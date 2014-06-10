@@ -1,22 +1,23 @@
 /********************************************************************
-	Copyright (c) 2013-2014 - QSanguosha-Hegemony Team
+    Copyright (c) 2013-2014 - QSanguosha-Hegemony Team
 
-  This file is part of QSanguosha-Hegemony.
+    This file is part of QSanguosha-Hegemony.
 
-  This game is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 3.0 of the License, or (at your option) any later version.
+    This game is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3.0 of the License, or (at your option) any later version.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  Lesser General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
 
-  See the LICENSE file for more details.
+    See the LICENSE file for more details.
 
-  QSanguosha-Hegemony Team	
-*********************************************************************/
+    QSanguosha-Hegemony Team
+    *********************************************************************/
+
 #include "UpdateCheckerThread.h"
 #include "mainwindow.h"
 
@@ -34,8 +35,8 @@ void UpdateCheckerThread::run() {
 #if defined(WIN32) && (defined(VS2010) || defined(VS2012) || defined(VS2013))
     QNetworkAccessManager *mgr = new QNetworkAccessManager;
     //temp url for test
-    QString URL = "http://ver.qsanguosha.org/UpdateInfo";
-    QString URL2 = "http://ver.qsanguosha.org/whatsnew.html";
+    QString URL = "http://ver.qsanguosha.org/test/UpdateInfo";
+    QString URL2 = "http://ver.qsanguosha.org/test/whatsnew.html";
     QEventLoop loop;
     QNetworkReply *reply = mgr->get(QNetworkRequest(QUrl(URL)));
     QNetworkReply *reply2 = mgr->get(QNetworkRequest(QUrl(URL2)));
@@ -59,14 +60,15 @@ void UpdateCheckerThread::run() {
 
     while (!reply->atEnd()) {
         QString line = reply->readLine();
+        line.replace('\n', "");
 
         //simple comment support
         if (line.startsWith("//")) continue;
-        if (!is_comment && line.startsWith("/*")) 
+        if (!is_comment && line.startsWith("/*"))
             is_comment = true;
         if (is_comment) {
             line.trimmed();
-            if (line.contains("*/")) 
+            if (line.contains("*/"))
                 //I wanna use QString::endsWith here, but the mothod always returns false.
                 //@@todo:Refine It Later
                 is_comment = false;
@@ -83,10 +85,10 @@ void UpdateCheckerThread::run() {
     }
     QString FILE_NAME = "info.html";
     QFile file(FILE_NAME);
-    if( !file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate) )  
-    {  
-        qDebug() << "Cannot open the file: " << FILE_NAME;  
-        return;  
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate))
+    {
+        qDebug() << "Cannot open the file: " << FILE_NAME;
+        return;
     }
     QByteArray codeContent = reply2->readAll();
     file.write(codeContent);

@@ -1,22 +1,23 @@
 /********************************************************************
-	Copyright (c) 2013-2014 - QSanguosha-Hegemony Team
+    Copyright (c) 2013-2014 - QSanguosha-Hegemony Team
 
-  This file is part of QSanguosha-Hegemony.
+    This file is part of QSanguosha-Hegemony.
 
-  This game is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 3.0 of the License, or (at your option) any later version.
+    This game is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3.0 of the License, or (at your option) any later version.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  Lesser General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
 
-  See the LICENSE file for more details.
+    See the LICENSE file for more details.
 
-  QSanguosha-Hegemony Team	
-*********************************************************************/
+    QSanguosha-Hegemony Team
+    *********************************************************************/
+
 #ifndef _ROOM_SCENE_H
 #define _ROOM_SCENE_H
 
@@ -53,8 +54,11 @@ struct RoomLayout;
 #include <QHBoxLayout>
 #include <QMutex>
 #include <QStack>
+#include <QtDeclarative\QDeclarativeEngine>
+#include <QtDeclarative\QDeclarativeContext>
+#include <QtDeclarative\QDeclarativeComponent>
 
-class ScriptExecutor: public QDialog {
+class ScriptExecutor : public QDialog {
     Q_OBJECT
 
 public:
@@ -64,7 +68,7 @@ public slots:
     void doScript();
 };
 
-class DeathNoteDialog: public QDialog {
+class DeathNoteDialog : public QDialog {
     Q_OBJECT
 
 public:
@@ -77,7 +81,7 @@ private:
     QComboBox *killer, *victim;
 };
 
-class DamageMakerDialog: public QDialog {
+class DamageMakerDialog : public QDialog {
     Q_OBJECT
 
 public:
@@ -98,7 +102,7 @@ private slots:
     void disableSource();
 };
 
-class ReplayerControlBar: public QGraphicsObject{
+class ReplayerControlBar : public QGraphicsObject{
     Q_OBJECT
 
 public:
@@ -122,7 +126,7 @@ private:
     qreal speed;
 };
 
-class RoomScene: public QGraphicsScene {
+class RoomScene : public QGraphicsScene {
     Q_OBJECT
 
 public:
@@ -154,7 +158,7 @@ public slots:
     void chooseGeneral(const QStringList &generals, const bool single_result);
     void chooseSuit(const QStringList &suits);
     void chooseCard(const ClientPlayer *playerName, const QString &flags, const QString &reason,
-                    bool handcard_visible, Card::HandlingMethod method, QList<int> disabled_ids);
+        bool handcard_visible, Card::HandlingMethod method, QList<int> disabled_ids);
     void chooseKingdom(const QStringList &kingdoms);
     void chooseOption(const QString &skillName, const QStringList &options);
     void chooseOrder(QSanProtocol::Game3v3ChooseOrderCommand reason);
@@ -187,7 +191,7 @@ public slots:
 
     void doTimeout();
 
-    inline QPointF tableCenterPos() {    return m_tableCenterPos;    };
+    inline QPointF tableCenterPos() { return m_tableCenterPos; };
 
     void doGongxin(const QList<int> &card_ids, bool enable_heart, QList<int> enabled_ids);
 
@@ -329,6 +333,11 @@ private:
     int _m_currentStage;
 
     QRectF _m_infoPlane;
+
+	// for animation effects
+    QDeclarativeEngine *_m_animationEngine;
+    QDeclarativeContext *_m_animationContext;
+    QDeclarativeComponent *_m_animationComponent;
 
 private slots:
     void fillCards(const QList<int> &card_ids, const QList<int> &disabled_ids = QList<int>());

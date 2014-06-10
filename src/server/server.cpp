@@ -1,22 +1,23 @@
 /********************************************************************
-	Copyright (c) 2013-2014 - QSanguosha-Hegemony Team
+    Copyright (c) 2013-2014 - QSanguosha-Hegemony Team
 
-  This file is part of QSanguosha-Hegemony.
+    This file is part of QSanguosha-Hegemony.
 
-  This game is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 3.0 of the License, or (at your option) any later version.
+    This game is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3.0 of the License, or (at your option) any later version.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  Lesser General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
 
-  See the LICENSE file for more details.
+    See the LICENSE file for more details.
 
-  QSanguosha-Hegemony Team	
-*********************************************************************/
+    QSanguosha-Hegemony Team
+    *********************************************************************/
+
 #include "server.h"
 #include "settings.h"
 #include "room.h"
@@ -28,6 +29,7 @@
 #include "miniscenarios.h"
 #include "SkinBank.h"
 #include "jsonutils.h"
+#include "banpair.h"
 
 #include <QMessageBox>
 #include <QFormLayout>
@@ -52,7 +54,7 @@ static QLayout *HLay(QWidget *left, QWidget *right) {
 }
 
 ServerDialog::ServerDialog(QWidget *parent)
-    : QDialog(parent)
+: QDialog(parent)
 {
     setWindowTitle(tr("Start server"));
 
@@ -85,11 +87,16 @@ QWidget *ServerDialog::createBasicTab() {
     timeout_spinbox->setDisabled(Config.OperationNoLimit);
     connect(nolimit_checkbox, SIGNAL(toggled(bool)), timeout_spinbox, SLOT(setDisabled(bool)));
 
+    QPushButton *edit_button = new QPushButton(tr("Banlist ..."));
+    edit_button->setFixedWidth(100);
+    connect(edit_button, SIGNAL(clicked()), this, SLOT(editBanlist()));
+
     QFormLayout *form_layout = new QFormLayout;
     form_layout->addRow(tr("Server name"), server_name_edit);
     QHBoxLayout *lay = new QHBoxLayout;
     lay->addWidget(timeout_spinbox);
     lay->addWidget(nolimit_checkbox);
+    lay->addWidget(edit_button);
     form_layout->addRow(tr("Operation timeout"), lay);
     form_layout->addRow(createGameModeBox());
 
@@ -119,7 +126,7 @@ QWidget *ServerDialog::createPackageTab() {
 
     int i = 0, j = 0;
     int row = 0, column = 0;
-    foreach (QString extension, extensions) {
+    foreach(QString extension, extensions) {
         const Package *package = Sanguosha->findChild<const Package *>(extension);
         if (package == NULL)
             continue;
@@ -133,23 +140,23 @@ QWidget *ServerDialog::createPackageTab() {
 
         switch (package->getType()) {
         case Package::GeneralPack: {
-                row = i / 5;
-                column = i % 5;
-                i++;
+                                       row = i / 5;
+                                       column = i % 5;
+                                       i++;
 
-                layout1->addWidget(checkbox, row, column + 1);
-                break;
-            }
+                                       layout1->addWidget(checkbox, row, column + 1);
+                                       break;
+        }
         case Package::CardPack: {
-                row = j / 5;
-                column = j % 5;
-                j++;
+                                    row = j / 5;
+                                    column = j % 5;
+                                    j++;
 
-                layout2->addWidget(checkbox, row, column + 1);
-                break;
-            }
+                                    layout2->addWidget(checkbox, row, column + 1);
+                                    break;
+        }
         default:
-                break;
+            break;
         }
     }
 
@@ -260,14 +267,14 @@ QWidget *ServerDialog::createConversionTab() {
     bool enable_lord_zhangjiao = Config.value("GeneralConversions").toStringList().contains("zhangjiao");
     convert_zhangjiao_to_lord = new QCheckBox(tr("Convert Zhang Jiao to Lord Zhang Jiao"));
     convert_zhangjiao_to_lord->setChecked(enable_lord_zhangjiao);
-/*
-    add_peace_spell = new QCheckBox(tr("Add Peace Spell"));
-    add_peace_spell->setChecked(Config.value("CardConversions").toStringList().contains("+109"));
-    add_peace_spell->setDisabled(enable_lord_zhangjiao);
+    /*
+        add_peace_spell = new QCheckBox(tr("Add Peace Spell"));
+        add_peace_spell->setChecked(Config.value("CardConversions").toStringList().contains("+109"));
+        add_peace_spell->setDisabled(enable_lord_zhangjiao);
 
-    connect(convert_zhangjiao_to_lord, SIGNAL(toggled(bool)), add_peace_spell, SLOT(setChecked(bool)));
-    connect(convert_zhangjiao_to_lord, SIGNAL(toggled(bool)), add_peace_spell, SLOT(setDisabled(bool)));
-*/
+        connect(convert_zhangjiao_to_lord, SIGNAL(toggled(bool)), add_peace_spell, SLOT(setChecked(bool)));
+        connect(convert_zhangjiao_to_lord, SIGNAL(toggled(bool)), add_peace_spell, SLOT(setDisabled(bool)));
+        */
     conversions_group->addButton(convert_zhangjiao_to_lord);
     //conversions_group->addButton(add_peace_spell);
     momentum_layout->addWidget(convert_zhangjiao_to_lord);
@@ -400,7 +407,8 @@ QGroupBox *ServerDialog::createGameModeBox() {
         if (item->isWidgetType()) {
             QWidget *widget = qobject_cast<QWidget *>(item);
             side->addWidget(widget);
-        } else {
+        }
+        else {
             QLayout *item_layout = qobject_cast<QLayout *>(item);
             side->addLayout(item_layout);
         }
@@ -438,9 +446,9 @@ QLayout *ServerDialog::createButtonLayout() {
 void ServerDialog::onDetectButtonClicked() {
     QHostInfo vHostInfo = QHostInfo::fromName(QHostInfo::localHostName());
     QList<QHostAddress> vAddressList = vHostInfo.addresses();
-    foreach (QHostAddress address, vAddressList) {
+    foreach(QHostAddress address, vAddressList) {
         if (!address.isNull() && address != QHostAddress::LocalHost
-            && address.protocol() ==  QAbstractSocket::IPv4Protocol) {
+            && address.protocol() == QAbstractSocket::IPv4Protocol) {
             address_edit->setText(address.toString());
             return;
         }
@@ -518,7 +526,7 @@ bool ServerDialog::config() {
 
     QSet<QString> ban_packages;
     QList<QAbstractButton *> checkboxes = extension_group->buttons();
-    foreach (QAbstractButton *checkbox, checkboxes) {
+    foreach(QAbstractButton *checkbox, checkboxes) {
         if (!checkbox->isChecked()) {
             QString package_name = checkbox->objectName();
             Sanguosha->addBanPackage(package_name);
@@ -543,14 +551,19 @@ bool ServerDialog::config() {
     return true;
 }
 
+void ServerDialog::editBanlist() {
+    BanlistDialog *dialog = new BanlistDialog(this);
+    dialog->exec();
+}
+
 BanIPDialog::BanIPDialog(QWidget *parent, Server *theserver)
-    : QDialog(parent), server(theserver){
-/*
-    if (Sanguosha->currentRoom() == NULL){
+: QDialog(parent), server(theserver){
+    /*
+        if (Sanguosha->currentRoom() == NULL){
         QMessageBox::warning(this, tr("Warining!"), tr("Game is not started!"));
         return;
-    }
-*/
+        }
+        */
     QVBoxLayout *left_layout = new QVBoxLayout;
     QVBoxLayout *right_layout = new QVBoxLayout;
 
@@ -606,8 +619,8 @@ BanIPDialog::BanIPDialog(QWidget *parent, Server *theserver)
 }
 
 void BanIPDialog::loadIPList(){
-    foreach (Room *room, server->rooms){
-        foreach (ServerPlayer *p, room->getPlayers()){
+    foreach(Room *room, server->rooms){
+        foreach(ServerPlayer *p, room->getPlayers()){
             if (p->getState() != "offline" && p->getState() != "robot") {
                 sp_list << p;
             }
@@ -616,7 +629,7 @@ void BanIPDialog::loadIPList(){
 
     left->clear();
 
-    foreach (ServerPlayer *p, sp_list){
+    foreach(ServerPlayer *p, sp_list){
         QString parsed_string = QString("%1::%2").arg(p->screenName(), p->getIp());
         left->addItem(parsed_string);
     }
@@ -672,8 +685,153 @@ void BanIPDialog::save(){
     Config.setValue("BannedIP", ips);
 }
 
+
+
+void BanlistDialog::switchTo(int item) {
+    this->item = item;
+    list = lists.at(item);
+}
+
+BanlistDialog::BanlistDialog(QWidget *parent, bool view)
+: QDialog(parent)
+{
+    setWindowTitle(tr("Select generals that are excluded"));
+    setMinimumWidth(455);
+
+    if (ban_list.isEmpty())
+        ban_list << "Generals" << "Pairs";
+    QVBoxLayout *layout = new QVBoxLayout;
+
+    QTabWidget *tab = new QTabWidget;
+    layout->addWidget(tab);
+    connect(tab, SIGNAL(currentChanged(int)), this, SLOT(switchTo(int)));
+
+    foreach(QString item, ban_list) {
+        QWidget *apage = new QWidget;
+
+        list = new QListWidget;
+        list->setObjectName(item);
+
+        if (item == "Pairs") {
+            foreach(BanPair pair, BanPair::getBanPairSet().toList())
+                addPair(pair.first, pair.second);
+        }
+        else {
+            QStringList banlist = Config.value(QString("Banlist/%1").arg(item)).toStringList();
+            foreach(QString name, banlist)
+                addGeneral(name);
+        }
+
+        lists << list;
+
+        QVBoxLayout *vlay = new QVBoxLayout;
+        vlay->addWidget(list);
+        apage->setLayout(vlay);
+
+        tab->addTab(apage, Sanguosha->translate(item));
+    }
+
+    QPushButton *add = new QPushButton(tr("Add ..."));
+    QPushButton *remove = new QPushButton(tr("Remove"));
+    QPushButton *ok = new QPushButton(tr("OK"));
+
+    connect(ok, SIGNAL(clicked()), this, SLOT(accept()));
+    connect(this, SIGNAL(accepted()), this, SLOT(saveAll()));
+    connect(remove, SIGNAL(clicked()), this, SLOT(doRemoveButton()));
+    connect(add, SIGNAL(clicked()), this, SLOT(doAddButton()));
+
+    QHBoxLayout *hlayout = new QHBoxLayout;
+    hlayout->addStretch();
+    if (!view) {
+        hlayout->addWidget(add);
+        hlayout->addWidget(remove);
+        list = lists.first();
+    }
+
+    hlayout->addWidget(ok);
+    layout->addLayout(hlayout);
+
+    setLayout(layout);
+
+    foreach(QListWidget *alist, lists) {
+        if (alist->objectName() == "Pairs")
+            continue;
+        alist->setViewMode(QListView::IconMode);
+        alist->setDragDropMode(QListView::NoDragDrop);
+        alist->setResizeMode(QListView::Adjust);
+    }
+}
+
+void BanlistDialog::addGeneral(const QString &name) {
+    if (list->objectName() == "Pairs") {
+        if (banned_items["Pairs"].contains(name)) return;
+        banned_items["Pairs"].append(name);
+        QString text = QString(tr("Banned for all: %1")).arg(Sanguosha->translate(name));
+        QListWidgetItem *item = new QListWidgetItem(text);
+        item->setData(Qt::UserRole, QVariant::fromValue(name));
+        list->addItem(item);
+    }
+    else {
+        foreach(QString general_name, name.split("+")) {
+            if (banned_items[list->objectName()].contains(general_name)) continue;
+            banned_items[list->objectName()].append(general_name);
+            QIcon icon(G_ROOM_SKIN.getGeneralPixmap(general_name, QSanRoomSkin::S_GENERAL_ICON_SIZE_TINY));
+            QString text = Sanguosha->translate(general_name);
+            QListWidgetItem *item = new QListWidgetItem(icon, text, list);
+            item->setSizeHint(QSize(60, 60));
+            item->setData(Qt::UserRole, general_name);
+        }
+    }
+}
+
+void BanlistDialog::addPair(const QString &first, const QString &second) {
+    if (banned_items["Pairs"].contains(QString("%1+%2").arg(first, second))
+        || banned_items["Pairs"].contains(QString("%1+%2").arg(second, first))) return;
+    banned_items["Pairs"].append(QString("%1+%2").arg(first, second));
+    QString trfirst = Sanguosha->translate(first);
+    QString trsecond = Sanguosha->translate(second);
+    QListWidgetItem *item = new QListWidgetItem(QString("%1 + %2").arg(trfirst, trsecond));
+    item->setData(Qt::UserRole, QVariant::fromValue(QString("%1+%2").arg(first, second)));
+    list->addItem(item);
+}
+
+void BanlistDialog::doAddButton() {
+    FreeChooseDialog *chooser = new FreeChooseDialog(this,
+        (list->objectName() == "Pairs") ? FreeChooseDialog::Pair : FreeChooseDialog::Multi);
+    connect(chooser, SIGNAL(general_chosen(QString)), this, SLOT(addGeneral(QString)));
+    connect(chooser, SIGNAL(pair_chosen(QString, QString)), this, SLOT(addPair(QString, QString)));
+    chooser->exec();
+}
+
+void BanlistDialog::doRemoveButton() {
+    int row = list->currentRow();
+    if (row != -1) {
+        banned_items[list->objectName()].removeOne(list->item(row)->data(Qt::UserRole).toString());
+        delete list->takeItem(row);
+    }
+}
+
+void BanlistDialog::save() {
+    QSet<QString> banset;
+
+    for (int i = 0; i < list->count(); i++)
+        banset << list->item(i)->data(Qt::UserRole).toString();
+
+    QStringList banlist = banset.toList();
+    Config.setValue(QString("Banlist/%1").arg(ban_list.at(item)), QVariant::fromValue(banlist));
+}
+
+void BanlistDialog::saveAll() {
+    for (int i = 0; i < lists.length(); i++) {
+        switchTo(i);
+        save();
+    }
+    BanPair::loadBanPairs();
+}
+
+
 Server::Server(QObject *parent)
-    : QObject(parent)
+: QObject(parent)
 {
     server = new NativeServerSocket;
     server->setParent(this);
@@ -690,12 +848,12 @@ Server::Server(QObject *parent)
 void Server::broadcast(const QString &msg) {
     Json::Value arg(Json::arrayValue);
     arg[0] = ".";
-    arg[1] = msg.toStdString();
+    arg[1] = Utils::toJsonString(msg);
 
-    QSanProtocol::Packet packet(QSanProtocol::S_SRC_ROOM | QSanProtocol::S_TYPE_NOTIFICATION | QSanProtocol::S_DEST_CLIENT, QSanProtocol::S_COMMAND_SPEAK);
+    Packet packet(S_SRC_ROOM | S_TYPE_NOTIFICATION | S_DEST_CLIENT, S_COMMAND_SPEAK);
     packet.setMessageBody(arg);
 
-    foreach (Room *room, rooms)
+    foreach(Room *room, rooms)
         room->broadcastInvoke(&packet);
 }
 
@@ -771,7 +929,7 @@ void Server::processRequest(const char *request) {
     QString avatar = Utils::toQString(body[2]);
 
     if (is_reconnection) {
-        foreach (QString objname, name2objname.values(screen_name)) {
+        foreach(QString objname, name2objname.values(screen_name)) {
             ServerPlayer *player = players.value(objname);
             if (player && player->getState() == "offline" && !player->getRoom()->isFinished()) {
                 player->getRoom()->reconnect(player, socket);
@@ -802,7 +960,7 @@ void Server::gameOver() {
     Room *room = qobject_cast<Room *>(sender());
     rooms.remove(room);
 
-    foreach (ServerPlayer *player, room->findChildren<ServerPlayer *>()) {
+    foreach(ServerPlayer *player, room->findChildren<ServerPlayer *>()) {
         name2objname.remove(player->screenName(), player->objectName());
         players.remove(player->objectName());
     }

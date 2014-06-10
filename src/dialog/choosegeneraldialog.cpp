@@ -1,3 +1,23 @@
+/********************************************************************
+    Copyright (c) 2013-2014 - QSanguosha-Hegemony Team
+
+    This file is part of QSanguosha-Hegemony.
+
+    This game is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3.0 of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    See the LICENSE file for more details.
+
+    QSanguosha-Hegemony Team
+    *********************************************************************/
+
 #include "choosegeneraldialog.h"
 #include "general.h"
 #include "engine.h"
@@ -15,11 +35,12 @@
 #include <QRadioButton>
 #include <QCheckBox>
 #include <QTabWidget>
+#include <QMessageBox>
 
 using namespace QSanProtocol;
 
 OptionButton::OptionButton(QString icon_path, const QString &caption, QWidget *parent)
-    : QToolButton(parent)
+: QToolButton(parent)
 {
     QPixmap pixmap(icon_path);
     QIcon icon(pixmap);
@@ -42,7 +63,7 @@ void OptionButton::mouseDoubleClickEvent(QMouseEvent *) {
 }
 
 ChooseGeneralDialog::ChooseGeneralDialog(const QStringList &general_names, QWidget *parent, bool view_only, const QString &title)
-    : QDialog(parent)
+: QDialog(parent)
 {
     m_freeChooseDialog = NULL;
     if (title.isEmpty())
@@ -53,7 +74,7 @@ ChooseGeneralDialog::ChooseGeneralDialog(const QStringList &general_names, QWidg
     QString lord_name;
 
     QList<const General *> generals;
-    foreach (QString general_name, general_names) {
+    foreach(QString general_name, general_names) {
         if (general_name.contains("(lord)")) {
             general_name.chop(6);
             lord_name = general_name;
@@ -72,22 +93,25 @@ ChooseGeneralDialog::ChooseGeneralDialog(const QStringList &general_names, QWidg
     QSanRoomSkin::GeneralIconSize icon_type;
     if (tooManyManyGenerals) {
         no_icon = true;
-    } else {
+    }
+    else {
         if (tooManyGenerals) {
             icon_type = QSanRoomSkin::S_GENERAL_ICON_SIZE_LARGE;
             icon_size = G_COMMON_LAYOUT.m_chooseGeneralBoxDenseIconSize;
-        } else {
+        }
+        else {
             icon_type = QSanRoomSkin::S_GENERAL_ICON_SIZE_CARD;
             icon_size = G_COMMON_LAYOUT.m_chooseGeneralBoxSparseIconSize;
         }
     }
-    foreach (const General *general, generals) {
+    foreach(const General *general, generals) {
         QString caption = Sanguosha->translate(general->objectName());
         OptionButton *button = new OptionButton(QString(), caption);
         if (no_icon) {
             button->setIcon(QIcon("image/system/no-general-icon.png"));
             button->setIconSize(QSize(G_COMMON_LAYOUT.m_chooseGeneralBoxDenseIconSize.width(), 1));
-        } else {
+        }
+        else {
             button->setIcon(QIcon(G_ROOM_SKIN.getGeneralPixmap(general->objectName(), icon_type)));
             button->setIconSize(icon_size);
         }
@@ -103,10 +127,10 @@ ChooseGeneralDialog::ChooseGeneralDialog(const QStringList &general_names, QWidg
 
     if (!view_only && generals.length() > 2) {
         int index = 0;
-        foreach (const General *general, generals) {
+        foreach(const General *general, generals) {
             int party = 0;
             bool has_lord = false;
-            foreach (const General *other, generals) {
+            foreach(const General *other, generals) {
                 if (other->getKingdom() == general->getKingdom()) {
                     party++;
                     if (other != general && other->isLord())
@@ -135,13 +159,14 @@ ChooseGeneralDialog::ChooseGeneralDialog(const QStringList &general_names, QWidg
 
     QLayout *layout = NULL;
     const int columns = tooManyGenerals ? G_COMMON_LAYOUT.m_chooseGeneralBoxSwitchIconEachRowForTooManyGenerals :
-                                          G_COMMON_LAYOUT.m_chooseGeneralBoxSwitchIconEachRow;
+        G_COMMON_LAYOUT.m_chooseGeneralBoxSwitchIconEachRow;
     if (generals.length() <= columns) {
         layout = new QHBoxLayout;
 
-        foreach (OptionButton *button, buttons)
+        foreach(OptionButton *button, buttons)
             layout->addWidget(button);
-    } else {
+    }
+    else {
         QGridLayout *grid_layout = new QGridLayout;
         QHBoxLayout *hlayout = new QHBoxLayout;
         QVBoxLayout *lord_layout = new QVBoxLayout;
@@ -181,7 +206,8 @@ ChooseGeneralDialog::ChooseGeneralDialog(const QStringList &general_names, QWidg
     QHBoxLayout *last_layout = new QHBoxLayout;
     if (view_only || ServerInfo.OperationTimeout == 0) {
         progress_bar = NULL;
-    } else {
+    }
+    else {
         progress_bar = new QSanCommandProgressBar();
         progress_bar->setFixedWidth(300);
         progress_bar->setTimerEnabled(true);
@@ -191,7 +217,7 @@ ChooseGeneralDialog::ChooseGeneralDialog(const QStringList &general_names, QWidg
     }
 
     bool free_choose = ServerInfo.FreeChoose
-                       || ServerInfo.GameMode.startsWith("_mini_") || ServerInfo.GameMode == "custom_scenario";
+        || ServerInfo.GameMode.startsWith("_mini_") || ServerInfo.GameMode == "custom_scenario";
 
     if (!view_only && free_choose) {
         QPushButton *free_choose_button = new QPushButton(tr("Free choose ..."));
@@ -228,19 +254,19 @@ void ChooseGeneralDialog::freeChoose() {
     dialog->exec();
 }
 
-FreeChooseDialog::FreeChooseDialog(QWidget *parent, bool pair_choose)
-    : QDialog(parent), pair_choose(pair_choose)
+FreeChooseDialog::FreeChooseDialog(QWidget *parent, ButtonGroupType type)
+: QDialog(parent), type(type)
 {
     setWindowTitle(tr("Free choose generals"));
 
     QTabWidget *tab_widget = new QTabWidget;
 
     group = new QButtonGroup(this);
-    group->setExclusive(!pair_choose);
+    group->setExclusive(type == Exclusive);
 
     QList<const General *> all_generals = Sanguosha->findChildren<const General *>();
     QMap<QString, QList<const General *> > map;
-    foreach (const General *general, all_generals) {
+    foreach(const General *general, all_generals) {
         if (general->isTotallyHidden())
             continue;
 
@@ -249,14 +275,14 @@ FreeChooseDialog::FreeChooseDialog(QWidget *parent, bool pair_choose)
 
     QStringList kingdoms = Sanguosha->getKingdoms();
 
-    foreach (QString kingdom, kingdoms) {
+    foreach(QString kingdom, kingdoms) {
         QList<const General *> generals = map[kingdom];
 
         if (!generals.isEmpty()) {
             QWidget *tab = createTab(generals);
             tab_widget->addTab(tab,
-                               QIcon(G_ROOM_SKIN.getPixmap(QSanRoomSkin::S_SKIN_KEY_KINGDOM_ICON, kingdom)),
-                               Sanguosha->translate(kingdom));
+                QIcon(G_ROOM_SKIN.getPixmap(QSanRoomSkin::S_SKIN_KEY_KINGDOM_ICON, kingdom)),
+                Sanguosha->translate(kingdom));
         }
     }
 
@@ -277,15 +303,15 @@ FreeChooseDialog::FreeChooseDialog(QWidget *parent, bool pair_choose)
 
     setLayout(layout);
 
-    if (!pair_choose)
+    if (type == Exclusive)
         group->buttons().first()->click();
 }
 
 void FreeChooseDialog::chooseGeneral() {
-    if (pair_choose) {
+    if (type == Pair) {
         QList<QAbstractButton *> buttons = group->buttons();
         QString first, second;
-        foreach (QAbstractButton *button, buttons) {
+        foreach(QAbstractButton *button, buttons) {
             if (!button->isChecked())
                 continue;
 
@@ -297,8 +323,20 @@ void FreeChooseDialog::chooseGeneral() {
                 break;
             }
         }
-        if (second.isEmpty()) emit general_chosen(first);
-    } else {
+        if (second.isEmpty()){
+            QMessageBox::information(this, tr("Information"), tr("You can only select 2 generals in Pairs mode."));
+            return;
+        }
+    }
+    else if (type == Multi) {
+        QStringList general_names;
+        foreach(QAbstractButton *button, group->buttons()) {
+            if (button->isChecked())
+                general_names << button->objectName();
+        }
+        if (!general_names.isEmpty()) emit general_chosen(general_names.join("+"));
+    }
+    else {
         QAbstractButton *button = group->checkedButton();
         if (button) emit general_chosen(button->objectName());
     }
@@ -319,14 +357,15 @@ QWidget *FreeChooseDialog::createTab(const QList<const General *> &generals) {
         const General *general = generals.at(i);
         QString general_name = general->objectName();
         QString text = QString("%1[%2]")
-                               .arg(Sanguosha->translate(general_name))
-                               .arg(Sanguosha->translate(general->getPackage()));
+            .arg(Sanguosha->translate(general_name))
+            .arg(Sanguosha->translate(general->getPackage()));
 
         QAbstractButton *button;
-        if (pair_choose)
-            button = new QCheckBox(text);
-        else
+        if (type == Exclusive)
             button = new QRadioButton(text);
+        else
+            button = new QCheckBox(text);
+
         button->setObjectName(general_name);
         button->setToolTip(general->getSkillDescription(true));
         if (general->isLord())
@@ -348,30 +387,42 @@ QWidget *FreeChooseDialog::createTab(const QList<const General *> &generals) {
 
     tab->setLayout(tablayout);
 
-    if (pair_choose) {
+    if (type == Pair) {
         connect(group, SIGNAL(buttonClicked(QAbstractButton *)),
-                this, SLOT(uncheckExtraButton(QAbstractButton *)));
+            this, SLOT(disableButtons(QAbstractButton *)));
     }
 
     return tab;
 }
 
-void FreeChooseDialog::uncheckExtraButton(QAbstractButton *click_button) {
-    QAbstractButton *first = NULL;
+void FreeChooseDialog::disableButtons(QAbstractButton *) {
     QList<QAbstractButton *> buttons = group->buttons();
-    foreach (QAbstractButton *button, buttons) {
-        if (!button->isChecked())
-            continue;
-
-        if (button == click_button)
-            continue;
-
-        if (first == NULL)
-            first = button;
-        else {
-            first->setChecked(false);
-            break;
+    QList<QAbstractButton *> checked;
+    foreach(QAbstractButton *btn, buttons){
+        if (btn->isChecked())
+            checked << btn;
+    }
+    if (checked.length() == 2){
+        foreach(QAbstractButton *btn, buttons){
+            if (!btn->isChecked())
+                btn->setEnabled(false);
+            else
+                btn->setEnabled(true);
         }
     }
+    else if (checked.length() == 1){
+        QString checked_kingdom = Sanguosha->getGeneral(checked.first()->objectName())->getKingdom();
+        foreach(QAbstractButton *btn, buttons){
+            QString btn_kingdom = Sanguosha->getGeneral(btn->objectName())->getKingdom();
+            btn->setEnabled(checked_kingdom == btn_kingdom);
+        }
+    }
+    else if (checked.length() == 0){
+        foreach(QAbstractButton *btn, buttons){
+            btn->setEnabled(true);
+        }
+    }
+    else
+        Q_ASSERT(false);
 }
 

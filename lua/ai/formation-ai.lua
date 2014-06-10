@@ -15,8 +15,9 @@
 
   See the LICENSE file for more details.
 
-  QSanguosha-Hegemony Team	
-**********************************************************************]]
+  QSanguosha-Hegemony Team
+*********************************************************************]]
+
 sgs.ai_skill_invoke.tuntian = true
 sgs.ai_skill_invoke._tuntian = true
 
@@ -322,10 +323,7 @@ sgs.ai_use_value.ShangyiCard = 4
 sgs.ai_use_priority.ShangyiCard = 9
 sgs.ai_card_intention.ShangyiCard = 50
 
-sgs.ai_skill_invoke.yicheng = function(self, data)
-	local player = data:toPlayer()
-	return true
-end
+sgs.ai_skill_invoke.yicheng = true
 
 sgs.ai_skill_discard.yicheng = function(self, discard_num, min_num, optional, include_equip)
 	local unpreferedCards = {}
@@ -379,6 +377,7 @@ sgs.ai_skill_invoke.qianhuan = function(self, data)
 	if data:toString() == "gethuan" then return true end
 	local use = self.player:getTag("qianhuan_data"):toCardUse()
 	if (use.from and self:isFriend(use.from)) then return false end --队友给自己出桃子不无懈（暂）
+	if use.card:isKindOf("Peach") then return false end
 	if use.to:isEmpty() then return false end
 	local to = use.to:first()
 	if to and to:objectName() == self.player:objectName() then
@@ -483,13 +482,13 @@ sgs.ai_skill_choice.DragonPhoenix = function(self, choices, data)
 		elseif (string.find(choices, "zhangliao")) then
 			return "zhangliao"
 		end
-		
+
 		table.removeOne(choices_t, "caohong")
 		table.removeOne(choices_t, "zangba")
 		table.removeOne(choices_t, "xuchu")
 		table.removeOne(choices_t, "dianwei")
 		table.removeOne(choices_t, "caoren")
-		
+
 	elseif (kingdom == "shu") then
 		if (string.find(choices, "mifuren")) then
 			return "mifuren"
@@ -502,14 +501,14 @@ sgs.ai_skill_choice.DragonPhoenix = function(self, choices, data)
 		elseif (string.find(choices, "jiangwanfeiyi")) then
 			return "jiangwanfeiyi"
 		end
-		
+
 		table.removeOne(choices_t, "liubei")
 		table.removeOne(choices_t, "guanyu")
 		table.removeOne(choices_t, "zhangfei")
 		table.removeOne(choices_t, "weiyan")
 		table.removeOne(choices_t, "zhurong")
 		table.removeOne(choices_t, "madai")
-		
+
 	elseif (kingdom == "wu") then
 		if (string.find(choices, "zhoutai")) then
 			return "zhoutai"
@@ -520,12 +519,12 @@ sgs.ai_skill_choice.DragonPhoenix = function(self, choices, data)
 		elseif (string.find(choices, "sunjian")) then
 			return "sunjian"
 		end
-		
+
 		table.removeOne(choices_t, "sunce")
 		table.removeOne(choices_t, "chenwudongxi")
 		table.removeOne(choices_t, "luxun")
 		table.removeOne(choices_t, "huanggai")
-		
+
 	elseif (kingdom == "qun") then
 		if (string.find(choices, "yuji")) then
 			return "yuji"
@@ -538,13 +537,56 @@ sgs.ai_skill_choice.DragonPhoenix = function(self, choices, data)
 		elseif (string.find(choices, "lord_zhangjiao")) then
 			return "lord_zhangjiao"
 		end
-		
+
 		table.removeOne(choices_t, "dongzhuo")
 		table.removeOne(choices_t, "tianfeng")
 		table.removeOne(choices_t, "zhangjiao")
-		
+
 	end
 	if #choices_t == 0 then choices_t = string.split(choices, "+") end
 	return choices_t[math.random(1, #choices_t)]
 end
 
+sgs.ai_skill_discard.DragonPhoenix = function(self, discard_num, min_num, optional, include_equip)
+	local to_discard = sgs.QList2Table(self.player:getCards("he"))
+
+	if #to_discard == 1 then
+		return {to_discard[1]:getEffectiveId()}
+	end
+
+	local aux_func = function(card)
+		local place = self.room:getCardPlace(card:getEffectiveId())
+		if place == sgs.Player_PlaceEquip then
+			if card:isKindOf("SilverLion") and self.player:isWounded() then return -2 end
+
+			if card:isKindOf("Weapon") then
+				if self.player:getHandcardNum() < discard_num + 2 and not self:needKongcheng() then return 0
+				else return 2 end
+			elseif card:isKindOf("OffensiveHorse") then
+				if self.player:getHandcardNum() < discard_num + 2 and not self:needKongcheng() then return 0
+				else return 1 end
+			elseif card:isKindOf("DefensiveHorse") then return 3
+			elseif card:isKindOf("Armor") then
+				if self.player:hasSkill("bazhen") then return 0
+				else return 4 end
+			end
+		else
+			if self.player:getMark("@qianxi_red") > 0 and card:isRed() and not card:isKindOf("Peach") then return 0 end
+			if self.player:getMark("@qianxi_black") > 0 and card:isBlack() then return 0 end
+			if self:isWeak() then return 5 else return 0 end
+		end
+	end
+
+	local compare_func = function(card1, card2)
+		local card1_aux = aux_func(card1)
+		local card2_aux = aux_func(card2)
+		if card1_aux ~= card2_aux then return card1_aux < card2_aux end
+		return self:getKeepValue(card1) < self:getKeepValue(card2)
+	end
+
+	table.sort(to_discard, compare_func)
+
+	for _, card in ipairs(to_discard) do
+		if not self.player:isJilei(card) then return {card:getEffectiveId()} end
+	end
+end

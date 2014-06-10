@@ -1,3 +1,23 @@
+/********************************************************************
+    Copyright (c) 2013-2014 - QSanguosha-Hegemony Team
+
+    This file is part of QSanguosha-Hegemony.
+
+    This game is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3.0 of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    See the LICENSE file for more details.
+
+    QSanguosha-Hegemony Team
+    *********************************************************************/
+
 #include "recorder.h"
 #include "client.h"
 
@@ -10,7 +30,7 @@
 using namespace QSanProtocol;
 
 Recorder::Recorder(QObject *parent)
-    : QObject(parent)
+: QObject(parent)
 {
     watch.start();
 }
@@ -34,9 +54,11 @@ bool Recorder::save(const QString &filename) const{
             return file.write(data) != -1;
         else
             return false;
-    } else if (filename.endsWith(".png")) {
+    }
+    else if (filename.endsWith(".png")) {
         return TXT2PNG(data).save(filename);
-    } else
+    }
+    else
         return false;
 }
 
@@ -64,15 +86,16 @@ QImage Recorder::TXT2PNG(QByteArray txtData) {
 }
 
 Replayer::Replayer(QObject *parent, const QString &filename)
-    : QThread(parent), m_commandSeriesCounter(1),
-      filename(filename), speed(1.0), playing(true)
+: QThread(parent), m_commandSeriesCounter(1),
+filename(filename), speed(1.0), playing(true)
 {
     QIODevice *device = NULL;
     if (filename.endsWith(".png")) {
         QByteArray *data = new QByteArray(PNG2TXT(filename));
         QBuffer *buffer = new QBuffer(data);
         device = buffer;
-    } else if (filename.endsWith(".qsgs")) {
+    }
+    else if (filename.endsWith(".qsgs")) {
         QFile *file = new QFile(filename);
         device = file;
     }
@@ -85,7 +108,7 @@ Replayer::Replayer(QObject *parent, const QString &filename)
 
     while (!device->atEnd()) {
         QString line = QString::fromUtf8(device->readLine());
-        
+
         QStringList splited_line = line.split(" ");
         QString elapsed_str = splited_line.takeFirst();
         QString cmd = splited_line.join(" ");
@@ -117,19 +140,20 @@ QString &Replayer::commandProceed(QString &cmd) {
     if (split_flags.isEmpty())
         split_flags << ":" << "+" << "_" << "->";
 
-    foreach (QString flag, split_flags) {
+    foreach(QString flag, split_flags) {
         QStringList messages = cmd.split(flag);
         if (messages.length() > 1) {
             QStringList message_analyse;
-            foreach (QString message, messages)
+            foreach(QString message, messages)
                 message_analyse << commandProceed(message);
             cmd = "[" + message_analyse.join(",") + "]";
-        } else {
+        }
+        else {
             bool ok = false;
             cmd.toInt(&ok);
 
             if (!cmd.startsWith("\"") && !cmd.startsWith("[") && !ok)
-                cmd = "\"" + cmd +"\"";
+                cmd = "\"" + cmd + "\"";
         }
     }
 
@@ -195,12 +219,12 @@ void Replayer::run() {
     QStringList nondelays;
     nondelays << "addPlayer" << "removePlayer" << "speak";
 
-    foreach (Pair pair, pairs) {
+    foreach(Pair pair, pairs) {
         int delay = qMin(pair.elapsed - last, 2500);
         last = pair.elapsed;
 
         bool delayed = true;
-        foreach (QString nondelay, nondelays) {
+        foreach(QString nondelay, nondelays) {
             if (pair.cmd.startsWith(nondelay)) {
                 delayed = false;
                 break;

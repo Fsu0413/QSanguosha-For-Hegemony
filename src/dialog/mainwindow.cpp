@@ -1,22 +1,23 @@
 /********************************************************************
-	Copyright (c) 2013-2014 - QSanguosha-Hegemony Team
+    Copyright (c) 2013-2014 - QSanguosha-Hegemony Team
 
-  This file is part of QSanguosha-Hegemony.
+    This file is part of QSanguosha-Hegemony.
 
-  This game is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 3.0 of the License, or (at your option) any later version.
+    This game is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3.0 of the License, or (at your option) any later version.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  Lesser General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
 
-  See the LICENSE file for more details.
+    See the LICENSE file for more details.
 
-  QSanguosha-Hegemony Team	
-*********************************************************************/
+    QSanguosha-Hegemony Team
+    *********************************************************************/
+
 #include "mainwindow.h"
 #include "startscene.h"
 #include "roomscene.h"
@@ -49,9 +50,9 @@
 #include <QLabel>
 #include <QStatusBar>
 
-class FitView: public QGraphicsView {
+class FitView : public QGraphicsView {
 public:
-    FitView(QGraphicsScene *scene): QGraphicsView(scene) {
+    FitView(QGraphicsScene *scene) : QGraphicsView(scene) {
         setSceneRect(Config.Rect);
         setRenderHints(QPainter::TextAntialiasing | QPainter::Antialiasing);
     }
@@ -71,10 +72,11 @@ public:
                 this->resetTransform();
             main_window->setBackgroundBrush(false);
             return;
-        } else if (scene()->inherits("StartScene")) {
+        }
+        else if (scene()->inherits("StartScene")) {
             StartScene *start_scene = qobject_cast<StartScene *>(scene());
             QRectF newSceneRect(-event->size().width() / 2, -event->size().height() / 2,
-                                event->size().width(), event->size().height());
+                event->size().width(), event->size().height());
             start_scene->setSceneRect(newSceneRect);
             setSceneRect(start_scene->sceneRect());
             if (newSceneRect != start_scene->sceneRect())
@@ -85,8 +87,46 @@ public:
     }
 };
 
+#ifdef AUDIO_SUPPORT
+#include "audio.h"
+
+SoundTestBox::SoundTestBox(QWidget *parent /* = NULL */)
+:QDialog(parent){
+    QDir dir("audio/test/");
+    QStringList entry_list = dir.entryList();
+    entry_list.removeOne(".");
+    entry_list.removeOne("..");
+
+    QHBoxLayout *total_layout = new QHBoxLayout;
+    QList<QPushButton *> btns;
+
+    foreach(QString name, entry_list){
+        if (name.contains(".")){
+            QPushButton *btn = new QPushButton(name);
+            btn->setObjectName(name);
+            btns << btn;
+        }
+    }
+
+    foreach(QPushButton *btn, btns){
+        total_layout->addWidget(btn);
+        connect(btn, SIGNAL(clicked()), this, SLOT(btn_clicked()));
+    }
+    setLayout(total_layout);
+}
+
+void SoundTestBox::btn_clicked(){
+    QObject *btn = sender();
+    QString name = "audio/test/" + btn->objectName();
+    if (QFile::exists(name)){
+        Audio::play(name);
+    }
+}
+
+#endif
+
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow), server(NULL)
+: QMainWindow(parent), ui(new Ui::MainWindow), server(NULL)
 {
     ui->setupUi(this);
     setWindowTitle(tr("QSanguosha-Hegemony") + " " + Sanguosha->getVersion());
@@ -94,7 +134,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     UpdateCheckerThread *thread = new UpdateCheckerThread;
     connect(thread, SIGNAL(storeKeyAndValue(const QString &, const QString &)), this, SLOT(storeKeyAndValue(const QString &, const QString &)));
-//@to-do: terminated() is removed from QThread in Qt 5
+    //@to-do: terminated() is removed from QThread in Qt 5
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     connect(thread, SIGNAL(terminated()), thread, SLOT(deleteLater()));
 #else
@@ -118,17 +158,17 @@ MainWindow::MainWindow(QWidget *parent)
 
     QList<QAction *> actions;
     actions << ui->actionStart_Game
-            << ui->actionStart_Server
-            << ui->actionPC_Console_Start
-            << ui->actionReplay
-            << ui->actionConfigure
-            << ui->actionGeneral_Overview
-            << ui->actionCard_Overview
-            << ui->actionRule_Summary
-            << ui->actionAbout
-            << ui->actionAbout_Us;
+        << ui->actionStart_Server
+        << ui->actionPC_Console_Start
+        << ui->actionReplay
+        << ui->actionConfigure
+        << ui->actionGeneral_Overview
+        << ui->actionCard_Overview
+        << ui->actionRule_Summary
+        << ui->actionAbout
+        << ui->actionAbout_Us;
 
-    foreach (QAction *action, actions)
+    foreach(QAction *action, actions)
         start_scene->addButton(action);
     view = new FitView(scene);
 
@@ -184,9 +224,9 @@ void MainWindow::gotoScene(QGraphicsScene *scene) {
 void MainWindow::on_actionExit_triggered() {
     QMessageBox::StandardButton result;
     result = QMessageBox::question(this,
-                                   tr("Sanguosha"),
-                                   tr("Are you sure to exit?"),
-                                   QMessageBox::Ok | QMessageBox::Cancel);
+        tr("Sanguosha"),
+        tr("Are you sure to exit?"),
+        QMessageBox::Ok | QMessageBox::Cancel);
     if (result == QMessageBox::Ok) {
         delete systray;
         systray = NULL;
@@ -218,7 +258,7 @@ void MainWindow::on_actionStart_Server_triggered() {
     }
 }
 
-void MainWindow::checkVersion(const QString &server_version, const QString &server_mod) {
+void MainWindow::checkVersion(const QString &server_version_str, const QString &server_mod) {
     QString client_mod = Sanguosha->getMODName();
     if (client_mod != server_mod) {
         QMessageBox::warning(this, tr("Warning"), tr("Client MOD name is not same as the server!"));
@@ -226,7 +266,8 @@ void MainWindow::checkVersion(const QString &server_version, const QString &serv
     }
 
     Client *client = qobject_cast<Client *>(sender());
-    QString client_version = Sanguosha->getVersionNumber();
+    const QSanVersionNumber &client_version = Sanguosha->getVersionNumber();
+    QSanVersionNumber server_version(server_version_str);
 
     if (server_version == client_version) {
         client->signup();
@@ -265,9 +306,9 @@ void MainWindow::on_actionReplay_triggered() {
         location = last_dir;
 
     QString filename = QFileDialog::getOpenFileName(this,
-                                                    tr("Select a reply file"),
-                                                    location,
-                                                    tr("QSanguosha Replay File(*.qsgs);; Image replay file (*.png)"));
+        tr("Select a reply file"),
+        location,
+        tr("QSanguosha Replay File(*.qsgs);; Image replay file (*.png)"));
 
     if (filename.isEmpty())
         return;
@@ -289,7 +330,7 @@ void MainWindow::networkError(const QString &error_msg) {
 void BackLoader::preload() {
     QStringList emotions = G_ROOM_SKIN.getAnimationFileNames();
 
-    foreach (QString emotion, emotions) {
+    foreach(QString emotion, emotions) {
         int n = PixmapAnimation::GetFrameCount(emotion);
         for (int i = 0; i < n; i++) {
             QString filename = QString("image/system/emotion/%1/%2.png").arg(emotion).arg(QString::number(i));
@@ -332,7 +373,8 @@ void MainWindow::enterRoom() {
         connect(ui->actionDamage_maker, SIGNAL(triggered()), room_scene, SLOT(makeDamage()));
         connect(ui->actionRevive_wand, SIGNAL(triggered()), room_scene, SLOT(makeReviving()));
         connect(ui->actionExecute_script_at_server_side, SIGNAL(triggered()), room_scene, SLOT(doScript()));
-    } else {
+    }
+    else {
         ui->menuCheat->setEnabled(false);
         ui->actionDeath_note->disconnect();
         ui->actionDamage_maker->disconnect();
@@ -348,7 +390,7 @@ void MainWindow::enterRoom() {
 }
 
 void MainWindow::gotoStartScene() {
-    if(server != NULL){
+    if (server != NULL){
         server->deleteLater();
         server = NULL;
     }
@@ -362,17 +404,17 @@ void MainWindow::gotoStartScene() {
 
     QList<QAction *> actions;
     actions << ui->actionStart_Game
-            << ui->actionStart_Server
-            << ui->actionPC_Console_Start
-            << ui->actionReplay
-            << ui->actionConfigure
-            << ui->actionGeneral_Overview
-            << ui->actionCard_Overview
-            << ui->actionRule_Summary
-            << ui->actionAbout
-            << ui->actionAbout_Us;
+        << ui->actionStart_Server
+        << ui->actionPC_Console_Start
+        << ui->actionReplay
+        << ui->actionConfigure
+        << ui->actionGeneral_Overview
+        << ui->actionCard_Overview
+        << ui->actionRule_Summary
+        << ui->actionAbout
+        << ui->actionAbout_Us;
 
-    foreach (QAction *action, actions)
+    foreach(QAction *action, actions)
         start_scene->addButton(action);
 
     setCentralWidget(view);
@@ -426,7 +468,7 @@ void MainWindow::on_actionNever_nullify_my_trick_toggled(bool checked) {
 
 void MainWindow::on_actionAbout_triggered() {
     // Cao Cao's pixmap
-    QString content =  "<center><img src='image/system/shencc.png'> <br /> </center>";
+    QString content = "<center><img src='image/system/shencc.png'> <br /> </center>";
 
     // Cao Cao' poem
     QString poem = tr("Disciples dressed in blue, my heart worries for you. You are the cause, of this song without pause");
@@ -438,10 +480,10 @@ void MainWindow::on_actionAbout_triggered() {
 
     QString email = "moligaloo@gmail.com";
     content.append(tr("This is the open source clone of the popular <b>Sanguosha</b> game,"
-                      "totally written in C++ Qt GUI framework <br />"
-                      "My Email: <a href='mailto:%1' style = \"color:#0072c1; \">%1</a> <br/>"
-                      "My QQ: 365840793 <br/>"
-                      "My Weibo: http://weibo.com/moligaloo <br/>").arg(email));
+        "totally written in C++ Qt GUI framework <br />"
+        "My Email: <a href='mailto:%1' style = \"color:#0072c1; \">%1</a> <br/>"
+        "My QQ: 365840793 <br/>"
+        "My Weibo: http://weibo.com/moligaloo <br/>").arg(email));
 
     QString config;
 
@@ -452,9 +494,9 @@ void MainWindow::on_actionAbout_triggered() {
 #endif
 
     content.append(tr("Current version: %1 %2 (%3)<br/>")
-                      .arg(Sanguosha->getVersion())
-                      .arg(config)
-                      .arg(Sanguosha->getVersionName()));
+        .arg(Sanguosha->getVersion())
+        .arg(config)
+        .arg(Sanguosha->getVersionName()));
 
     const char *date = __DATE__;
     const char *time = __TIME__;
@@ -473,7 +515,7 @@ void MainWindow::on_actionAbout_triggered() {
     window->addContent(content);
     window->addCloseButton(tr("OK"));
     window->shift(scene->inherits("RoomScene") ? scene->width() : 0,
-                  scene->inherits("RoomScene") ? scene->height() : 0);
+        scene->inherits("RoomScene") ? scene->height() : 0);
 
     window->appear();
 }
@@ -527,7 +569,7 @@ void MainWindow::on_actionFullscreen_triggered()
 void MainWindow::on_actionShow_Hide_Menu_triggered()
 {
     QMenuBar *menu_bar = menuBar();
-    menu_bar->setVisible(! menu_bar->isVisible());
+    menu_bar->setVisible(!menu_bar->isVisible());
 }
 
 void MainWindow::on_actionMinimize_to_system_tray_triggered()
@@ -562,7 +604,7 @@ void MainWindow::on_actionRule_Summary_triggered()
 }
 
 BroadcastBox::BroadcastBox(Server *server, QWidget *parent)
-    : QDialog(parent), server(server)
+: QDialog(parent), server(server)
 {
     setWindowTitle(tr("Broadcast"));
 
@@ -608,7 +650,7 @@ void MainWindow::on_actionAcknowledgement_triggered() {
     button->moveBy(-85, -35);
     window->setZValue(32766);
     window->shift(scene && scene->inherits("RoomScene") ? scene->width() : 0,
-                    scene && scene->inherits("RoomScene") ? scene->height() : 0);
+        scene && scene->inherits("RoomScene") ? scene->height() : 0);
 
     window->appear();
 }
@@ -639,9 +681,9 @@ void MainWindow::on_actionPC_Console_Start_triggered() {
 
 void MainWindow::on_actionReplay_file_convert_triggered() {
     QString filename = QFileDialog::getOpenFileName(this,
-                                                    tr("Please select a replay file"),
-                                                    Config.value("LastReplayDir").toString(),
-                                                    tr("QSanguosha Replay File(*.qsgs);; Image replay file (*.png)"));
+        tr("Please select a replay file"),
+        Config.value("LastReplayDir").toString(),
+        tr("QSanguosha Replay File(*.qsgs);; Image replay file (*.png)"));
 
     if (filename.isEmpty())
         return;
@@ -657,7 +699,8 @@ void MainWindow::on_actionReplay_file_convert_triggered() {
             // txt to png
             Recorder::TXT2PNG(file.readAll()).save(tosave);
 
-        } else if (filename.endsWith(".png")) {
+        }
+        else if (filename.endsWith(".png")) {
             tosave.append(".qsgs");
 
             // png to txt
@@ -677,9 +720,9 @@ void MainWindow::on_actionRecord_analysis_triggered() {
     QString location = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
 #endif
     QString filename = QFileDialog::getOpenFileName(this,
-                                                    tr("Load replay record"),
-                                                    location,
-                                                    tr("QSanguosha Replay File(*.qsgs);; Image replay file (*.png)"));
+        tr("Load replay record"),
+        location,
+        tr("QSanguosha Replay File(*.qsgs);; Image replay file (*.png)"));
 
     if (filename.isEmpty()) return;
 
@@ -697,13 +740,13 @@ void MainWindow::on_actionRecord_analysis_triggered() {
     static QStringList labels;
     if (labels.isEmpty()) {
         labels << tr("ScreenName") << tr("General") << tr("Role") << tr("Living") << tr("WinOrLose") << tr("TurnCount")
-               << tr("Recover") << tr("Damage") << tr("Damaged") << tr("Kill") << tr("Designation");
+            << tr("Recover") << tr("Damage") << tr("Damaged") << tr("Kill") << tr("Designation");
     }
     table->setHorizontalHeaderLabels(labels);
     table->setSelectionBehavior(QTableWidget::SelectRows);
 
     int i = 0;
-    foreach (PlayerRecordStruct *rec, record_map.values()) {
+    foreach(PlayerRecordStruct *rec, record_map.values()) {
         QTableWidgetItem *item = new QTableWidgetItem;
         QString screen_name = Sanguosha->translate(rec->m_screenName);
         if (rec->m_statue == "robot")
@@ -729,7 +772,7 @@ void MainWindow::on_actionRecord_analysis_triggered() {
 
         item = new QTableWidgetItem;
         bool is_win = record->getRecordWinners().contains(rec->m_role)
-                      || record->getRecordWinners().contains(record_map.key(rec));
+            || record->getRecordWinners().contains(record_map.key(rec));
         item->setText(is_win ? tr("Win") : tr("Lose"));
         table->setItem(i, 4, item);
 
@@ -810,7 +853,7 @@ void MainWindow::on_actionAbout_fmod_triggered() {
     window->addCloseButton(tr("OK"));
     window->setZValue(32766);
     window->shift(scene && scene->inherits("RoomScene") ? scene->width() : 0,
-                  scene && scene->inherits("RoomScene") ? scene->height() : 0);
+        scene && scene->inherits("RoomScene") ? scene->height() : 0);
 
     window->appear();
 }
@@ -834,7 +877,7 @@ void MainWindow::on_actionAbout_Lua_triggered() {
     window->addCloseButton(tr("OK"));
     window->setZValue(32766);
     window->shift(scene && scene->inherits("RoomScene") ? scene->width() : 0,
-                  scene && scene->inherits("RoomScene") ? scene->height() : 0);
+        scene && scene->inherits("RoomScene") ? scene->height() : 0);
 
     window->appear();
 }
@@ -853,7 +896,7 @@ void MainWindow::on_actionAbout_GPLv3_triggered() {
     window->addCloseButton(tr("OK"));
     window->setZValue(32766);
     window->shift(scene && scene->inherits("RoomScene") ? scene->width() : 0,
-                  scene && scene->inherits("RoomScene") ? scene->height() : 0);
+        scene && scene->inherits("RoomScene") ? scene->height() : 0);
 
     window->appear();
 }
@@ -867,20 +910,26 @@ void MainWindow::on_actionManage_Ban_IP_triggered(){
 
 
 
-void MainWindow::storeKeyAndValue( const QString &key, const QString &value )
+void MainWindow::storeKeyAndValue(const QString &key, const QString &value)
 {
     if ("VersionNumber" == key) {
         QString v = value;
         if (value.contains("Patch")) {
             update_info.is_patch = true;
             v.chop(6);
-        } else
+        }
+        else
             update_info.is_patch = false;
 
+        QSanVersionNumber latest_version = Sanguosha->getVersionNumber();
+        if (!v.isNull() && latest_version.tryParse(v))
+            v = latest_version;
+
         update_info.version_number = v;
-        if (Sanguosha->getVersionNumber().toInt() < value.toInt())
+        if (Sanguosha->getVersionNumber() < latest_version)
             setWindowTitle(tr("New Version Available") + "  " + windowTitle());
-    } else if ("Address" == key)
+    }
+    else if ("Address" == key)
         update_info.address = value;
     if (!update_info.address.isNull() && !update_info.version_number.isNull())
         ui->actionCheckUpdate->setEnabled(true);
@@ -899,4 +948,13 @@ void MainWindow::on_actionCheckUpdate_triggered()
     dialog->setLayout(layout);
 
     dialog->show();
+}
+
+void MainWindow::on_actionSound_Test_triggered(){
+#ifdef AUDIO_SUPPORT
+    SoundTestBox *soundtestbox = new SoundTestBox(this);
+    soundtestbox->show();
+#else
+    QMessageBox::warning(this, tr("Warning"), tr("Audio support is disabled when compiled"));
+#endif
 }

@@ -1,3 +1,23 @@
+/********************************************************************
+    Copyright (c) 2013-2014 - QSanguosha-Hegemony Team
+
+    This file is part of QSanguosha-Hegemony.
+
+    This game is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3.0 of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    See the LICENSE file for more details.
+
+    QSanguosha-Hegemony Team
+    *********************************************************************/
+
 #include "cardoverview.h"
 #include "ui_cardoverview.h"
 #include "engine.h"
@@ -19,7 +39,7 @@ CardOverview *CardOverview::getInstance(QWidget *main_window) {
 }
 
 CardOverview::CardOverview(QWidget *parent)
-    : QDialog(parent), ui(new Ui::CardOverview)
+: QDialog(parent), ui(new Ui::CardOverview)
 {
     ui->setupUi(this);
 
@@ -43,7 +63,7 @@ CardOverview::CardOverview(QWidget *parent)
 void CardOverview::loadFromAll() {
     int n = Sanguosha->getCardCount();
     ui->tableWidget->setRowCount(n);
-    for (int i = 0; i < n ;i++) {
+    for (int i = 0; i < n; i++) {
         const Card *card = Sanguosha->getEngineCard(i);
         addCard(i, card);
     }
@@ -56,7 +76,8 @@ void CardOverview::loadFromAll() {
             ui->playAudioEffectButton->show();
             ui->malePlayButton->hide();
             ui->femalePlayButton->hide();
-        } else {
+        }
+        else {
             ui->playAudioEffectButton->hide();
             ui->malePlayButton->show();
             ui->femalePlayButton->show();
@@ -78,7 +99,8 @@ void CardOverview::loadFromList(const QList<const Card *> &list) {
             ui->playAudioEffectButton->show();
             ui->malePlayButton->hide();
             ui->femalePlayButton->hide();
-        } else {
+        }
+        else {
             ui->playAudioEffectButton->hide();
             ui->malePlayButton->show();
             ui->femalePlayButton->show();
@@ -129,7 +151,8 @@ void CardOverview::on_tableWidget_itemSelectionChanged() {
         ui->playAudioEffectButton->show();
         ui->malePlayButton->hide();
         ui->femalePlayButton->hide();
-    } else {
+    }
+    else {
         ui->playAudioEffectButton->hide();
         ui->malePlayButton->show();
         ui->femalePlayButton->show();

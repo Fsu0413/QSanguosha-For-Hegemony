@@ -1,22 +1,23 @@
 /********************************************************************
-	Copyright (c) 2013-2014 - QSanguosha-Hegemony Team
+    Copyright (c) 2013-2014 - QSanguosha-Hegemony Team
 
-  This file is part of QSanguosha-Hegemony.
+    This file is part of QSanguosha-Hegemony.
 
-  This game is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 3.0 of the License, or (at your option) any later version.
+    This game is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3.0 of the License, or (at your option) any later version.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  Lesser General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
 
-  See the LICENSE file for more details.
+    See the LICENSE file for more details.
 
-  QSanguosha-Hegemony Team	
-*********************************************************************/
+    QSanguosha-Hegemony Team
+    *********************************************************************/
+
 #ifndef _SERVER_H
 #define _SERVER_H
 
@@ -44,15 +45,15 @@ class QRadioButton;
 
 class Package;
 
-class ServerDialog: public QDialog {
+class ServerDialog : public QDialog {
     Q_OBJECT
 
 public:
     //************************************
     // Method:    ServerDialog
     // FullName:  ServerDialog::ServerDialog
-    // Access:    public 
-    // Returns:   
+    // Access:    public
+    // Returns:
     // Qualifier:
     // Parameter: QWidget * parent
     // Description: Construct a dialog for user setting.
@@ -68,7 +69,7 @@ public:
     //************************************
     // Method:    config
     // FullName:  ServerDialog::config
-    // Access:    public 
+    // Access:    public
     // Returns:   bool
     // Qualifier:
     // Description: To save all selections by user.
@@ -87,7 +88,7 @@ private:
     //************************************
     // Method:    createAdvancedTab
     // FullName:  ServerDialog::createAdvancedTab
-    // Access:    private 
+    // Access:    private
     // Returns:   QWidget *
     // Qualifier:
     // Description: Create the Tab "advanced" for advanced setting.
@@ -102,7 +103,7 @@ private:
     //************************************
     // Method:    createConversionTab
     // FullName:  ServerDialog::createConversionTab
-    // Access:    private 
+    // Access:    private
     // Returns:   QWidget *
     // Qualifier:
     // Description: Create the Tab "conversions" to set conversions of cards and generals.
@@ -162,6 +163,7 @@ private slots:
 
     void onOkButtonClicked();
     void onDetectButtonClicked();
+    void editBanlist();
 
     void doCustomAssign();
 };
@@ -170,7 +172,7 @@ class Scenario;
 class ServerPlayer;
 class BanIPDialog;
 
-class Server: public QObject {
+class Server : public QObject {
     Q_OBJECT
 
 public:
@@ -202,7 +204,7 @@ signals:
     void server_message(const QString &);
 };
 
-class BanIPDialog: public QDialog {
+class BanIPDialog : public QDialog {
     Q_OBJECT
 
 public:
@@ -224,6 +226,29 @@ private slots:
     void kickClicked();
 
     void save();
+};
+
+class BanlistDialog : public QDialog {
+    Q_OBJECT
+
+public:
+    BanlistDialog(QWidget *parent, bool view = false);
+
+private:
+    QList<QListWidget *>lists;
+    QListWidget *list;
+    int item;
+    QStringList ban_list;
+    QMap<QString, QStringList> banned_items;
+
+private slots:
+    void addGeneral(const QString &name);
+    void addPair(const QString &first, const QString &second);
+    void doAddButton();
+    void doRemoveButton();
+    void save();
+    void saveAll();
+    void switchTo(int item);
 };
 
 #endif

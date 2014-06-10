@@ -15,8 +15,8 @@
 
   See the LICENSE file for more details.
 
-  QSanguosha-Hegemony Team	
-**********************************************************************]]
+  QSanguosha-Hegemony Team
+*********************************************************************]]
 
 -- This is the Smart AI, and it should be loaded and run at the server side
 
@@ -125,6 +125,7 @@ function setInitialTables()
 	sgs.current_mode_players = { lord = 0, loyalist = 0, rebel = 0, renegade = 0 }
 	sgs.ai_type_name = 			{"Skill", "Basic", "Trick", "Equip"}
 	sgs.lose_equip_skill = "xiaoji"
+	sgs.lose_one_equip_skill = ""
 	sgs.need_kongcheng = "kongcheng"
 	sgs.masochism_skill = 		"yiji|fankui|jieming|ganglie|fangzhu|hengjiang|qianhuan"
 	sgs.wizard_skill = 		"guicai|guidao|tiandu"
@@ -1087,7 +1088,7 @@ function SmartAI:adjustUsePriority(card, v)
 			if self.slashAvail == 1 then v = v + 0.1 else v = v - 0.1 end
 		end
 		if self.player:hasSkill("jiang") and card:isRed() then v = v + 0.21 end
-		
+
 		for _, p in ipairs(self.friends) do
 			if p:hasSkill("yongjue") then
 				v = 9.4
@@ -2006,7 +2007,7 @@ function SmartAI:askForDiscard(reason, discard_num, min_num, optional, include_e
 			elseif self.player:hasSkill("bazhen") and card:isKindOf("Armor") then return 0
 			elseif card:isKindOf("Armor") then return 4
 			end
-		elseif self.player:hasSkills(sgs.lose_equip_skill) then return 5
+		elseif self.player:hasSkills(sgs.lose_one_equip_skill) then return 5
 		else return 0
 		end
 	end
@@ -2016,14 +2017,26 @@ function SmartAI:askForDiscard(reason, discard_num, min_num, optional, include_e
 	end
 
 	table.sort(cards, compare_func)
+	if include_equip and self.player:hasSkills(sgs.lose_equip_skill) then
+		for i, card in ipairs(cards) do
+			if card:getTypeId() == sgs.Card_TypeEquip then
+				table.remove(cards, i)
+				table.insert(cards, 1, card)
+				break
+			end
+		end
+	end
+
 	local least = min_num
 	if discard_num - min_num > 1 then
 		least = discard_num - 1
 	end
+
 	for _, card in ipairs(cards) do
 		if #to_discard >= discard_num then break end
 		if exchange or not self.player:isJilei(card) then table.insert(to_discard, card:getId()) end
 	end
+
 	return to_discard
 end
 
@@ -3017,7 +3030,7 @@ function SmartAI:getOverflow(player, getMaxCards)
 	player = player or self.player
 	local MaxCards = player:getMaxCards()
 	if player:hasShownSkill("qiaobian") and not player:hasFlag("AI_ConsideringQiaobianSkipDiscard") then
-		MaxCards = math.max(self.player:getHandcardNum() - 1, MaxCards) 
+		MaxCards = math.max(self.player:getHandcardNum() - 1, MaxCards)
 		player:setFlags("-AI_ConsideringQiaobianSkipDiscard")
 	end
 	if player:hasShownSkill("keji") and not player:hasFlag("KejiSlashInPlayPhase") then MaxCards = self.player:getHandcardNum() end
@@ -3107,6 +3120,8 @@ function SmartAI:needRetrial(judge)
 		if who:hasShownSkill("hongyan") then return false end
 
 		if who:hasArmorEffect("SilverLion") and who:getHp() > 1 then return false end
+
+		if who:hasArmorEffect("PeaceSpell") then return false end
 
 		if self:isFriend(who) then
 			if who:isChained() and self:isGoodChainTarget(who, self.player, sgs.DamageStruct_Thunder, 3) then return false end
@@ -4034,7 +4049,7 @@ function SmartAI:getAoeValue(card, player)
 	local dont = 0
 	for _, p in sgs.qlist(self.room:getOtherPlayers(attacker)) do
 		if self:aoeIsEffective(card, p, attacker) and self:damageIsEffective(p, sgs.DamageStruct_Normal, attacker) then
-			if (card:isKindOf("SavageAssault") and getCardsNum("Slash",p,attacker) == 0) or (card:isKindOf("ArcheryAttack") and getCardsNum("Jink",p,attacker) == 0) then 
+			if (card:isKindOf("SavageAssault") and getCardsNum("Slash",p,attacker) == 0) or (card:isKindOf("ArcheryAttack") and getCardsNum("Jink",p,attacker) == 0) then
 				if self:isWeak(p) and self:getAllPeachNum(p) < 1 then
 					if self:isFriend(p) then
 						dont = dont+2
@@ -4046,7 +4061,7 @@ function SmartAI:getAoeValue(card, player)
 		end
 	end
 	if dont > 0 then return -100 end
-	
+
 	local enemy_number = 0
 	for _, player in sgs.qlist(self.room:getOtherPlayers(attacker)) do
 		if self:cantbeHurt(player, attacker) and self:aoeIsEffective(card, player, attacker) then
@@ -4228,9 +4243,9 @@ function SmartAI:useEquipCard(card, use)
 	if not card then global_room:writeToConsole(debug.traceback()) return end
 	if self.player:hasSkill("xiaoji") and self:evaluateArmor(card) > -5 then
 		local armor = self.player:getArmor()
-		if armor and armor:objectName() == "PeaceSpell" and card:isKindOf("Armor") then 
+		if armor and armor:objectName() == "PeaceSpell" and card:isKindOf("Armor") then
 			if (self:getAllPeachNum() == 0 and self.player:getHp() < 3) and not (self.player:getHp() < 2 and self:getCardsNum("Analeptic") > 0) then
-				return 
+				return
 			end
 		end
 		use.card = card
@@ -4238,9 +4253,9 @@ function SmartAI:useEquipCard(card, use)
 	end
 	if self.player:hasSkills(sgs.lose_equip_skill) and self:evaluateArmor(card) > -5 and #self.enemies > 1 then
 		local armor = self.player:getArmor()
-		if armor and armor:objectName() == "PeaceSpell" and card:isKindOf("Armor") then 
+		if armor and armor:objectName() == "PeaceSpell" and card:isKindOf("Armor") then
 			if (self:getAllPeachNum() == 0 and self.player:getHp() < 3) and not (self.player:getHp() < 2 and self:getCardsNum("Analeptic") > 0) then
-				return 
+				return
 			end
 		end
 		use.card = card
@@ -4248,9 +4263,9 @@ function SmartAI:useEquipCard(card, use)
 	end
 	if self.player:getHandcardNum() == 1 and self:needKongcheng() and self:evaluateArmor(card) > -5 then
 		local armor = self.player:getArmor()
-		if armor and armor:objectName() == "PeaceSpell" and card:isKindOf("Armor") then 
+		if armor and armor:objectName() == "PeaceSpell" and card:isKindOf("Armor") then
 			if (self:getAllPeachNum() == 0 and self.player:getHp() < 3) and not (self.player:getHp() < 2 and self:getCardsNum("Analeptic") > 0) then
-				return 
+				return
 			end
 		end
 		use.card = card

@@ -1,3 +1,23 @@
+/********************************************************************
+    Copyright (c) 2013-2014 - QSanguosha-Hegemony Team
+
+    This file is part of QSanguosha-Hegemony.
+
+    This game is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3.0 of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    See the LICENSE file for more details.
+
+    QSanguosha-Hegemony Team
+    *********************************************************************/
+
 #ifndef _MAIN_WINDOW_H
 #define _MAIN_WINDOW_H
 
@@ -25,7 +45,7 @@ class QToolButton;
 class QGroupBox;
 class RoomItem;
 
-class BroadcastBox: public QDialog {
+class BroadcastBox : public QDialog {
     Q_OBJECT
 
 public:
@@ -44,7 +64,20 @@ public:
     static void preload();
 };
 
-class MainWindow: public QMainWindow {
+#ifdef AUDIO_SUPPORT
+class SoundTestBox :public QDialog{
+    Q_OBJECT
+
+public:
+    SoundTestBox(QWidget *parent = NULL);
+
+private slots:
+    void btn_clicked();
+    
+};
+#endif
+
+class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
@@ -95,6 +128,7 @@ private slots:
     void on_actionStart_Server_triggered();
     void on_actionExit_triggered();
     void on_actionCheckUpdate_triggered();
+    void on_actionSound_Test_triggered();
 
     void checkVersion(const QString &server_version, const QString &server_mod);
     void networkError(const QString &error_msg);

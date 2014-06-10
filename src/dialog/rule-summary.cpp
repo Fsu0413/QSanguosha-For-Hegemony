@@ -1,3 +1,23 @@
+/********************************************************************
+    Copyright (c) 2013-2014 - QSanguosha-Hegemony Team
+
+    This file is part of QSanguosha-Hegemony.
+
+    This game is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3.0 of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    See the LICENSE file for more details.
+
+    QSanguosha-Hegemony Team
+    *********************************************************************/
+
 #include "rule-summary.h"
 #include "engine.h"
 #include "scenario.h"
@@ -9,7 +29,7 @@
 #include <QTextStream>
 
 RuleSummary::RuleSummary(QWidget *parent)
-    : QDialog(parent)
+: QDialog(parent)
 {
     setWindowTitle(tr("Rule Summary"));
     resize(800, 600);
@@ -29,8 +49,8 @@ RuleSummary::RuleSummary(QWidget *parent)
     setLayout(layout);
 
     QStringList names = Sanguosha->getModScenarioNames();
-    names << "Hegemony";
-    foreach (QString name, names) {
+    names << "hegemony" << "rule1-card" << "rule2-wording" << "rule3-extras";
+    foreach(QString name, names) {
         QString text = Sanguosha->translate(name);
         QListWidgetItem *item = new QListWidgetItem(text, list);
         item->setData(Qt::UserRole, name);
@@ -44,7 +64,7 @@ RuleSummary::RuleSummary(QWidget *parent)
 
 void RuleSummary::loadContent(int row) {
     QString name = list->item(row)->data(Qt::UserRole).toString();
-    QString filename = QString("scenarios/%1.html").arg(name);
+    QString filename = QString("rule/%1.html").arg(name);
     QFile file(filename);
     if (file.open(QIODevice::ReadOnly)) {
         QTextStream stream(&file);

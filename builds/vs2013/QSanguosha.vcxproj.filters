@@ -62,11 +62,6 @@
     <Filter Include="Swig Files">
       <UniqueIdentifier>{9981aa0b-e6a2-412b-95d7-2e22d217b648}</UniqueIdentifier>
     </Filter>
-    <Filter Include="dialog\form">
-      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
-      <Extensions>ui</Extensions>
-      <ParseFiles>false</ParseFiles>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\swig\sanguosha_wrap.cxx">
@@ -766,6 +761,9 @@
     <ClCompile Include="Release\moc_UpdateCheckerThread.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\core\banpair.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\src\server\ai.h">
@@ -1068,25 +1066,28 @@
     <CustomBuild Include="..\..\src\dialog\UpdateChecker.h">
       <Filter>dialog</Filter>
     </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
     <CustomBuild Include="..\..\src\dialog\cardoverview.ui">
-      <Filter>dialog\form</Filter>
+      <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\src\dialog\configdialog.ui">
-      <Filter>dialog\form</Filter>
+      <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\src\dialog\connectiondialog.ui">
-      <Filter>dialog\form</Filter>
+      <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\src\dialog\generaloverview.ui">
-      <Filter>dialog\form</Filter>
+      <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\src\dialog\mainwindow.ui">
-      <Filter>dialog\form</Filter>
+      <Filter>Form Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource\icon.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\core\banpair.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

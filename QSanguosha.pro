@@ -2,12 +2,11 @@
 # Project created by QtCreator 2010-06-13T04:26:52
 # -------------------------------------------------
 TARGET = QSanguosha
-QT += network sql
+QT += network sql declarative
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TEMPLATE = app
 CONFIG += audio
 
-# choose luajit if you like it, the default is to use lua.
 CONFIG += lua
 
 SOURCES += \
@@ -16,6 +15,7 @@ SOURCES += \
     src/client/client.cpp \
     src/client/clientplayer.cpp \
     src/client/clientstruct.cpp \
+    src/core/banpair.cpp \
     src/core/card.cpp \
     src/core/engine.cpp \
     src/core/general.cpp \
@@ -107,6 +107,7 @@ HEADERS += \
     src/client/clientplayer.h \
     src/client/clientstruct.h \
     src/core/audio.h \
+    src/core/banpair.h \
     src/core/card.h \
     src/core/compiler-specific.h \
     src/core/engine.h \
@@ -319,30 +320,13 @@ CONFIG(lua){
     INCLUDEPATH += src/lua
 }
 
-#CONFIG(luajit){
-#    HEADERS += \
-#        src/luajit/lauxlib.h \
-#        src/luajit/luaconf.h \
-#        src/luajit/lua.h \
-#        src/luajit/lua.hpp \
-#        src/luajit/luajit.h \
-#        src/luajit/lualib.h \
-#        src/luajit/luatools.h
-#    INCLUDEPATH += src/luajit
-#    unix: LIBS += -L/usr/local/lib -lluajit-5.1
-#}
+TRANSLATIONS += builds/vs2013/sanguosha.ts
 
-TRANSLATIONS += builds/vs2010/sanguosha.ts
-TRANSLATIONS += builds/vs2012/sanguosha.ts
-TRANSLATIONS += sanguosha.ts
-
-#system("lrelease builds/vs2010/sanguosha.ts")
+#system("lrelease builds/vs2013/sanguosha.ts")
 
 OTHER_FILES += \
-    sanguosha.qss \
-    acknowledgement/main.qml \
-    acknowledgement/list.png \
-    acknowledgement/back.png
+        sanguosha.qss \
+        animation-script/basic.qml
 
 LIBS += -lfreetype
 

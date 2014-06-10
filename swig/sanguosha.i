@@ -1,5 +1,5 @@
 /********************************************************************
-	Copyright (c) 2013-2014 - QSanguosha-Hegemony Team
+    Copyright (c) 2013-2014 - QSanguosha-Hegemony Team
 
   This file is part of QSanguosha-Hegemony.
 
@@ -15,8 +15,9 @@
 
   See the LICENSE file for more details.
 
-  QSanguosha-Hegemony Team	
+  QSanguosha-Hegemony Team
 *********************************************************************/
+
 %module sgs
 
 %{
@@ -999,7 +1000,7 @@ public:
     Card *cloneCard(const Card *card) const;
     Card *cloneCard(const char *name, Card::Suit suit = Card::SuitToBeDecided, int number = -1) const;
     SkillCard *cloneSkillCard(const char *name) const;
-    QString getVersionNumber() const;
+    //QString getVersionNumber() const;
     QString getVersion() const;
     QString getVersionName() const;
     QString getMODName() const;
