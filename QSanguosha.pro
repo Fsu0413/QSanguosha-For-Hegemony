@@ -3,7 +3,6 @@
 # -------------------------------------------------
 TARGET = QSanguosha
 QT += network widgets
-!winrt:QT += declarative
 TEMPLATE = app
 CONFIG += audio
 
@@ -523,7 +522,7 @@ CONFIG(opengl){
 TRANSLATIONS += builds/sanguosha.ts
 
 !build_pass{
-    system("lrelease $$_PRO_FILE_PWD_/builds/sanguosha.ts -qm $$_PRO_FILE_PWD_/sanguosha.qm")
+    system("lrelease $$_PRO_FILE_PWD_/sanguosha.ts -qm $$_PRO_FILE_PWD_/sanguosha.qm")
 
     SWIG_bin = "swig"
     contains(QMAKE_HOST.os, "Windows"): SWIG_bin = "$$_PRO_FILE_PWD_/tools/swig/swig.exe"
@@ -535,7 +534,7 @@ OTHER_FILES += \
     sanguosha.qss \
     ui-script/animation.qml \
     resource/android/AndroidManifest.xml \
-    builds/sanguosha.ts
+    sanguosha.ts
 
 CONFIG(debug, debug|release): LIBS += -lfreetype_D
 else:LIBS += -lfreetype
