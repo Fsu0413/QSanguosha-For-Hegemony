@@ -37,36 +37,6 @@
 #include <QDir>
 #endif
 
-#ifdef USE_BREAKPAD
-#include <client/windows/handler/exception_handler.h>
-#include <QProcess>
-
-using namespace google_breakpad;
-
-static bool callback(const wchar_t *, const wchar_t *id, void *, EXCEPTION_POINTERS *, MDRawAssertionInfo *, bool succeeded)
-{
-#if 0
-    if (succeeded && QFile::exists("QSanSMTPClient.exe")) {
-        char ID[16000];
-        memset(ID, 0, sizeof(ID));
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable: 4996)
-#endif
-        wcstombs(ID, id, wcslen(id));
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-        QProcess *process = new QProcess(qApp);
-        QStringList args;
-        args << QString(ID) + ".dmp";
-        process->start("QSanSMTPClient", args);
-    }
-#endif
-    return succeeded;
-}
-#endif
-
 int main(int argc, char *argv[])
 {
     bool noGui = argc > 1 && strcmp(argv[1], "-server") == 0;
