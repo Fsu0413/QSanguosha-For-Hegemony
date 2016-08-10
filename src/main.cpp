@@ -18,10 +18,6 @@
     Mogara
     *********************************************************************/
 
-#if defined(WIN32) && !defined(GPP) && !defined(QT_NO_DEBUG) && !defined(WINRT)
-#include <vld/vld.h>
-#endif
-
 #include <QFile>
 #include <QCoreApplication>
 #include <QApplication>
@@ -49,6 +45,7 @@ using namespace google_breakpad;
 
 static bool callback(const wchar_t *, const wchar_t *id, void *, EXCEPTION_POINTERS *, MDRawAssertionInfo *, bool succeeded)
 {
+#if 0
     if (succeeded && QFile::exists("QSanSMTPClient.exe")) {
         char ID[16000];
         memset(ID, 0, sizeof(ID));
@@ -65,6 +62,7 @@ static bool callback(const wchar_t *, const wchar_t *id, void *, EXCEPTION_POINT
         args << QString(ID) + ".dmp";
         process->start("QSanSMTPClient", args);
     }
+#endif
     return succeeded;
 }
 #endif
