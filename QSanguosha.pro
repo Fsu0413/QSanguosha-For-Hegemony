@@ -4,7 +4,7 @@
 TARGET = QSanguosha
 QT += network widgets
 TEMPLATE = app
-CONFIG += audio
+#CONFIG += audio # drop audio support temporily due to it use a proprietary software
 
 CONFIG += c++11
 
