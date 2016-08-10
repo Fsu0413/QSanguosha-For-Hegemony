@@ -48,6 +48,7 @@
 #include "choosesuitbox.h"
 #include "guhuobox.h"
 #include "cardchoosebox.h"
+#include "lightboxanimation.h"
 
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
@@ -3939,17 +3940,23 @@ void RoomScene::showSkillInvocation(const QString &who, const QString &skill_nam
 
 void RoomScene::removeLightBox()
 {
-    PixmapAnimation *pma = qobject_cast<PixmapAnimation *>(sender());
-    if (pma) {
-        removeItem(pma->parentItem());
-    } else {
-        QPropertyAnimation *animation = qobject_cast<QPropertyAnimation *>(sender());
-        QGraphicsTextItem *line = qobject_cast<QGraphicsTextItem *>(animation->targetObject());
-        if (line) {
-            removeItem(line->parentItem());
+    LightboxAnimation *lightbox = qobject_cast<LightboxAnimation *>(sender());
+    if (lightbox){
+        removeItem(lightbox);
+        lightbox->deleteLater();
+    }else{
+        PixmapAnimation *pma = qobject_cast<PixmapAnimation *>(sender());
+        if (pma) {
+            removeItem(pma->parentItem());
         } else {
-            QSanSelectableItem *line = qobject_cast<QSanSelectableItem *>(animation->targetObject());
-            removeItem(line->parentItem());
+            QPropertyAnimation *animation = qobject_cast<QPropertyAnimation *>(sender());
+            QGraphicsTextItem *line = qobject_cast<QGraphicsTextItem *>(animation->targetObject());
+            if (line) {
+                removeItem(line->parentItem());
+            } else {
+                QSanSelectableItem *line = qobject_cast<QSanSelectableItem *>(animation->targetObject());
+                removeItem(line->parentItem());
+            }
         }
     }
 }
@@ -4063,6 +4070,15 @@ void RoomScene::doLightboxAnimation(const QString &, const QStringList &args)
             connect(pma, &PixmapAnimation::finished, this, &RoomScene::removeLightBox);
         }
     } else {
+    }
+   else if (word.startsWith("skill=")) {
+        QStringList l = word.mid(6).split(":");
+        LightboxAnimation *animation = new LightboxAnimation(l.first(), l.last(), rect);
+        animation->setZValue(20001.0);
+        addItem(animation);
+        connect(animation, &LightboxAnimation::finished, this, &RoomScene::removeLightBox);
+    }
+    else {
         QFont font = Config.BigFont;
         if (reset_size) font.setPixelSize(100);
         QGraphicsTextItem *line = addText(word, font);

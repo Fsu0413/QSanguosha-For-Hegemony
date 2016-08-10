@@ -60,7 +60,6 @@ struct RoomLayout;
 #include <QHBoxLayout>
 #include <QMutex>
 #include <QStack>
-
 class ScriptExecutor : public QDialog
 {
     Q_OBJECT
