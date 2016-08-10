@@ -48,6 +48,7 @@
 #include "choosesuitbox.h"
 #include "guhuobox.h"
 #include "cardchoosebox.h"
+#include "lightboxanimation.h"
 
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
@@ -410,11 +411,6 @@ RoomScene::RoomScene(QMainWindow *main_window)
 
     pindian_from_card = NULL;
     pindian_to_card = NULL;
-#ifndef Q_OS_WINRT
-    _m_animationEngine = new QDeclarativeEngine(this);
-    _m_animationContext = new QDeclarativeContext(_m_animationEngine->rootContext(), this);
-    _m_animationComponent = new QDeclarativeComponent(_m_animationEngine, QUrl::fromLocalFile("ui-script/animation.qml"), this);
-#endif
 }
 
 void RoomScene::handleGameEvent(const QVariant &args)
@@ -3944,17 +3940,23 @@ void RoomScene::showSkillInvocation(const QString &who, const QString &skill_nam
 
 void RoomScene::removeLightBox()
 {
-    PixmapAnimation *pma = qobject_cast<PixmapAnimation *>(sender());
-    if (pma) {
-        removeItem(pma->parentItem());
-    } else {
-        QPropertyAnimation *animation = qobject_cast<QPropertyAnimation *>(sender());
-        QGraphicsTextItem *line = qobject_cast<QGraphicsTextItem *>(animation->targetObject());
-        if (line) {
-            removeItem(line->parentItem());
+    LightboxAnimation *lightbox = qobject_cast<LightboxAnimation *>(sender());
+    if (lightbox){
+        removeItem(lightbox);
+        lightbox->deleteLater();
+    }else{
+        PixmapAnimation *pma = qobject_cast<PixmapAnimation *>(sender());
+        if (pma) {
+            removeItem(pma->parentItem());
         } else {
-            QSanSelectableItem *line = qobject_cast<QSanSelectableItem *>(animation->targetObject());
-            removeItem(line->parentItem());
+            QPropertyAnimation *animation = qobject_cast<QPropertyAnimation *>(sender());
+            QGraphicsTextItem *line = qobject_cast<QGraphicsTextItem *>(animation->targetObject());
+            if (line) {
+                removeItem(line->parentItem());
+            } else {
+                QSanSelectableItem *line = qobject_cast<QSanSelectableItem *>(animation->targetObject());
+                removeItem(line->parentItem());
+            }
         }
     }
 }
@@ -4068,22 +4070,13 @@ void RoomScene::doLightboxAnimation(const QString &, const QStringList &args)
             connect(pma, &PixmapAnimation::finished, this, &RoomScene::removeLightBox);
         }
     }
-#ifndef Q_OS_WINRT
-    else if (word.startsWith("skill=")) {
-        const QString hero = word.mid(6);
-        const QString skill = args.value(1, QString());
-
-        _m_animationContext->setContextProperty("sceneWidth", sceneRect().width());
-        _m_animationContext->setContextProperty("sceneHeight", sceneRect().height());
-        _m_animationContext->setContextProperty("tableWidth", m_tableCenterPos.x() * 2);
-        _m_animationContext->setContextProperty("hero", hero);
-        _m_animationContext->setContextProperty("skill", Sanguosha->translate(skill));
-        QGraphicsObject *object = qobject_cast<QGraphicsObject *>(_m_animationComponent->create(_m_animationContext));
-        connect(object, SIGNAL(animationCompleted()), object, SLOT(deleteLater())); // cannot replace?
-        addItem(object);
-        bringToFront(object);
+   else if (word.startsWith("skill=")) {
+        QStringList l = word.mid(6).split(":");
+        LightboxAnimation *animation = new LightboxAnimation(l.first(), l.last(), rect);
+        animation->setZValue(20001.0);
+        addItem(animation);
+        connect(animation, &LightboxAnimation::finished, this, &RoomScene::removeLightBox);
     }
-#endif
     else {
         QFont font = Config.BigFont;
         if (reset_size) font.setPixelSize(100);
