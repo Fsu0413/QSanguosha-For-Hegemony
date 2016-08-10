@@ -4069,6 +4069,7 @@ void RoomScene::doLightboxAnimation(const QString &, const QStringList &args)
             pma->moveBy(-sceneRect().width() * _m_roomLayout->m_infoPlaneWidthPercentage / 2, 0);
             connect(pma, &PixmapAnimation::finished, this, &RoomScene::removeLightBox);
         }
+    } else {
     }
    else if (word.startsWith("skill=")) {
         QStringList l = word.mid(6).split(":");

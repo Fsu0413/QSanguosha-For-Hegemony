@@ -4,7 +4,7 @@
 TARGET = QSanguosha
 QT += network widgets
 TEMPLATE = app
-CONFIG += audio
+#CONFIG += audio # drop audio support temporily due to it use a proprietary software
 
 CONFIG += c++11
 
@@ -242,12 +242,6 @@ FORMS += \
     src/dialog/generaloverview.ui
     
 
-
-CONFIG(buildbot) {
-    DEFINES += USE_BUILDBOT
-    SOURCES += src/bot_version.cpp
-}
-
 win32 {
     FORMS += src/dialog/mainwindow.ui
 }
@@ -293,29 +287,6 @@ win32-msvc*{
     } else {
         DEFINES += WIN64
         LIBS += -L"$$_PRO_FILE_PWD_/lib/win/x64"
-    }
-    CONFIG(debug, debug|release) {
-        !winrt:INCLUDEPATH += include/vld
-    } else {
-        QMAKE_LFLAGS_RELEASE = $$QMAKE_LFLAGS_RELEASE_WITH_DEBUGINFO
-        DEFINES += USE_BREAKPAD
-
-        SOURCES += src/breakpad/client/windows/crash_generation/client_info.cc \
-            src/breakpad/client/windows/crash_generation/crash_generation_client.cc \
-            src/breakpad/client/windows/crash_generation/crash_generation_server.cc \
-            src/breakpad/client/windows/crash_generation/minidump_generator.cc \
-            src/breakpad/client/windows/handler/exception_handler.cc \
-            src/breakpad/common/windows/guid_string.cc
-
-        HEADERS += src/breakpad/client/windows/crash_generation/client_info.h \
-            src/breakpad/client/windows/crash_generation/crash_generation_client.h \
-            src/breakpad/client/windows/crash_generation/crash_generation_server.h \
-            src/breakpad/client/windows/crash_generation/minidump_generator.h \
-            src/breakpad/client/windows/handler/exception_handler.h \
-            src/breakpad/common/windows/guid_string.h
-
-        INCLUDEPATH += src/breakpad
-        INCLUDEPATH += src/breakpad/client/windows
     }
 }
 win32-g++{
@@ -524,7 +495,7 @@ CONFIG(opengl){
 TRANSLATIONS += builds/sanguosha.ts
 
 !build_pass{
-    system("lrelease $$_PRO_FILE_PWD_/builds/sanguosha.ts -qm $$_PRO_FILE_PWD_/sanguosha.qm")
+    system("lrelease $$_PRO_FILE_PWD_/sanguosha.ts -qm $$_PRO_FILE_PWD_/sanguosha.qm")
 
     SWIG_bin = "swig"
     contains(QMAKE_HOST.os, "Windows"): SWIG_bin = "$$_PRO_FILE_PWD_/tools/swig/swig.exe"
@@ -536,7 +507,7 @@ OTHER_FILES += \
     sanguosha.qss \
     ui-script/animation.qml \
     resource/android/AndroidManifest.xml \
-    builds/sanguosha.ts
+    sanguosha.ts
 
 CONFIG(debug, debug|release): LIBS += -lfreetype_D
 else:LIBS += -lfreetype
