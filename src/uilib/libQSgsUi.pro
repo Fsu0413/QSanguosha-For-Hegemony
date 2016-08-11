@@ -2,7 +2,7 @@ TEMPLATE = lib
 winrt|ios: CONFIG += staticlib
 TARGET = QSgsAi
 
-QT += network
+QT += network widgets
 
 INCLUDEPATH += src/aiclient
 INCLUDEPATH += src/ailib
@@ -13,3 +13,10 @@ INCLUDEPATH += src/maincpp
 INCLUDEPATH += src/server
 INCLUDEPATH += src/skillslib
 INCLUDEPATH += src/uilib
+
+
+CONFIG += precompiled_header
+
+PRECOMPILED_HEADER = pch.h
+
+HEADERS += pch.h

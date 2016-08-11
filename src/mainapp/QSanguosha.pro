@@ -2,7 +2,7 @@ TEMPLATE = app
 TARGET = QSanguosha
 CONFIG += app_bundle windows
 
-QT += network
+QT += network widgets
 
 SOURCES += \
     main.cpp
@@ -19,3 +19,10 @@ INCLUDEPATH += src/server
 INCLUDEPATH += src/skillslib
 INCLUDEPATH += src/uilib
 
+
+
+CONFIG += precompiled_header
+
+PRECOMPILED_HEADER = pch.h
+
+HEADERS += pch.h

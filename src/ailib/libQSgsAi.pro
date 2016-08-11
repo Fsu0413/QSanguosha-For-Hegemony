@@ -7,10 +7,6 @@ TARGET = QSgsAi
 QT -= widgets gui
 QT += network
 
-CONFIG(luaai) {
-
-}
-
 INCLUDEPATH += src/aiclient
 INCLUDEPATH += src/ailib
 INCLUDEPATH += src/clientlib
@@ -20,3 +16,13 @@ INCLUDEPATH += src/maincpp
 INCLUDEPATH += src/server
 INCLUDEPATH += src/skillslib
 INCLUDEPATH += src/uilib
+
+CONFIG += precompiled_header
+
+PRECOMPILED_HEADER = pch.h
+
+HEADERS += pch.h
+
+CONFIG(luaai) {
+
+}

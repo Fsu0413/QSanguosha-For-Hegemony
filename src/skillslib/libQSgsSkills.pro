@@ -1,10 +1,6 @@
 winrt|ios {
     TEMPLATE = lib
     CONFIG += staticlib
-} else {
-    TEMPLATE = subdirs
-    SUBDIRS += XXXXXXXX
-}
 
 QT -= gui widgets
 
@@ -19,3 +15,15 @@ INCLUDEPATH += src/maincpp
 INCLUDEPATH += src/server
 INCLUDEPATH += src/skillslib
 INCLUDEPATH += src/uilib
+
+
+CONFIG += precompiled_header
+
+PRECOMPILED_HEADER = pch.h
+
+HEADERS += pch.h
+
+} else {
+    TEMPLATE = subdirs
+#   SUBDIRS += XXXXXXXX
+}
