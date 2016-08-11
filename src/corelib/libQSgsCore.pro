@@ -2,6 +2,9 @@ TEMPLATE = lib
 winrt|ios: CONFIG += staticlib
 TARGET = QSgsCore
 
+QT -= widgets gui
+QT += network
+
 INCLUDEPATH += src/aiclient
 INCLUDEPATH += src/ailib
 INCLUDEPATH += src/clientlib

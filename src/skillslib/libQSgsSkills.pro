@@ -6,6 +6,10 @@ winrt|ios {
     SUBDIRS += XXXXXXXX
 }
 
+QT -= gui widgets
+
+QT += network
+
 INCLUDEPATH += src/aiclient
 INCLUDEPATH += src/ailib
 INCLUDEPATH += src/clientlib

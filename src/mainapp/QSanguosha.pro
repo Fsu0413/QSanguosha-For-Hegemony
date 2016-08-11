@@ -2,6 +2,8 @@ TEMPLATE = app
 TARGET = QSanguosha
 CONFIG += app_bundle windows
 
+QT += network
+
 SOURCES += \
     main.cpp
 

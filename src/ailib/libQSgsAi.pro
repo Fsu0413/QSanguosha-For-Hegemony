@@ -4,6 +4,9 @@ TARGET = QSgsAi
 
 !winrt: !ios: CONFIG += luaai
 
+QT -= widgets gui
+QT += network
+
 CONFIG(luaai) {
 
 }

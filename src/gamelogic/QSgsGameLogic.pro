@@ -7,6 +7,10 @@ TEMPLATE = app
 TARGET = QSgsGameLogic
 CONFIG -= app_bundle
 CONFIG += console
+
+QT -= gui widgets
+
+QT += network
 }
 
 SOURCES += \

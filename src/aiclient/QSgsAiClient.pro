@@ -7,6 +7,11 @@ TEMPLATE = app
 TARGET = QSgsAiClient
 CONFIG -= app_bundle
 CONFIG += console
+
+QT -= gui widgets
+
+QT += network
+
 }
 
 SOURCES += \

@@ -7,7 +7,11 @@ TEMPLATE = app
 TARGET = QSgsServer
 CONFIG -= app_bundle
 CONFIG += console
+
+QT += network
+
 }
+
 
 SOURCES += \
     main.cpp
