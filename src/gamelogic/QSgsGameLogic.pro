@@ -11,7 +11,6 @@ CONFIG += console
 QT -= gui widgets
 
 QT += network
-}
 
 SOURCES += \
     main.cpp
@@ -26,3 +25,4 @@ INCLUDEPATH += src/maincpp
 INCLUDEPATH += src/server
 INCLUDEPATH += src/skillslib
 INCLUDEPATH += src/uilib
+}

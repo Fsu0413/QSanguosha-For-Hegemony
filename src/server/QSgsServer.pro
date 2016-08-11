@@ -10,9 +10,6 @@ CONFIG += console
 
 QT += network
 
-}
-
-
 SOURCES += \
     main.cpp
 
@@ -26,3 +23,5 @@ INCLUDEPATH += src/maincpp
 INCLUDEPATH += src/server
 INCLUDEPATH += src/skillslib
 INCLUDEPATH += src/uilib
+
+}
