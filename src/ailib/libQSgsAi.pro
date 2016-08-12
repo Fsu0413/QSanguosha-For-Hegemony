@@ -23,6 +23,9 @@ PRECOMPILED_HEADER = pch.h
 
 HEADERS += pch.h
 
+DESTDIR = $$OUT_PWD/../../inst/lib
+DLLDESTDIR = $$OUT_PWD/../../inst/bin
+
 CONFIG(luaai) {
 
 }
