@@ -230,13 +230,21 @@
 ** LUA_BUILD_AS_DLL to get it).
 */
 #if defined(LUA_BUILD_AS_DLL)	/* { */
-
+#ifdef _WIN32
 #if defined(LUA_CORE) || defined(LUA_LIB)	/* { */
 #define LUA_API __declspec(dllexport)
 #else						/* }{ */
 #define LUA_API __declspec(dllimport)
 #endif						/* } */
-
+#else
+#ifdef __GNUC__
+#if defined(LUA_CORE) || defined(LUA_LIB)
+#define LUA_API __attribute__((visibility("default")))
+#else
+#define LUA_API
+#endif
+#endif
+#endif
 #else				/* }{ */
 
 #define LUA_API		extern
