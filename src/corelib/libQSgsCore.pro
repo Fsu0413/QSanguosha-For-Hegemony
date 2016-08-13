@@ -1,3 +1,7 @@
+
+include(../../QSanguosha.pri)
+
+
 TEMPLATE = lib
 winrt|ios: CONFIG += staticlib
 TARGET = QSgsCore
@@ -5,15 +9,15 @@ TARGET = QSgsCore
 QT -= widgets gui
 QT += network
 
-INCLUDEPATH += src/aiclient
-INCLUDEPATH += src/ailib
-INCLUDEPATH += src/clientlib
-INCLUDEPATH += src/corelib
-INCLUDEPATH += src/gamelogic
-INCLUDEPATH += src/maincpp
-INCLUDEPATH += src/server
-INCLUDEPATH += src/skillslib
-INCLUDEPATH += src/uilib
+INCLUDEPATH += ../aiclient
+INCLUDEPATH += ../ailib
+INCLUDEPATH += ../clientlib
+INCLUDEPATH += ../corelib
+INCLUDEPATH += ../gamelogic
+INCLUDEPATH += ../maincpp
+INCLUDEPATH += ../server
+INCLUDEPATH += ../skillslib
+INCLUDEPATH += ../uilib
 
 
 CONFIG += precompiled_header
@@ -25,3 +29,8 @@ HEADERS += pch.h
 DESTDIR = $$OUT_PWD/../../inst/lib
 DLLDESTDIR = $$OUT_PWD/../../inst/bin
 
+CONFIG(systemlua) {
+    LIBS += QSANGUOSHA_LUA_LIBS
+    QMAKE_CFLAGS += QSANGUOSHA_LUA_CFLAGS
+    QMAKE_CXXFLAGS += QSANGUOSHA_LUA_CFLAGS
+} else: INCLUDEPATH += ../lua/src

@@ -1,9 +1,9 @@
 TEMPLATE = subdirs
 
 SUBDIRS += libQSgsCore libQSgsSkills libQSgsClient libQSgsUi libQSgsAi \
-           QSanguosha QSgsAiClient QSgsServer QSgsGameLogic
+           QSanguosha QSgsAiClient QSgsServer QSgsGameLogic lua
 
-
+libQSgsCore.depends = lua
 libQSgsSkills.depends = libQSgsCore
 libQSgsClient.depends = libQSgsCore
 libQSgsUi.depends = libQSgsClient
@@ -25,12 +25,3 @@ QSgsAiClient.file = aiclient/QSgsAiClient.pro
 QSgsServer.file = server/QSgsServer.pro
 QSgsGameLogic.file = gamelogic/QSgsGameLogic.pro
 
-INCLUDEPATH += src/aiclient
-INCLUDEPATH += src/ailib
-INCLUDEPATH += src/clientlib
-INCLUDEPATH += src/corelib
-INCLUDEPATH += src/gamelogic
-INCLUDEPATH += src/maincpp
-INCLUDEPATH += src/server
-INCLUDEPATH += src/skillslib
-INCLUDEPATH += src/uilib

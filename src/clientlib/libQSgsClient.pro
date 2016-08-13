@@ -1,3 +1,6 @@
+
+include(../../QSanguosha.pri)
+
 TEMPLATE = lib
 winrt|ios: CONFIG += staticlib
 TARGET = QSgsClient
@@ -6,15 +9,15 @@ QT -= gui widgets
 QT += network
 
 
-INCLUDEPATH += src/aiclient
-INCLUDEPATH += src/ailib
-INCLUDEPATH += src/clientlib
-INCLUDEPATH += src/corelib
-INCLUDEPATH += src/gamelogic
-INCLUDEPATH += src/maincpp
-INCLUDEPATH += src/server
-INCLUDEPATH += src/skillslib
-INCLUDEPATH += src/uilib
+INCLUDEPATH += ../aiclient
+INCLUDEPATH += ../ailib
+INCLUDEPATH += ../clientlib
+INCLUDEPATH += ../corelib
+INCLUDEPATH += ../gamelogic
+INCLUDEPATH += ../maincpp
+INCLUDEPATH += ../server
+INCLUDEPATH += ../skillslib
+INCLUDEPATH += ../uilib
 
 
 CONFIG += precompiled_header
