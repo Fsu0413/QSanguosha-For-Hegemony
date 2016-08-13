@@ -22,6 +22,15 @@ INCLUDEPATH += ../uilib
 
 CONFIG += precompiled_header
 
+CONFIG(bundledlua) {
+    INCLUDEPATH += ../lua/src
+    LIBS += -llua
+} else {
+    QMAKE_CFLAGS += QSANGUOSHA_LUA_CFLAGS
+    QMAKE_CXXFLAGS += QSANGUOSHA_LUA_CFLAGS
+    LIBS += QSANGUOSHA_LUA_LIBS
+}
+
 PRECOMPILED_HEADER = pch.h
 
 HEADERS += pch.h

@@ -7,11 +7,6 @@ CONFIG -= qt
 TEMPLATE = lib
 winrt|ios: CONFIG += staticlib
 
-win32-msvc* { # seems like only msvc support LUA pch....
-    CONFIG += precompiled_header
-    PRECOMPILED_HEADER = src/lua.hpp
-}
-
 !CONFIG(staticlib): DEFINES += LUA_BUILD_AS_DLL
 
 linux {
