@@ -1,13 +1,17 @@
-#include <lua.hpp>
-#include <QCoreApplication>
 
-int Q_DECL_EXPORT testlink(int x, char **y) {
+#include "pch.h"
+#include "testlink.h"
 
+int qSgsCoreTestLink(int argc, char **argv)
+{
     lua_State *s = luaL_newstate();
     lua_close(s);
 
-    QCoreApplication a(x, y);
+    QCoreApplication a(argc, argv);
     a.exec();
+
+    QTcpServer server;
+    server.listen();
 
     return 0;
 }

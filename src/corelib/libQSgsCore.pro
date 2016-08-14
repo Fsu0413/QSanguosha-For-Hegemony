@@ -19,6 +19,8 @@ INCLUDEPATH += ../server
 INCLUDEPATH += ../skillslib
 INCLUDEPATH += ../uilib
 
+DEFINES += LIBQSGSCORE_BUILDING_LIBQSGSCORE
+
 CONFIG(bundledlua) {
     INCLUDEPATH += ../lua/src
     LIBS += -llua
@@ -32,7 +34,7 @@ CONFIG += precompiled_header
 
 PRECOMPILED_HEADER = pch.h
 
-HEADERS += pch.h
+HEADERS += pch.h testlink.h
 SOURCES += testlink.cpp
 
 DESTDIR = $$OUT_PWD/../../inst/lib
