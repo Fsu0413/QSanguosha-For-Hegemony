@@ -19,7 +19,6 @@ INCLUDEPATH += ../server
 INCLUDEPATH += ../skillslib
 INCLUDEPATH += ../uilib
 
-
 CONFIG += precompiled_header
 
 PRECOMPILED_HEADER = pch.h

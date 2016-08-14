@@ -28,6 +28,8 @@ INCLUDEPATH += ../server
 INCLUDEPATH += ../skillslib
 INCLUDEPATH += ../uilib
 
+DEFINES += QSGSGAMELOGICEXE_BUILDING_QSGSGAMELOGICEXE
+
 CONFIG += precompiled_header
 
 PRECOMPILED_HEADER = pch.h
@@ -37,3 +39,9 @@ HEADERS += pch.h
 DESTDIR = $$OUT_PWD/../../inst/bin
 
 }
+
+HEADERS += \
+    testlink.h
+
+SOURCES += \
+    testlink.cpp

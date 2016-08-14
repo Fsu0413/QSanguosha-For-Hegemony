@@ -28,9 +28,17 @@ INCLUDEPATH += ../uilib
 
 CONFIG += precompiled_header
 
+DEFINES += QSGSSERVEREXE_BUILDING_QSGSSERVEREXE
+
 PRECOMPILED_HEADER = pch.h
 
 HEADERS += pch.h
 
 DESTDIR = $$OUT_PWD/../../inst/bin
 }
+
+HEADERS += \
+    testlink.h
+
+SOURCES += \
+    testlink.cpp

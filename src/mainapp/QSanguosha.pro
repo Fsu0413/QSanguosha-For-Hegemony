@@ -8,7 +8,8 @@ CONFIG += app_bundle windows
 QT += network widgets
 
 SOURCES += \
-    main.cpp
+    main.cpp \
+    testlink.cpp
 
 INCLUDEPATH += ../aiclient
 INCLUDEPATH += ../ailib
@@ -22,8 +23,11 @@ INCLUDEPATH += ../uilib
 
 CONFIG += precompiled_header
 
+DEFINES += QSGSEXE_BUILDING_QSGSEXE
+
 PRECOMPILED_HEADER = pch.h
 
-HEADERS += pch.h
+HEADERS += pch.h \
+    testlink.h
 
 DESTDIR = $$OUT_PWD/../../inst/bin

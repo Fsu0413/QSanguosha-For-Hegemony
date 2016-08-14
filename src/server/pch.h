@@ -1,3 +1,10 @@
 
 #include <QtCore>
 #include <QtNetwork>
+
+
+#ifdef QSGSSERVEREXE_BUILDING_QSGSSERVEREXE
+#define QSGSSERVEREXE_EXPORT Q_DECL_EXPORT
+#else
+#define QSGSSERVEREXE_EXPORT Q_DECL_IMPORT
+#endif

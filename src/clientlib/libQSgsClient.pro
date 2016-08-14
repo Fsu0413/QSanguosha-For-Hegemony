@@ -22,6 +22,8 @@ INCLUDEPATH += ../uilib
 
 CONFIG += precompiled_header
 
+DEFINES += LIBQSGSCLIENT_BUILDING_LIBQSGSCLIENT
+
 CONFIG(bundledlua) {
     INCLUDEPATH += ../lua/src
     LIBS += -llua
@@ -33,8 +35,12 @@ CONFIG(bundledlua) {
 
 PRECOMPILED_HEADER = pch.h
 
-HEADERS += pch.h
+HEADERS += pch.h \
+    testlink.h
 
 DESTDIR = $$OUT_PWD/../../inst/lib
 DLLDESTDIR = $$OUT_PWD/../../inst/bin
+
+SOURCES += \
+    testlink.cpp
 

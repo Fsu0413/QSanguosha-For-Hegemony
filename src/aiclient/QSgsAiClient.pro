@@ -28,6 +28,8 @@ INCLUDEPATH += ../server
 INCLUDEPATH += ../skillslib
 INCLUDEPATH += ../uilib
 
+DEFINES += QSGSAICLIENTEXE_BUILDING_QSGSAICLIENTEXE
+
 
 CONFIG += precompiled_header
 
@@ -38,4 +40,10 @@ HEADERS += pch.h
 DESTDIR = $$OUT_PWD/../../inst/bin
 
 }
+
+HEADERS += \
+    testlink.h
+
+SOURCES += \
+    testlink.cpp
 
