@@ -21,42 +21,18 @@
 #ifndef _ENGINE_H
 #define _ENGINE_H
 
-#include "roomstate.h"
-#include "card.h"
-#include "general.h"
-#include "skill.h"
-#include "package.h"
-#include "exppattern.h"
-#include "util.h"
-#include "version.h"
-#include "aux-skills.h"
-
-#include <QHash>
-#include <QStringList>
-#include <QMetaObject>
-#include <QThread>
-#include <QList>
-#include <QMutex>
-
-class AI;
-class Scenario;
-class LuaBasicCard;
-class LuaTrickCard;
-class LuaWeapon;
-class LuaArmor;
-class LuaTreasure;
+#include <QObject>
+#include <QVersionNumber>
 
 struct lua_State;
 
-typedef int LuaFunction;
-
-class Engine : public QObject
+class QSgsEngine : public QObject
 {
     Q_OBJECT
 
 public:
-    Engine();
-    ~Engine();
+    QSgsEngine();
+    ~QSgsEngine();
 
     void addTranslationEntry(const char *key, const char *value);
     QString translate(const QString &toTranslate) const;
@@ -73,21 +49,8 @@ public:
     Card *cloneCard(const Card *card) const;
     Card *cloneCard(const QString &name, Card::Suit suit = Card::SuitToBeDecided, int number = -1, const QStringList &flags = QStringList()) const;
     SkillCard *cloneSkillCard(const QString &name) const;
-    //************************************
-    // Method:    getVersionNumber
-    // FullName:  Engine::getVersionNumber
-    // Access:    public
-    // Returns:   QSanVersionNumber
-    // Qualifier: const
-    // Description: Get current version number.
-    //
-    // Last Updated By Fsu0413
-    // To update version number
-    //
-    // Mogara
-    // June 2 2014
-    //************************************
-    QSanVersionNumber getVersionNumber() const;
+
+    QVersionNumber getVersionNumber() const;
     QString getVersion() const;
     QString getVersionName() const;
     QString getMODName() const;
@@ -185,7 +148,7 @@ public:
     //************************************
     QStringList getLimitedGeneralNames() const;
     QStringList getGeneralNames() const;
-    GeneralList getGeneralList() const;
+    QList<const General *> getGeneralList() const;
 
     void playSystemAudioEffect(const QString &name) const;
     void playAudioEffect(const QString &filename) const;
@@ -196,12 +159,6 @@ public:
     int correctMaxCards(const ServerPlayer *target, bool fixed = false, MaxCardsType::MaxCardsCount type = MaxCardsType::Max) const;
     int correctCardTarget(const TargetModSkill::ModType type, const Player *from, const Card *card) const;
     int correctAttackRange(const Player *target, bool include_weapon = true, bool fixed = false) const;
-
-    void registerRoom(QObject *room);
-    void unregisterRoom();
-    QObject *currentRoomObject();
-    Room *currentRoom();
-    RoomState *currentRoomState();
 
     QString getCurrentCardUsePattern();
     CardUseStruct::CardUseReason getCurrentCardUseReason();
@@ -214,14 +171,12 @@ private:
     void _loadMiniScenarios();
     void _loadModScenarios();
 
-    QMutex m_mutex;
     QHash<QString, QString> translations;
-    GeneralList generalList;
+    QList<const General *> generalList;
     QHash<QString, const General *> generalHash;
     QHash<QString, const QMetaObject *> metaobjects;
     QHash<QString, QString> className2objectName;
     QHash<QString, const Skill *> skills;
-    QHash<QThread *, QObject *> m_rooms;
     QMap<QString, QString> modes;
     QMultiMap<QString, QString> related_skills;
     mutable QMap<QString, const CardPattern *> patterns;
@@ -258,7 +213,26 @@ private:
 
     QMultiMap<QString, QString> sp_convert_pairs;
 
+
+#if 1
+
+public:
+
+    void registerRoom(QObject *room);
+    void unregisterRoom();
+    QObject *currentRoomObject();
+    Room *currentRoom();
+    RoomState *currentRoomState();
+
+private:
+
+    // todo: delete me after the code has completely finished
+
+    QMutex m_mutex;
+    QHash<QThread *, QObject *> m_rooms;
+
     TransferSkill *transfer;
+#endif
 };
 
 static inline QVariant GetConfigFromLuaState(lua_State *L, const char *key)
@@ -266,7 +240,7 @@ static inline QVariant GetConfigFromLuaState(lua_State *L, const char *key)
     return GetValueFromLuaState(L, "config", key);
 }
 
-extern Engine *Sanguosha;
+extern QSgsEngine *Sanguosha;
 
 #endif
 

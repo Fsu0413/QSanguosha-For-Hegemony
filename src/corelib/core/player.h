@@ -168,7 +168,6 @@ public:
     bool faceUp() const;
     void setFaceUp(bool face_up);
 
-    virtual int aliveCount(bool includeRemoved = true) const = 0;
     void setFixedDistance(const Player *player, int distance);
     int originalRightDistanceTo(const Player *other) const;
     int distanceTo(const Player *other, int distance_fix = 0) const;
@@ -187,7 +186,6 @@ public:
     bool hasSkills(const QString &skill_name, bool include_lose = false) const;
     bool hasInnateSkill(const QString &skill_name) const;
     bool hasLordSkill(const QString &skill_name, bool include_lose = false) const;
-    virtual QString getGameMode() const = 0;
 
     void setEquip(WrappedCard *equip);
     void removeEquip(WrappedCard *equip);
