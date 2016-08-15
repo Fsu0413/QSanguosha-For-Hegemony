@@ -15,7 +15,12 @@ QT -= gui widgets
 
 QT += network
 
+
+HEADERS += \
+    testlink.h
+
 SOURCES += \
+    testlink.cpp \
     main.cpp
 
 INCLUDEPATH += ../aiclient
@@ -39,11 +44,7 @@ HEADERS += pch.h
 
 DESTDIR = $$OUT_PWD/../../inst/bin
 
+target.path = /bin/
+INSTALLS += target
+
 }
-
-HEADERS += \
-    testlink.h
-
-SOURCES += \
-    testlink.cpp
-

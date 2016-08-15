@@ -13,7 +13,12 @@ CONFIG += console
 
 QT += network
 
+
+HEADERS += \
+    testlink.h
+
 SOURCES += \
+    testlink.cpp \
     main.cpp
 
 INCLUDEPATH += ../aiclient
@@ -35,10 +40,8 @@ PRECOMPILED_HEADER = pch.h
 HEADERS += pch.h
 
 DESTDIR = $$OUT_PWD/../../inst/bin
+
+target.path = /bin/
+INSTALLS += target
+
 }
-
-HEADERS += \
-    testlink.h
-
-SOURCES += \
-    testlink.cpp
