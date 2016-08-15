@@ -18,7 +18,9 @@ unix: !android: !macos: QMAKE_LFLAGS += -Wl,--rpath=../lib
 
 LIBS += -L$$OUT_PWD/../../inst/lib
 
-win32: dlltarget.path = /bin/
-else: dlltarget.path = /lib/
+!winrt: !ios { # !macos?
+    win32: dlltarget.path = /bin/
+    else: dlltarget.path = /lib/
 
-INSTALLS += dlltarget
+    INSTALLS += dlltarget
+}
