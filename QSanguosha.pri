@@ -11,7 +11,14 @@ unix {
     CONFIG += bundledlua
 }
 
+unix: !android: !macos: QMAKE_LFLAGS += -Wl,--rpath=../lib
+
 
 !win32-msvc*: QMAKE_LFLAGS += -Wl,--no-undefined
 
 LIBS += -L$$OUT_PWD/../../inst/lib
+
+win32: dlltarget.path = /bin/
+else: dlltarget.path = /lib/
+
+INSTALLS += dlltarget
