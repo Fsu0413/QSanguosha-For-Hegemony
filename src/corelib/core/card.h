@@ -38,7 +38,6 @@ struct CardUseStruct;
 class Card : public QObject
 {
     Q_OBJECT
-    m_
 
     Q_ENUMS(Suit)
     Q_ENUMS(CardType)
