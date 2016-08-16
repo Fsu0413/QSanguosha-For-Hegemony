@@ -66,10 +66,17 @@ class Card : public QObject
 
 public:
     // enumeration type
-    enum Suit
-    {
-        Spade, Club, Heart, Diamond, NoSuitBlack, NoSuitRed, NoSuit, SuitToBeDecided = -1
+    enum class Suit {
+        NoSuit = 0x0,
+        Black = 0x100,
+        Red = 0x200,
+        Spade = Black + 1,
+        Club = Black + 2,
+        Heart = Red + 1,
+        Diamond = Red + 2,
+        Tbd = -1
     };
+
     enum Color
     {
         Red, Black, Colorless
