@@ -25,8 +25,8 @@
 
 namespace HegemonyMode
 {
-    QString GetMappedRole(const QString &kingdom);
-    QString GetMappedKingdom(const QString &role);
+    //QString GetMappedRole(const QString &kingdom);
+    //QString GetMappedKingdom(const QString &role);
 
     enum ArrayType
     {
@@ -35,14 +35,14 @@ namespace HegemonyMode
     };
 }
 
-namespace MaxCardsType
-{
-    enum MaxCardsCount
-    {
-        Max = 1,
-        Normal = 0,
-        Min = -1,
-    };
-}
+//namespace MaxCardsType
+//{
+//    enum MaxCardsCount
+//    {
+//        Max = 1,
+//        Normal = 0,
+//        Min = -1,
+//    };
+//}
 
 #endif

@@ -37,11 +37,16 @@ PRECOMPILED_HEADER = pch.h
 HEADERS += pch.h testlink.h \
     core/engine.h \
     core/card.h \
-    core/general.h
+    core/general.h \
+    core/json.h \
+    core/lua-wrapper.h \
+    core/namespace.h
 SOURCES += testlink.cpp \
     core/engine.cpp \
     core/card.cpp \
-    core/general.cpp
+    core/general.cpp \
+    core/json.cpp \
+    core/lua-wrapper.cpp
 
 DESTDIR = $$OUT_PWD/../../inst/lib
 DLLDESTDIR = $$OUT_PWD/../../inst/bin
