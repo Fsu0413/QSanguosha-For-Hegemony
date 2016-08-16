@@ -521,15 +521,15 @@ const Card *Card::Parse(const QString &str)
             show_skill = texts.at(5);
             user_string = texts.at(6);
         } else
-            return NULL;
+            return nullptr;
 
         if (subcard_str != ".")
             subcard_ids = subcard_str.split("+");
 
         SkillCard *card = Sanguosha->cloneSkillCard(card_name);
 
-        if (card == NULL)
-            return NULL;
+        if (card == nullptr)
+            return nullptr;
 
         card->addSubcards(StringList2IntList(subcard_ids));
 
@@ -587,7 +587,7 @@ const Card *Card::Parse(const QString &str)
     } else if (str.contains(QChar('='))) {
         QRegExp pattern("(\\w+):(\\w*)\\[(\\w+):(.+)\\]=(.+)&(.*)");
         if (!pattern.exactMatch(str))
-            return NULL;
+            return nullptr;
 
         QStringList texts = pattern.capturedTexts();
         QString card_name = texts.at(1);
@@ -621,8 +621,8 @@ const Card *Card::Parse(const QString &str)
             number = number_string.toInt();
 
         Card *card = Sanguosha->cloneCard(card_name, suit, number);
-        if (card == NULL)
-            return NULL;
+        if (card == nullptr)
+            return nullptr;
 
         card->addSubcards(StringList2IntList(subcard_ids));
         card->setSkillName(m_skillName);
@@ -635,7 +635,7 @@ const Card *Card::Parse(const QString &str)
         if (ok)
             return Sanguosha->getCard(card_id)->realCard();
         else
-            return NULL;
+            return nullptr;
     }
 }
 
@@ -644,26 +644,26 @@ Card *Card::Clone(const Card *card)
     Card::Suit suit = card->suit();
     int number = card->number();
 
-    QObject *card_obj = NULL;
+    QObject *card_obj = nullptr;
     if (card->isKindOf("LuaBasicCard")) {
         const LuaBasicCard *lcard = qobject_cast<const LuaBasicCard *>(card);
-        Q_ASSERT(lcard != NULL);
+        Q_ASSERT(lcard != nullptr);
         card_obj = lcard->clone();
     } else if (card->isKindOf("LuaTrickCard")) {
         const LuaTrickCard *lcard = qobject_cast<const LuaTrickCard *>(card);
-        Q_ASSERT(lcard != NULL);
+        Q_ASSERT(lcard != nullptr);
         card_obj = lcard->clone();
     } else if (card->isKindOf("LuaWeapon")) {
         const LuaWeapon *lcard = qobject_cast<const LuaWeapon *>(card);
-        Q_ASSERT(lcard != NULL);
+        Q_ASSERT(lcard != nullptr);
         card_obj = lcard->clone();
     } else if (card->isKindOf("LuaArmor")) {
         const LuaArmor *lcard = qobject_cast<const LuaArmor *>(card);
-        Q_ASSERT(lcard != NULL);
+        Q_ASSERT(lcard != nullptr);
         card_obj = lcard->clone();
     } else if (card->isKindOf("LuaTreasure")) {
         const LuaTreasure *lcard = qobject_cast<const LuaTreasure *>(card);
-        Q_ASSERT(lcard != NULL);
+        Q_ASSERT(lcard != nullptr);
         card_obj = lcard->clone();
     } else {
         const QMetaObject *meta = card->metaObject();
@@ -677,7 +677,7 @@ Card *Card::Clone(const Card *card)
         new_card->setTransferable(card->isTransferable());
         return new_card;
     } else
-        return NULL;
+        return nullptr;
 }
 
 bool Card::targetFixed() const
@@ -746,7 +746,7 @@ void Card::onUse(Room *room, const CardUseStruct &use) const
 
 //    QVariant data = QVariant::fromValue(card_use);
 //    RoomThread *thread = room->getThread();
-//    Q_ASSERT(thread != NULL);
+//    Q_ASSERT(thread != nullptr);
 //    thread->trigger(PreCardUsed, room, player, data);
 //    card_use = data.value<CardUseStruct>();
 
@@ -755,7 +755,7 @@ void Card::onUse(Room *room, const CardUseStruct &use) const
 //        if (card_use.to.size() == 1)
 //            reason.m_targetId = card_use.to.first()->objectName();
 //        foreach (int id, used_cards) {
-//            CardsMoveStruct move(id, NULL, Player::PlaceTable, reason);
+//            CardsMoveStruct move(id, nullptr, Player::PlaceTable, reason);
 //            moves.append(move);
 //        }
 //        room->moveCardsAtomic(moves, true);
@@ -778,7 +778,7 @@ void Card::onUse(Room *room, const CardUseStruct &use) const
 //            if (!table_cardids.isEmpty()) {
 //                DummyCard dummy(table_cardids);
 //                CardMoveReason reason(CardMoveReason::S_REASON_THROW, player->objectName(), QString(), card_use.card->getSkillName(), QString());
-//                room->moveCardTo(&dummy, player, NULL, Player::DiscardPile, reason, true);
+//                room->moveCardTo(&dummy, player, nullptr, Player::DiscardPile, reason, true);
 //            }
 //        }
 //    }
@@ -816,7 +816,7 @@ void Card::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets)
 //        DummyCard dummy(table_cardids);
 //        CardMoveReason reason(CardMoveReason::S_REASON_USE, source->objectName(), QString(), this->getSkillName(), QString());
 //        if (targets.size() == 1) reason.m_targetId = targets.first()->objectName();
-//        room->moveCardTo(&dummy, source, NULL, Player::DiscardPile, reason, true);
+//        room->moveCardTo(&dummy, source, nullptr, Player::DiscardPile, reason, true);
 //    }
 }
 
@@ -989,7 +989,7 @@ void SkillCard::extraCost(Room *room, const CardUseStruct &card_use) const
 {
     if (card_use.card->willThrow()) {
         CardMoveReason reason(CardMoveReason::S_REASON_THROW, card_use.from->objectName(), QString(), card_use.card->skillName(), QString());
-        room->moveCardTo(this, card_use.from, NULL, Player::PlaceTable, reason, true);
+        room->moveCardTo(this, card_use.from, nullptr, Player::PlaceTable, reason, true);
     }
 }
 
@@ -1044,7 +1044,7 @@ const Card *ArraySummonCard::validate(CardUseStruct &card_use) const
         card_use.from->showGeneral(card_use.from->inHeadSkills(skill));
         skill->summonFriends(card_use.from);
     }
-    return NULL;
+    return nullptr;
 }
 
 TransferCard::TransferCard()

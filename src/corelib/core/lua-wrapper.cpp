@@ -124,7 +124,7 @@
 
 //LuaSkillCard *LuaSkillCard::clone() const
 //{
-//    LuaSkillCard *new_card = new LuaSkillCard(NULL, NULL);
+//    LuaSkillCard *new_card = new LuaSkillCard(nullptr, nullptr);
 
 //    new_card->setObjectName(objectName());
 //    new_card->setSkillName(m_skillName);
@@ -185,11 +185,11 @@
 //        user_string = texts.at(5);
 //        show_skill = texts.at(6);
 //    } else
-//        return NULL;
+//        return nullptr;
 
-//    const LuaSkillCard *c = LuaSkillCards.value(name, NULL);
-//    if (c == NULL)
-//        return NULL;
+//    const LuaSkillCard *c = LuaSkillCards.value(name, nullptr);
+//    if (c == nullptr)
+//        return nullptr;
 
 //    LuaSkillCard *new_card = c->clone();
 

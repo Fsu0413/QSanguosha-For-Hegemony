@@ -59,9 +59,9 @@
 //    virtual int getPriority() const;
 //    virtual bool canPreshow() const;
 //    virtual TriggerList triggerable(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const;
-//    virtual bool cost(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data, ServerPlayer *ask_who = NULL) const;
-//    virtual bool effect(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data, ServerPlayer *ask_who = NULL) const;
-//    void onTurnBroken(const char *function_name, TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data, ServerPlayer *ask_who = NULL) const;
+//    virtual bool cost(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data, ServerPlayer *ask_who = nullptr) const;
+//    virtual bool effect(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data, ServerPlayer *ask_who = nullptr) const;
+//    void onTurnBroken(const char *function_name, TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data, ServerPlayer *ask_who = nullptr) const;
 //    virtual void record(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const;
 
 //    LuaFunction on_record;
@@ -94,9 +94,9 @@
 //    virtual int getPriority() const;
 
 //    virtual TriggerList triggerable(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const;
-//    virtual bool cost(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data, ServerPlayer *ask_who = NULL) const;
-//    virtual bool effect(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data, ServerPlayer *ask_who = NULL) const;
-//    void onTurnBroken(const char *function_name, TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data, ServerPlayer *ask_who = NULL) const;
+//    virtual bool cost(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data, ServerPlayer *ask_who = nullptr) const;
+//    virtual bool effect(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data, ServerPlayer *ask_who = nullptr) const;
+//    void onTurnBroken(const char *function_name, TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data, ServerPlayer *ask_who = nullptr) const;
 //    virtual void record(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const;
 
 //    LuaFunction on_record;
@@ -570,7 +570,7 @@
 //        return origin->getPriority();
 //    }
 
-//    virtual bool effect(TriggerEvent event, Room* room, ServerPlayer *player, QVariant &data, ServerPlayer *ask_who = NULL) const;
+//    virtual bool effect(TriggerEvent event, Room* room, ServerPlayer *player, QVariant &data, ServerPlayer *ask_who = nullptr) const;
 
 //protected:
 //    TriggerSkill *origin;

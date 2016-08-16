@@ -34,7 +34,7 @@ General::General(Package *package, const QString &name, const QString &kingdom,
     : QObject(package), m_kingdom(kingdom),
     m_doubleMaxHp(double_max_hp), m_gender(male ? Male : Female),
     m_hidden(hidden), m_neverShown(never_shown),
-    m_headMaxHpAdjustedValue(0), m_deputyMaxHpAdjustedValue(0),
+    m_headMaxHpAdjustedValue(0), m_deputyMaxHpAdjustedValue(0)
     //skin_count(-1)
 {
     static QChar lord_symbol('$');
@@ -135,7 +135,7 @@ QList<const Skill *> General::getSkillList(bool relate_to_place, bool head_only)
     QList<const Skill *> skills;
     foreach (const QString &skill_name, m_skillnameList) {
         const Skill *skill = Sanguosha->getSkill(skill_name);
-        Q_ASSERT(skill != NULL);
+        Q_ASSERT(skill != nullptr);
         if (relate_to_place && !skill->relateToPlace(!head_only))
             skills << skill;
         else if (!relate_to_place) skills << skill;
