@@ -484,6 +484,7 @@ bool QSgsEngine::isGeneralHidden(const QString &general_name) const
 TransferSkill *QSgsEngine::getTransfer() const
 {
    // return transfer;
+    return nullptr;
 }
 
 WrappedCard *QSgsEngine::getWrappedCard(int cardId)
@@ -496,25 +497,21 @@ WrappedCard *QSgsEngine::getWrappedCard(int cardId)
 
 Card *QSgsEngine::getCard(int cardId)
 {
-    Card *card = NULL;
-    if (cardId < 0 || cardId >= m_cards.length())
-        return NULL;
-    //QObject *room = currentRoomObject();
-   // Q_ASSERT(room);
-    //Room *serverRoom = qobject_cast<Room *>(room);
-   // if (serverRoom != NULL) {
-       // card = serverRoom->getCard(cardId);
-   // } else {
-        Client *clientRoom = qobject_cast<Client *>(room);
-        Q_ASSERT(clientRoom != NULL);
-        card = clientRoom->getCard(cardId);
-   // }
-    Q_ASSERT(card);
-    return card;
-}
-
-const Card *QSgsEngine::getEngineCard(int cardId) const
-{
+//    Card *card = NULL;
+//    if (cardId < 0 || cardId >= m_cards.length())
+//        return NULL;
+//    //QObject *room = currentRoomObject();
+//   // Q_ASSERT(room);
+//    //Room *serverRoom = qobject_cast<Room *>(room);
+//   // if (serverRoom != NULL) {
+//       // card = serverRoom->getCard(cardId);
+//   // } else {
+//        Client *clientRoom = qobject_cast<Client *>(room);
+//        Q_ASSERT(clientRoom != NULL);
+//        card = clientRoom->getCard(cardId);
+//   // }
+//    Q_ASSERT(card);
+//    return card;
     if (cardId == Card::S_UNKNOWN_CARD_ID)
         return NULL;
     else if (cardId < 0 || cardId >= m_cards.length()) {
@@ -525,6 +522,19 @@ const Card *QSgsEngine::getEngineCard(int cardId) const
         return m_cards[cardId];
     }
 }
+
+//const Card *QSgsEngine::getEngineCard(int cardId) const
+//{
+//    if (cardId == Card::S_UNKNOWN_CARD_ID)
+//        return NULL;
+//    else if (cardId < 0 || cardId >= m_cards.length()) {
+//        Q_ASSERT(false);
+//        return NULL;
+//    } else {
+//        Q_ASSERT(m_cards[cardId] != NULL);
+//        return m_cards[cardId];
+//    }
+//}
 
 Card *QSgsEngine::cloneCard(const Card *card) const
 {
