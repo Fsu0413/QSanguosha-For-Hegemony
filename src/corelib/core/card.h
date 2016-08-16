@@ -38,18 +38,7 @@ struct CardUseStruct;
 class Card : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString suit READ getSuitString CONSTANT)
-    Q_PROPERTY(bool red READ isRed STORED false CONSTANT)
-    Q_PROPERTY(bool black READ isBlack STORED false CONSTANT)
-    Q_PROPERTY(int id READ getId CONSTANT)
-    Q_PROPERTY(int number READ getNumber WRITE setNumber)
-    Q_PROPERTY(QString number_string READ getNumberString CONSTANT)
-    Q_PROPERTY(QString type READ getType CONSTANT)
-    Q_PROPERTY(bool target_fixed READ targetFixed)
-    Q_PROPERTY(bool mute READ isMute CONSTANT)
-    Q_PROPERTY(bool equipped READ isEquipped)
-    Q_PROPERTY(Color color READ getColor)
-    Q_PROPERTY(bool transferable READ isTransferable WRITE setTransferable)
+    m_
 
     Q_ENUMS(Suit)
     Q_ENUMS(CardType)
@@ -115,7 +104,7 @@ public:
     virtual void setFlags(const QString &flag) const;
     inline virtual void setFlags(const QStringList &fs)
     {
-        flags = fs;
+        m_flags = fs;
     }
     bool hasFlag(const QString &flag) const;
     virtual void clearFlags() const;
@@ -180,7 +169,7 @@ public:
     }
     inline virtual QStringList getFlags() const
     {
-        return flags;
+        return m_flags;
     }
 
     inline virtual bool isModified() const
@@ -209,22 +198,22 @@ public:
     virtual void setTransferable(const bool transferbale);
 
 protected:
-    QList<int> subcards;
-    bool target_fixed;
-    bool mute;
-    bool will_throw;
-    bool has_preact;
-    bool can_recast;
-    bool transferable;
+    QList<int> m_subcards;
+    bool m_targetixed;
+    bool m_mute;
+    bool m_willThrow;
+    bool m_hasPreact;
+    bool m_canRecast;
+    bool m_transferable;
     Suit m_suit;
     int m_number;
     int m_id;
     QString m_skillName;
-    Card::HandlingMethod handling_method;
+    Card::HandlingMethod m_handlingMethod;
 
-    QString show_skill;
+    QString m_showSkill;
 
-    mutable QStringList flags;
+    mutable QStringList m_flags;
 };
 
 typedef QList<const Card *> CardList;
@@ -235,7 +224,7 @@ class SkillCard : public Card
 
 public:
     SkillCard();
-    void setUserString(const QString &user_string);
+    void setUserString(const QString &userString);
     QString getUserString() const;
 
     virtual QString getSubtype() const;
@@ -246,7 +235,7 @@ public:
     virtual void extraCost(Room *room, const CardUseStruct &card_use) const;
 
 protected:
-    QString user_string;
+    QString m_userString;
 };
 
 class ArraySummonCard : public SkillCard
@@ -276,7 +265,7 @@ class DummyCard : public SkillCard
 
 public:
     DummyCard();
-    DummyCard(const QList<int> &subcards);
+    DummyCard(const QList<int> &m_subcards);
 
     virtual QString getSubtype() const;
     virtual QString getType() const;

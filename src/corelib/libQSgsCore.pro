@@ -35,9 +35,11 @@ CONFIG += precompiled_header
 PRECOMPILED_HEADER = pch.h
 
 HEADERS += pch.h testlink.h \
-    core/engine.h
+    core/engine.h \
+    core/card.h
 SOURCES += testlink.cpp \
-    core/engine.cpp
+    core/engine.cpp \
+    core/card.cpp
 
 DESTDIR = $$OUT_PWD/../../inst/lib
 DLLDESTDIR = $$OUT_PWD/../../inst/bin
