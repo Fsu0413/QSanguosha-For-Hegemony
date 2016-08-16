@@ -491,7 +491,7 @@ WrappedCard *QSgsEngine::getWrappedCard(int cardId)
 {
     Card *card = getCard(cardId);
     WrappedCard *wrappedCard = qobject_cast<WrappedCard *>(card);
-    Q_ASSERT(wrappedCard != NULL && wrappedCard->getId() == cardId);
+    Q_ASSERT(wrappedCard != NULL && wrappedCard->id() == cardId);
     return wrappedCard;
 }
 
@@ -540,11 +540,11 @@ Card *QSgsEngine::cloneCard(const Card *card) const
 {
     Q_ASSERT(card->metaObject() != NULL);
     QString name = card->metaObject()->className();
-    Card *result = cloneCard(name, card->getSuit(), card->getNumber(), card->getFlags());
+    Card *result = cloneCard(name, card->suit(), card->number(), card->flags());
     if (result == NULL)
         return NULL;
-    result->setId(card->getEffectiveId());
-    result->setSkillName(card->getSkillName(false));
+    result->setId(card->effectiveId());
+    result->setSkillName(card->skillName(false));
     result->setObjectName(card->objectName());
     return result;
 }
@@ -902,8 +902,8 @@ QList<int> QSgsEngine::getRandomCards() const
     foreach (Card *card, cards) {
         card->clearFlags();
 
-        if (!getBanPackages().contains(card->getPackage()))
-            list << card->getId();
+        if (!getBanPackages().contains(card->package()))
+            list << card->id();
     }
 
     QStringList card_conversions = Config.value("CardConversions").toStringList();

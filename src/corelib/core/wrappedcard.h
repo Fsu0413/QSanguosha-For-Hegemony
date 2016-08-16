@@ -94,14 +94,14 @@ public:
     {
         return m_isModified;
     }
-    inline virtual QString getClassName() const
+    inline virtual QString className() const
     {
         Q_ASSERT(m_card != NULL);
         Q_ASSERT(m_card->metaObject() != NULL);
-        return m_card->getClassName();
+        return m_card->className();
     }
 
-    inline virtual const Card *getRealCard() const
+    inline virtual const Card *realCard() const
     {
         Q_ASSERT(m_card != NULL);
         return m_card;
@@ -125,10 +125,10 @@ public:
         return m_card->canRecast();
     }
 
-    inline virtual Card::HandlingMethod getHandlingMethod() const
+    inline virtual Card::HandlingMethod handlingMethod() const
     {
         Q_ASSERT(m_card != NULL);
-        return m_card->getHandlingMethod();
+        return m_card->handlingMethod();
     }
 
     inline virtual bool hasPreAction() const
@@ -137,10 +137,10 @@ public:
         return m_card->hasPreAction();
     }
 
-    inline virtual QString getPackage() const
+    inline virtual QString package() const
     {
         Q_ASSERT(m_card != NULL);
-        return m_card->getPackage();
+        return m_card->package();
     }
 
     inline virtual bool isVirtualCard() const
@@ -148,10 +148,10 @@ public:
         return false;
     }
     //inline virtual bool isEquipped() const{ return m_card->isEquipped(); }
-    inline virtual QString getCommonEffectName() const
+    inline virtual QString commonEffectName() const
     {
         Q_ASSERT(m_card != NULL);
-        return m_card->getCommonEffectName();
+        return m_card->commonEffectName();
     }
 
     inline virtual bool match(const QString &pattern) const
@@ -182,17 +182,17 @@ public:
     // inline virtual QString subcardString() const;
     // inline virtual int subcardsLength() const;
 
-    inline virtual QString getType() const
+    inline virtual QString type() const
     {
-        return m_card->getType();
+        return m_card->type();
     }
-    inline virtual QString getSubtype() const
+    inline virtual QString subtype() const
     {
-        return m_card->getSubtype();
+        return m_card->subtype();
     }
-    inline virtual CardType getTypeId() const
+    inline virtual CardType typeId() const
     {
-        return m_card->getTypeId();
+        return m_card->typeId();
     }
     inline virtual QString toString(bool hidden = false) const
     {

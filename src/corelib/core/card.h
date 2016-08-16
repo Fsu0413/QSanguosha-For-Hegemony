@@ -35,6 +35,27 @@ class CardItem;
 struct CardEffectStruct;
 struct CardUseStruct;
 
+
+
+class CardPattern
+{
+public:
+    virtual bool match(const Player *player, const Card *card) const = 0;
+    virtual bool willThrow() const
+    {
+        return true;
+    }
+    virtual QString patternString() const
+    {
+        return QString();
+    }
+
+    virtual ~CardPattern()
+    {
+    }
+};
+
+
 class Card : public QObject
 {
     Q_OBJECT
@@ -70,35 +91,35 @@ public:
     Card(Suit suit, int number, bool target_fixed = false);
 
     // property getters/setters
-    QString getSuitString() const;
+    QString suitString() const;
     bool isRed() const;
     bool isBlack() const;
-    int getId() const;
+    int id() const;
     virtual void setId(int id);
-    int getEffectiveId() const;
+    int effectiveId() const;
 
-    int getNumber() const;
+    int number() const;
     virtual void setNumber(int number);
-    QString getNumberString() const;
+    QString numberString() const;
 
-    Suit getSuit() const;
+    Suit suit() const;
     virtual void setSuit(Suit suit);
 
     bool sameColorWith(const Card *other) const;
-    Color getColor() const;
-    QString getFullName(bool include_suit = false) const;
-    QString getLogName() const;
-    QString getName() const;
-    QString getSkillName(bool removePrefix = true) const;
+    Color color() const;
+    QString fullName(bool include_suit = false) const;
+    QString logName() const;
+    QString name() const;
+    QString skillName(bool removePrefix = true) const;
     virtual void setSkillName(const QString &skill_name);
-    QString getDescription(bool inToolTip = true) const;
+    QString description(bool inToolTip = true) const;
 
     virtual bool isMute() const;
     virtual bool willThrow() const;
     virtual bool canRecast() const;
     virtual bool hasPreAction() const;
-    virtual Card::HandlingMethod getHandlingMethod() const;
-    void setCanRecast(bool can);
+    virtual Card::HandlingMethod handlingMethod() const;
+    void canRecast(bool can);
 
     virtual void setFlags(const QString &flag) const;
     inline virtual void setFlags(const QStringList &fs)
@@ -108,28 +129,25 @@ public:
     bool hasFlag(const QString &flag) const;
     virtual void clearFlags() const;
 
-    virtual QString getPackage() const;
-    inline virtual QString getClassName() const
-    {
-        return metaObject()->className();
-    }
+    virtual QString package() const;
+    inline virtual QString className() const;
     virtual bool isVirtualCard() const;
     virtual bool isEquipped() const;
-    virtual QString getCommonEffectName() const;
+    virtual QString commonEffectName() const;
     virtual bool match(const QString &pattern) const;
 
     virtual void addSubcard(int card_id);
     virtual void addSubcard(const Card *card);
-    virtual QList<int> getSubcards() const;
+    virtual QList<int> subcards() const;
     virtual void clearSubcards();
     virtual QString subcardString() const;
     virtual void addSubcards(const QList<const Card *> &cards);
     virtual void addSubcards(const QList<int> &subcards_list);
     virtual int subcardsLength() const;
 
-    virtual QString getType() const = 0;
-    virtual QString getSubtype() const = 0;
-    virtual CardType getTypeId() const = 0;
+    virtual QString type() const = 0;
+    virtual QString subtype() const = 0;
+    virtual CardType typeId() const = 0;
     virtual bool isNDTrick() const;
 
     // card target selection
@@ -141,7 +159,7 @@ public:
         int &maxVotes) const;
     virtual bool isAvailable(const Player *player) const;
 
-    inline virtual const Card *getRealCard() const
+    inline virtual const Card *realCard() const
     {
         return this;
     }
@@ -166,7 +184,7 @@ public:
     {
         Q_ASSERT(cardType); return inherits(cardType);
     }
-    inline virtual QStringList getFlags() const
+    inline virtual QStringList flags() const
     {
         return m_flags;
     }
@@ -191,7 +209,7 @@ public:
     static const Card *Parse(const QString &str);
     virtual QString toString(bool hidden = false) const;
 
-    virtual QString getEffectName() const;
+    virtual QString effectName() const;
 
     virtual bool isTransferable() const;
     virtual void setTransferable(const bool transferbale);
@@ -224,11 +242,11 @@ class SkillCard : public Card
 public:
     SkillCard();
     void setUserString(const QString &userString);
-    QString getUserString() const;
+    QString userString() const;
 
-    virtual QString getSubtype() const;
-    virtual QString getType() const;
-    virtual CardType getTypeId() const;
+    virtual QString subtype() const;
+    virtual QString type() const;
+    virtual CardType typeId() const;
     virtual QString toString(bool hidden = false) const;
 
     virtual void extraCost(Room *room, const CardUseStruct &card_use) const;
@@ -266,8 +284,8 @@ public:
     DummyCard();
     DummyCard(const QList<int> &m_subcards);
 
-    virtual QString getSubtype() const;
-    virtual QString getType() const;
+    virtual QString subtype() const;
+    virtual QString type() const;
     virtual QString toString(bool hidden = false) const;
 };
 
