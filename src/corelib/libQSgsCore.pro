@@ -36,10 +36,12 @@ PRECOMPILED_HEADER = pch.h
 
 HEADERS += pch.h testlink.h \
     core/engine.h \
-    core/card.h
+    core/card.h \
+    core/general.h
 SOURCES += testlink.cpp \
     core/engine.cpp \
-    core/card.cpp
+    core/card.cpp \
+    core/general.cpp
 
 DESTDIR = $$OUT_PWD/../../inst/lib
 DLLDESTDIR = $$OUT_PWD/../../inst/bin
