@@ -150,9 +150,9 @@ public:
     QStringList getGeneralNames() const;
     QList<const General *> getGeneralList() const;
 
-    void playSystemAudioEffect(const QString &name) const;
-    void playAudioEffect(const QString &filename) const;
-    void playSkillAudioEffect(const QString &skill_name, int index) const;
+//    void playSystemAudioEffect(const QString &name) const;
+//    void playAudioEffect(const QString &filename) const;
+//    void playSkillAudioEffect(const QString &skill_name, int index) const;
 
     const ProhibitSkill *isProhibited(const Player *from, const Player *to, const Card *card, const QList<const Player *> &others = QList<const Player *>()) const;
     int correctDistance(const Player *from, const Player *to) const;
@@ -160,79 +160,79 @@ public:
     int correctCardTarget(const TargetModSkill::ModType type, const Player *from, const Card *card) const;
     int correctAttackRange(const Player *target, bool include_weapon = true, bool fixed = false) const;
 
-    QString getCurrentCardUsePattern();
-    CardUseStruct::CardUseReason getCurrentCardUseReason();
+//    QString getCurrentCardUsePattern();
+//    CardUseStruct::CardUseReason getCurrentCardUseReason();
 
     bool isGeneralHidden(const QString &general_name) const;
 
-    TransferSkill *getTransfer() const;
+    //TransferSkill *getTransfer() const;
 
 private:
     void _loadMiniScenarios();
     void _loadModScenarios();
 
-    QHash<QString, QString> translations;
-    QList<const General *> generalList;
-    QHash<QString, const General *> generalHash;
-    QHash<QString, const QMetaObject *> metaobjects;
-    QHash<QString, QString> className2objectName;
-    QHash<QString, const Skill *> skills;
-    QMap<QString, QString> modes;
-    QMultiMap<QString, QString> related_skills;
-    mutable QMap<QString, const CardPattern *> patterns;
-    mutable QList<ExpPattern *> enginePatterns;
+    QHash<QString, QString> m_translations;
+    QList<const General *> m_generalList;
+    QHash<QString, const General *> m_generalHash;
+    QHash<QString, const QMetaObject *> m_metaobjects;
+    QHash<QString, QString> m_className2objectName;
+    QHash<QString, const Skill *> m_skills;
+    QMap<QString, QString> m_modes;
+    QMultiMap<QString, QString> m_relatedSkills;
+    mutable QMap<QString, const CardPattern *> m_patterns;
+    mutable QList<ExpPattern *> m_enginePatterns;
 
     // special skills
-    QList<const ProhibitSkill *> prohibit_skills;
-    QList<const DistanceSkill *> distance_skills;
-    QList<const MaxCardsSkill *> maxcards_skills;
-    QList<const TargetModSkill *> targetmod_skills;
-    QList<const AttackRangeSkill *> attackrange_skills;
-    QList<const TriggerSkill *> global_trigger_skills;
+    QList<const ProhibitSkill *> m_prohibitSkills;
+    QList<const DistanceSkill *> m_distanceSkills;
+    QList<const MaxCardsSkill *> m_maxcardsSkills;
+    QList<const TargetModSkill *> m_targetmodSkills;
+    QList<const AttackRangeSkill *> m_attackrangeSkills;
+    QList<const TriggerSkill *> m_globalTriggerSkills;
 
-    QList<const Package *> packages;
-    QList<Card *> cards;
-    QStringList lord_list;
-    QSet<QString> ban_package;
+    QList<const Package *> m_packages;
+    QList<Card *> m_cards;
+    QStringList m_lordList;
+    QSet<QString> m_banPackage;
     QHash<QString, Scenario *> m_scenarios;
     QHash<QString, Scenario *> m_miniScenes;
     Scenario *m_customScene;
 
-    lua_State *lua;
+    lua_State *m_lua;
 
-    QHash<QString, QString> luaBasicCard_className2objectName;
-    QHash<QString, const LuaBasicCard *> luaBasicCards;
-    QHash<QString, QString> luaTrickCard_className2objectName;
-    QHash<QString, const LuaTrickCard *> luaTrickCards;
-    QHash<QString, QString> luaWeapon_className2objectName;
-    QHash<QString, const LuaWeapon*> luaWeapons;
-    QHash<QString, QString> luaArmor_className2objectName;
-    QHash<QString, const LuaArmor *> luaArmors;
-    QHash<QString, QString> luaTreasure_className2objectName;
-    QHash<QString, const LuaTreasure *> luaTreasures;
+   // QHash<QString, QString> luaBasicCard_className2objectName;
+    QHash<QString, const LuaBasicCard *> m_luaBasicCards;
+   // QHash<QString, QString> luaTrickCard_className2objectName;
+    QHash<QString, const LuaTrickCard *> m_luaTrickCards;
+   // QHash<QString, QString> luaWeapon_className2objectName;
+    QHash<QString, const LuaWeapon*> m_luaWeapons;
+   // QHash<QString, QString> luaArmor_className2objectName;
+    QHash<QString, const LuaArmor *> m_luaArmors;
+    //QHash<QString, QString> luaTreasure_className2objectName;
+    QHash<QString, const LuaTreasure *> m_luaTreasures;
 
-    QMultiMap<QString, QString> sp_convert_pairs;
+    QMultiMap<QString, QString> m_spConvertPairs;
 
 
-#if 1
+//#if 1
 
-public:
+//public:
 
-    void registerRoom(QObject *room);
-    void unregisterRoom();
-    QObject *currentRoomObject();
-    Room *currentRoom();
-    RoomState *currentRoomState();
+//    void registerRoom(QObject *room);
+//    void unregisterRoom();
+//    QObject *currentRoomObject();
+//    Room *currentRoom();
+//    RoomState *currentRoomState();
 
-private:
+//private:
 
     // todo: delete me after the code has completely finished
 
-    QMutex m_mutex;
-    QHash<QThread *, QObject *> m_rooms;
+    //QMutex m_mutex;
+    //QHash<QThread *, QObject *> m_rooms;
 
-    TransferSkill *transfer;
-#endif
+    //TransferSkill *transfer;
+//#endif
 };
 
 static inline QVariant GetConfigFromLuaState(lua_State *L, const char *key)

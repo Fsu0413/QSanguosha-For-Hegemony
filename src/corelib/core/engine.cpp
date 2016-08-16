@@ -416,60 +416,60 @@ int QSgsEngine::getGeneralCount(bool include_banned) const
     return total;
 }
 
-void QSgsEngine::registerRoom(QObject *room)
-{
-    m_mutex.lock();
-    m_rooms[QThread::currentThread()] = room;
-    m_mutex.unlock();
-}
+//void QSgsEngine::registerRoom(QObject *room)
+//{
+//    m_mutex.lock();
+//    m_rooms[QThread::currentThread()] = room;
+//    m_mutex.unlock();
+//}
 
-void QSgsEngine::unregisterRoom()
-{
-    m_mutex.lock();
-    m_rooms.remove(QThread::currentThread());
-    m_mutex.unlock();
-}
+//void QSgsEngine::unregisterRoom()
+//{
+//    m_mutex.lock();
+//    m_rooms.remove(QThread::currentThread());
+//    m_mutex.unlock();
+//}
 
-QObject *QSgsEngine::currentRoomObject()
-{
-    QObject *room = NULL;
-    m_mutex.lock();
-    room = m_rooms[QThread::currentThread()];
-    Q_ASSERT(room);
-    m_mutex.unlock();
-    return room;
-}
+//QObject *QSgsEngine::currentRoomObject()
+//{
+//    QObject *room = NULL;
+//    m_mutex.lock();
+//    room = m_rooms[QThread::currentThread()];
+//    Q_ASSERT(room);
+//    m_mutex.unlock();
+//    return room;
+//}
 
-Room *QSgsEngine::currentRoom()
-{
-    QObject *roomObject = currentRoomObject();
-    Room *room = qobject_cast<Room *>(roomObject);
-    Q_ASSERT(room != NULL);
-    return room;
-}
+//Room *QSgsEngine::currentRoom()
+//{
+//    QObject *roomObject = currentRoomObject();
+//    Room *room = qobject_cast<Room *>(roomObject);
+//    Q_ASSERT(room != NULL);
+//    return room;
+//}
 
-RoomState *QSgsEngine::currentRoomState()
-{
-    QObject *roomObject = currentRoomObject();
-    Room *room = qobject_cast<Room *>(roomObject);
-    if (room != NULL) {
-        return room->getRoomState();
-    } else {
-        Client *client = qobject_cast<Client *>(roomObject);
-        Q_ASSERT(client != NULL);
-        return client->getRoomState();
-    }
-}
+//RoomState *QSgsEngine::currentRoomState()
+//{
+//    QObject *roomObject = currentRoomObject();
+//    Room *room = qobject_cast<Room *>(roomObject);
+//    if (room != NULL) {
+//        return room->getRoomState();
+//    } else {
+//        Client *client = qobject_cast<Client *>(roomObject);
+//        Q_ASSERT(client != NULL);
+//        return client->getRoomState();
+//    }
+//}
 
-QString QSgsEngine::getCurrentCardUsePattern()
-{
-    return currentRoomState()->getCurrentCardUsePattern();
-}
+//QString QSgsEngine::getCurrentCardUsePattern()
+//{
+//    return currentRoomState()->getCurrentCardUsePattern();
+//}
 
-CardUseStruct::CardUseReason QSgsEngine::getCurrentCardUseReason()
-{
-    return currentRoomState()->getCurrentCardUseReason();
-}
+//CardUseStruct::CardUseReason QSgsEngine::getCurrentCardUseReason()
+//{
+//    return currentRoomState()->getCurrentCardUseReason();
+//}
 
 bool QSgsEngine::isGeneralHidden(const QString &general_name) const
 {
@@ -483,7 +483,7 @@ bool QSgsEngine::isGeneralHidden(const QString &general_name) const
 
 TransferSkill *QSgsEngine::getTransfer() const
 {
-    return transfer;
+   // return transfer;
 }
 
 WrappedCard *QSgsEngine::getWrappedCard(int cardId)
@@ -497,18 +497,18 @@ WrappedCard *QSgsEngine::getWrappedCard(int cardId)
 Card *QSgsEngine::getCard(int cardId)
 {
     Card *card = NULL;
-    if (cardId < 0 || cardId >= cards.length())
+    if (cardId < 0 || cardId >= m_cards.length())
         return NULL;
-    QObject *room = currentRoomObject();
-    Q_ASSERT(room);
-    Room *serverRoom = qobject_cast<Room *>(room);
-    if (serverRoom != NULL) {
-        card = serverRoom->getCard(cardId);
-    } else {
+    //QObject *room = currentRoomObject();
+   // Q_ASSERT(room);
+    //Room *serverRoom = qobject_cast<Room *>(room);
+   // if (serverRoom != NULL) {
+       // card = serverRoom->getCard(cardId);
+   // } else {
         Client *clientRoom = qobject_cast<Client *>(room);
         Q_ASSERT(clientRoom != NULL);
         card = clientRoom->getCard(cardId);
-    }
+   // }
     Q_ASSERT(card);
     return card;
 }
@@ -517,12 +517,12 @@ const Card *QSgsEngine::getEngineCard(int cardId) const
 {
     if (cardId == Card::S_UNKNOWN_CARD_ID)
         return NULL;
-    else if (cardId < 0 || cardId >= cards.length()) {
+    else if (cardId < 0 || cardId >= m_cards.length()) {
         Q_ASSERT(false);
         return NULL;
     } else {
-        Q_ASSERT(cards[cardId] != NULL);
-        return cards[cardId];
+        Q_ASSERT(m_cards[cardId] != NULL);
+        return m_cards[cardId];
     }
 }
 
@@ -542,52 +542,52 @@ Card *QSgsEngine::cloneCard(const Card *card) const
 Card *QSgsEngine::cloneCard(const QString &name, Card::Suit suit, int number, const QStringList &flags) const
 {
     Card *card = NULL;
-    if (luaBasicCard_className2objectName.contains(name)) {
-        const LuaBasicCard *lcard = luaBasicCards.value(name, NULL);
-        if (!lcard) return NULL;
-        card = lcard->clone(suit, number);
-    } else if (luaBasicCard_className2objectName.values().contains(name)) {
-        QString class_name = luaBasicCard_className2objectName.key(name, name);
-        const LuaBasicCard *lcard = luaBasicCards.value(class_name, NULL);
-        if (!lcard) return NULL;
-        card = lcard->clone(suit, number);
-    } else if (luaTrickCard_className2objectName.contains(name)) {
-        const LuaTrickCard *lcard = luaTrickCards.value(name, NULL);
-        if (!lcard) return NULL;
-        card = lcard->clone(suit, number);
-    } else if (luaTrickCard_className2objectName.values().contains(name)) {
-        QString class_name = luaTrickCard_className2objectName.key(name, name);
-        const LuaTrickCard *lcard = luaTrickCards.value(class_name, NULL);
-        if (!lcard) return NULL;
-        card = lcard->clone(suit, number);
-    } else if (luaWeapon_className2objectName.contains(name)) {
-        const LuaWeapon *lcard = luaWeapons.value(name, NULL);
-        if (!lcard) return NULL;
-        card = lcard->clone(suit, number);
-    } else if (luaWeapon_className2objectName.values().contains(name)) {
-        QString class_name = luaWeapon_className2objectName.key(name, name);
-        const LuaWeapon *lcard = luaWeapons.value(class_name, NULL);
-        if (!lcard) return NULL;
-        card = lcard->clone(suit, number);
-    } else if (luaArmor_className2objectName.contains(name)) {
-        const LuaArmor *lcard = luaArmors.value(name, NULL);
-        if (!lcard) return NULL;
-        card = lcard->clone(suit, number);
-    } else if (luaArmor_className2objectName.values().contains(name)) {
-        QString class_name = luaArmor_className2objectName.key(name, name);
-        const LuaArmor *lcard = luaArmors.value(class_name, NULL);
-        if (!lcard) return NULL;
-        card = lcard->clone(suit, number);
-    } else if (luaTreasure_className2objectName.contains(name)) {
-        const LuaTreasure *lcard = luaTreasures.value(name, NULL);
-        if (!lcard) return NULL;
-        card = lcard->clone(suit, number);
-    } else if (luaTreasure_className2objectName.values().contains(name)) {
-        QString class_name = luaTreasure_className2objectName.key(name, name);
-        const LuaTreasure *lcard = luaTreasures.value(class_name, NULL);
-        if (!lcard) return NULL;
-        card = lcard->clone(suit, number);
-    } else {
+//    if (luaBasicCard_className2objectName.contains(name)) {
+//        const LuaBasicCard *lcard = luaBasicCards.value(name, NULL);
+//        if (!lcard) return NULL;
+//        card = lcard->clone(suit, number);
+//    } else if (luaBasicCard_className2objectName.values().contains(name)) {
+//        QString class_name = luaBasicCard_className2objectName.key(name, name);
+//        const LuaBasicCard *lcard = luaBasicCards.value(class_name, NULL);
+//        if (!lcard) return NULL;
+//        card = lcard->clone(suit, number);
+//    } else if (luaTrickCard_className2objectName.contains(name)) {
+//        const LuaTrickCard *lcard = luaTrickCards.value(name, NULL);
+//        if (!lcard) return NULL;
+//        card = lcard->clone(suit, number);
+//    } else if (luaTrickCard_className2objectName.values().contains(name)) {
+//        QString class_name = luaTrickCard_className2objectName.key(name, name);
+//        const LuaTrickCard *lcard = luaTrickCards.value(class_name, NULL);
+//        if (!lcard) return NULL;
+//        card = lcard->clone(suit, number);
+//    } else if (luaWeapon_className2objectName.contains(name)) {
+//        const LuaWeapon *lcard = luaWeapons.value(name, NULL);
+//        if (!lcard) return NULL;
+//        card = lcard->clone(suit, number);
+//    } else if (luaWeapon_className2objectName.values().contains(name)) {
+//        QString class_name = luaWeapon_className2objectName.key(name, name);
+//        const LuaWeapon *lcard = luaWeapons.value(class_name, NULL);
+//        if (!lcard) return NULL;
+//        card = lcard->clone(suit, number);
+//    } else if (luaArmor_className2objectName.contains(name)) {
+//        const LuaArmor *lcard = luaArmors.value(name, NULL);
+//        if (!lcard) return NULL;
+//        card = lcard->clone(suit, number);
+//    } else if (luaArmor_className2objectName.values().contains(name)) {
+//        QString class_name = luaArmor_className2objectName.key(name, name);
+//        const LuaArmor *lcard = luaArmors.value(class_name, NULL);
+//        if (!lcard) return NULL;
+//        card = lcard->clone(suit, number);
+//    } else if (luaTreasure_className2objectName.contains(name)) {
+//        const LuaTreasure *lcard = luaTreasures.value(name, NULL);
+//        if (!lcard) return NULL;
+//        card = lcard->clone(suit, number);
+//    } else if (luaTreasure_className2objectName.values().contains(name)) {
+//        QString class_name = luaTreasure_className2objectName.key(name, name);
+//        const LuaTreasure *lcard = luaTreasures.value(class_name, NULL);
+//        if (!lcard) return NULL;
+//        card = lcard->clone(suit, number);
+//    } else {
         const QMetaObject *meta = metaobjects.value(name, NULL);
         if (meta == NULL)
             meta = metaobjects.value(className2objectName.key(name, QString()), NULL);
@@ -596,7 +596,7 @@ Card *QSgsEngine::cloneCard(const QString &name, Card::Suit suit, int number, co
             card_obj->setObjectName(className2objectName.value(name, name));
             card = qobject_cast<Card *>(card_obj);
         }
-    }
+    //}
     if (!card) return NULL;
     card->clearFlags();
     if (!flags.isEmpty()) {
@@ -608,7 +608,7 @@ Card *QSgsEngine::cloneCard(const QString &name, Card::Suit suit, int number, co
 
 SkillCard *QSgsEngine::cloneSkillCard(const QString &name) const
 {
-    const QMetaObject *meta = metaobjects.value(name, NULL);
+    const QMetaObject *meta = m_metaobjects.value(name, NULL);
     if (meta) {
         QObject *card_obj = meta->newInstance();
         SkillCard *card = qobject_cast<SkillCard *>(card_obj);
@@ -646,7 +646,7 @@ QString QSgsEngine::getMODName() const
 QStringList QSgsEngine::getExtensions() const
 {
     QStringList extensions;
-    foreach (const Package *package, packages) {
+    foreach (const Package *package, m_packages) {
         if (package->inherits("Scenario"))
             continue;
 
@@ -753,20 +753,20 @@ QString QSgsEngine::getSetupString() const
 
 QMap<QString, QString> QSgsEngine::getAvailableModes() const
 {
-    return modes;
+    return m_modes;
 }
 
 QString QSgsEngine::getModeName(const QString &mode) const
 {
-    if (modes.contains(mode))
-        return modes.value(mode);
+    if (m_modes.contains(mode))
+        return m_modes.value(mode);
     else
         return tr("%1 [Scenario mode]").arg(translate(mode));
 }
 
 int QSgsEngine::getPlayerCount(const QString &mode) const
 {
-    if (modes.contains(mode)) {
+    if (m_modes.contains(mode)) {
         QRegExp rx("(\\d+)");
         int index = rx.indexIn(mode);
         if (index != -1)
@@ -839,14 +839,14 @@ int QSgsEngine::getCardCount() const
 QStringList QSgsEngine::getGeneralNames() const
 {
     QStringList generalNames;
-    foreach (const General *general, generalList)
+    foreach (const General *general, m_generalList)
         generalNames << general->objectName();
     return generalNames;
 }
 
 QList<const General *> QSgsEngine::getGeneralList() const
 {
-    return generalList;
+    return m_generalList;
 }
 
 QStringList QSgsEngine::getLimitedGeneralNames() const
@@ -938,17 +938,17 @@ void QSgsEngine::playAudioEffect(const QString &filename) const
 #endif
 }
 
-void QSgsEngine::playSkillAudioEffect(const QString &skill_name, int index) const
-{
-    const Skill *skill = skills.value(skill_name, NULL);
-    if (skill)
-        skill->playAudioEffect(index);
-}
+//void QSgsEngine::playSkillAudioEffect(const QString &skill_name, int index) const
+//{
+//    const Skill *skill = m_skills.value(skill_name, NULL);
+//    if (skill)
+//        skill->playAudioEffect(index);
+//}
 
-const Skill *QSgsEngine::getSkill(const QString &skill_name) const
-{
-    return skills.value(skill_name, NULL);
-}
+//const Skill *QSgsEngine::getSkill(const QString &skill_name) const
+//{
+//    return m_skills.value(skill_name, NULL);
+//}
 
 const Skill *QSgsEngine::getSkill(const EquipCard *equip) const
 {
@@ -963,7 +963,7 @@ const Skill *QSgsEngine::getSkill(const EquipCard *equip) const
 
 QStringList QSgsEngine::getSkillNames() const
 {
-    return skills.keys();
+    return m_skills.keys();
 }
 
 const TriggerSkill *QSgsEngine::getTriggerSkill(const QString &skill_name) const
@@ -992,7 +992,7 @@ const ViewAsSkill *QSgsEngine::getViewAsSkill(const QString &skill_name) const
 
 const ProhibitSkill *QSgsEngine::isProhibited(const Player *from, const Player *to, const Card *card, const QList<const Player *> &others) const
 {
-    foreach (const ProhibitSkill *skill, prohibit_skills) {
+    foreach (const ProhibitSkill *skill, m_prohibitSkills) {
         if (skill->isProhibited(from, to, card, others))
             return skill;
     }
@@ -1004,7 +1004,7 @@ int QSgsEngine::correctDistance(const Player *from, const Player *to) const
 {
     int correct = 0;
 
-    foreach (const DistanceSkill *skill, distance_skills)
+    foreach (const DistanceSkill *skill, m_distanceSkills)
         correct += skill->getCorrect(from, to);
 
     return correct;
@@ -1014,7 +1014,7 @@ int QSgsEngine::correctMaxCards(const ServerPlayer *target, bool fixed, MaxCards
 {
     int extra = 0;
 
-    foreach (const MaxCardsSkill *skill, maxcards_skills) {
+    foreach (const MaxCardsSkill *skill, m_maxcardsSkills) {
         if (fixed) {
             int f = skill->getFixed(target, type);
             if (f > extra)
@@ -1032,7 +1032,7 @@ int QSgsEngine::correctCardTarget(const TargetModSkill::ModType type, const Play
     int x = 0;
 
     if (type == TargetModSkill::Residue) {
-        foreach (const TargetModSkill *skill, targetmod_skills) {
+        foreach (const TargetModSkill *skill, m_targetmodSkills) {
             ExpPattern p(skill->getPattern());
             if (p.match(from, card)) {
                 int residue = skill->getResidueNum(from, card);
@@ -1041,7 +1041,7 @@ int QSgsEngine::correctCardTarget(const TargetModSkill::ModType type, const Play
             }
         }
     } else if (type == TargetModSkill::DistanceLimit) {
-        foreach (const TargetModSkill *skill, targetmod_skills) {
+        foreach (const TargetModSkill *skill, m_targetmodSkills) {
             ExpPattern p(skill->getPattern());
             if (p.match(from, card)) {
                 int distance_limit = skill->getDistanceLimit(from, card);
@@ -1050,7 +1050,7 @@ int QSgsEngine::correctCardTarget(const TargetModSkill::ModType type, const Play
             }
         }
     } else if (type == TargetModSkill::ExtraTarget) {
-        foreach (const TargetModSkill *skill, targetmod_skills) {
+        foreach (const TargetModSkill *skill, m_targetmodSkills) {
             ExpPattern p(skill->getPattern());
             if (p.match(from, card)) {
                 x += skill->getExtraTargetNum(from, card);
@@ -1066,7 +1066,7 @@ int QSgsEngine::correctAttackRange(const Player *target, bool include_weapon, bo
 {
     int extra = 0;
 
-    foreach (const AttackRangeSkill *skill, attackrange_skills) {
+    foreach (const AttackRangeSkill *skill, m_attackrangeSkills) {
         if (fixed) {
             int f = skill->getFixed(target, include_weapon);
             if (f > extra)
