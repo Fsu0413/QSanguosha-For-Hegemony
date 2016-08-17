@@ -40,67 +40,67 @@ public:
     void addTranslationEntry(const char *key, const char *value);
     QString translate(const QString &toTranslate) const;
     QString translate(const QString &toTranslate, const QString &defaultValue) const;
-    lua_State *getLuaState() const;
+    lua_State *luaState() const;
 
-    int getMiniSceneCounts();
+    int miniSceneCounts();
 
     void addPackage(Package *package);
     void addBanPackage(const QString &package_name);
-    QList<const Package *> getPackages() const;
+    QList<const Package *> packages() const;
 
-    QStringList getBanPackages() const;
+    QStringList banPackages() const;
     Card *cloneCard(const Card *card) const;
     Card *cloneCard(const QString &name, Card::Suit suit = Card::SuitToBeDecided, int number = -1, const QStringList &flags = QStringList()) const;
     SkillCard *cloneSkillCard(const QString &name) const;
 
-    QVersionNumber getVersionNumber() const;
-    QString getVersion() const;
-    QString getVersionName() const;
-    QString getMODName() const;
-    QStringList getExtensions() const;
-    QStringList getKingdoms() const;
-    QColor getKingdomColor(const QString &kingdom) const;
-    QMap<QString, QColor> getSkillColorMap() const;
-    QColor getSkillColor(const QString &skill_type) const;
-    QStringList getChattingEasyTexts() const;
-    QString getSetupString() const;
+    QVersionNumber versionNumber() const;
+    QString version() const;
+    QString versionName() const;
+    QString ModName() const;
+    QStringList extensions() const;
+    QStringList kingdoms() const;
+    QColor kingdomColor(const QString &kingdom) const;
+    QMap<QString, QColor> skillColorMap() const;
+    QColor skillColor(const QString &skill_type) const;
+    QStringList chattingEasyTexts() const;
+    QString setupString() const;
 
-    QMap<QString, QString> getAvailableModes() const;
-    QString getModeName(const QString &mode) const;
-    int getPlayerCount(const QString &mode) const;
-    QString getRoles(const QString &mode) const;
-    QStringList getRoleList(const QString &mode) const;
+    QMap<QString, QString> availableModes() const;
+    QString modeName(const QString &mode) const;
+    int playerCount(const QString &mode) const;
+    QString roles(const QString &mode) const;
+    QStringList roleList(const QString &mode) const;
 
-    const CardPattern *getPattern(const QString &name) const;
+    const CardPattern *pattern(const QString &name) const;
     bool matchExpPattern(const QString &pattern, const Player *player, const Card *card) const;
-    Card::HandlingMethod getCardHandlingMethod(const QString &method_name) const;
-    QList<const Skill *> getRelatedSkills(const QString &skill_name) const;
-    const Skill *getMainSkill(const QString &skill_name) const;
+    Card::HandlingMethod cardHandlingMethod(const QString &method_name) const;
+    QList<const Skill *> relatedSkills(const QString &skill_name) const;
+    const Skill *mainSkill(const QString &skill_name) const;
 
-    QStringList getModScenarioNames() const;
+    QStringList modScenarioNames() const;
     void addScenario(Scenario *scenario);
-    const Scenario *getScenario(const QString &name) const;
+    const Scenario *scenario(const QString &name) const;
     void addPackage(const QString &name);
 
-    const General *getGeneral(const QString &name) const;
-    int getGeneralCount(bool include_banned = false) const;
-    const Skill *getSkill(const QString &skill_name) const;
-    const Skill *getSkill(const EquipCard *card) const;
-    QStringList getSkillNames() const;
-    const TriggerSkill *getTriggerSkill(const QString &skill_name) const;
-    const ViewAsSkill *getViewAsSkill(const QString &skill_name) const;
-    QList<const DistanceSkill *> getDistanceSkills() const;
-    QList<const MaxCardsSkill *> getMaxCardsSkills() const;
-    QList<const TargetModSkill *> getTargetModSkills() const;
-    QList<const TriggerSkill *> getGlobalTriggerSkills() const;
-    QList<const AttackRangeSkill *> getAttackRangeSkills() const;
+    const General *general(const QString &name) const;
+    int generalCount(bool include_banned = false) const;
+    const Skill *skill(const QString &skill_name) const;
+    const Skill *skill(const EquipCard *card) const;
+    QStringList skillNames() const;
+    const TriggerSkill *triggerSkill(const QString &skill_name) const;
+    const ViewAsSkill *viewAsSkill(const QString &skill_name) const;
+    QList<const DistanceSkill *> distanceSkills() const;
+    QList<const MaxCardsSkill *> maxCardsSkills() const;
+    QList<const TargetModSkill *> targetModSkills() const;
+    QList<const TriggerSkill *> globalTriggerSkills() const;
+    QList<const AttackRangeSkill *> attackRangeSkills() const;
     void addSkills(const QList<const Skill *> &skills);
 
-    int getCardCount() const;
+    int cardCount() const;
     //const Card *getEngineCard(int cardId) const;
     // @todo: consider making this const Card *
-    Card *getCard(int cardId);
-    WrappedCard *getWrappedCard(int cardId);
+    Card *card(int cardId);
+    WrappedCard *wrappedCard(int cardId);
 
     //************************************
     // Method:    getRandomGenerals
@@ -118,7 +118,7 @@ public:
     // Mogara
     // March 17 2014
     //************************************
-    QStringList getRandomGenerals(int count, const QSet<QString> &ban_set = QSet<QString>()) const;
+    QStringList randomGenerals(int count, const QSet<QString> &ban_set = QSet<QString>()) const;
     //************************************
     // Method:    getRandomCards
     // FullName:  Engine::getRandomCards
@@ -133,8 +133,8 @@ public:
     // Mogara
     // March 17 2014
     //************************************
-    QList<int> getRandomCards() const;
-    QString getRandomGeneralName() const;
+    QList<int> randomCards() const;
+    QString randomGeneralName() const;
     //************************************
     // Method:    getLimitedGeneralNames
     // FullName:  Engine::getLimitedGeneralNames
@@ -149,9 +149,9 @@ public:
     // Mogara
     // March 17 2014
     //************************************
-    QStringList getLimitedGeneralNames() const;
-    QStringList getGeneralNames() const;
-    QList<const General *> getGeneralList() const;
+    QStringList limitedGeneralNames() const;
+    QStringList generalNames() const;
+    QList<const General *> generalList() const;
 
 //    void playSystemAudioEffect(const QString &name) const;
 //    void playAudioEffect(const QString &filename) const;
@@ -178,7 +178,7 @@ private:
     QList<const General *> m_generalList;
     QHash<QString, const General *> m_generalHash;
     QHash<QString, const QMetaObject *> m_metaobjects;
-    QHash<QString, QString> m_className2objectName;
+    //QHash<QString, QString> m_className2objectName;
     QHash<QString, const Skill *> m_skills;
     QMap<QString, QString> m_modes;
     QMultiMap<QString, QString> m_relatedSkills;
@@ -204,15 +204,15 @@ private:
     lua_State *m_lua;
 
    // QHash<QString, QString> luaBasicCard_className2objectName;
-    QHash<QString, const LuaBasicCard *> m_luaBasicCards;
+    //QHash<QString, const LuaBasicCard *> m_luaBasicCards;
    // QHash<QString, QString> luaTrickCard_className2objectName;
-    QHash<QString, const LuaTrickCard *> m_luaTrickCards;
+    //QHash<QString, const LuaTrickCard *> m_luaTrickCards;
    // QHash<QString, QString> luaWeapon_className2objectName;
-    QHash<QString, const LuaWeapon*> m_luaWeapons;
+    //QHash<QString, const LuaWeapon*> m_luaWeapons;
    // QHash<QString, QString> luaArmor_className2objectName;
-    QHash<QString, const LuaArmor *> m_luaArmors;
+    //QHash<QString, const LuaArmor *> m_luaArmors;
     //QHash<QString, QString> luaTreasure_className2objectName;
-    QHash<QString, const LuaTreasure *> m_luaTreasures;
+    //QHash<QString, const LuaTreasure *> m_luaTreasures;
 
     QMultiMap<QString, QString> m_spConvertPairs;
 

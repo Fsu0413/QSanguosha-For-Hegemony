@@ -48,10 +48,8 @@ public:
     }
 };
 
-class Package : public QObject
+class QSgsPackage
 {
-    Q_OBJECT
-        Q_ENUMS(Type)
 
 public:
     enum Type
@@ -59,77 +57,86 @@ public:
         GeneralPack, CardPack, MixedPack, SpecialPack
     };
 
-    Package(const QString &name, Type pack_type = GeneralPack)
+    QSgsPackage(const QString &name, Type pack_type = GeneralPack)
     {
         setObjectName(name);
-        type = pack_type;
+        m_type = pack_type;
     }
 
     QList<const QMetaObject *> getMetaObjects() const
     {
-        return metaobjects;
+        return m_metaobjects;
     }
 
     QList<const Skill *> getSkills() const
     {
-        return skills;
+        return m_skills;
     }
 
     QMap<QString, const CardPattern *> getPatterns() const
     {
-        return patterns;
+        return m_patterns;
     }
 
     QMultiMap<QString, QString> getRelatedSkills() const
     {
-        return related_skills;
+        return m_relatedSkills;
     }
 
     QMultiMap<QString, QString> getConvertPairs() const
     {
-        return convert_pairs;
+        return m_convertPairs;
     }
 
     Type getType() const
     {
-        return type;
+        return m_type;
     }
 
     template<typename T>
     void addMetaObject()
     {
-        metaobjects << &T::staticMetaObject;
+        m_metaobjects << &T::staticMetaObject;
     }
 
     inline void insertRelatedSkills(const QString &main_skill, const QString &related_skill)
     {
-        related_skills.insertMulti(main_skill, related_skill);
+        m_relatedSkills.insertMulti(main_skill, related_skill);
     }
 
     void insertRelatedSkills(const QString &main_skill, int n, ...);
 
     inline void insertConvertPairs(const QString &from, const QString &to)
     {
-        convert_pairs.insertMulti(from, to);
+        m_convertPairs.insertMulti(from, to);
     }
 
-    virtual ~Package();
+    void registerCards();
+
+    QList <Card *> &cards() const{
+        return m_cards;
+    }
+
+    virtual ~QSgsPackage();
 
 protected:
-    QList<const QMetaObject *> metaobjects;
-    QList<const Skill *> skills;
-    QMap<QString, const CardPattern *> patterns;
-    QMultiMap<QString, QString> related_skills;
-    QMultiMap<QString, QString> convert_pairs;
-    Type type;
+    QList<const QMetaObject *> m_metaobjects;
+    QList<const Skill *> m_skills;
+    QMap<QString, const CardPattern *> m_patterns;
+    QMultiMap<QString, QString> m_relatedSkills;
+    QMultiMap<QString, QString> m_convertPairs;
+    Type m_type;
+    QList <Card *> m_cards;
+    QHash<QString, QString> m_className2objectName;
 };
 
-typedef QHash<QString, Package *> PackageHash;
+
+typedef QHash<QString, QSgsPackage *> PackageHash;
 
 class PackageAdder
 {
 public:
-    PackageAdder(const QString &name, Package *pack)
+    PackageAdder(const QString &name, QSgsPackage *pack)
     {
         packages()[name] = pack;
     }

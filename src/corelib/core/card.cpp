@@ -100,7 +100,7 @@ int Card::number() const
         else {
             int num = 0;
             foreach (int id, m_subcards)
-                num += Sanguosha->getCard(id)->number();
+                num += Sanguosha->card(id)->number();
             return num;
         }
     } else
@@ -134,11 +134,11 @@ Card::Suit Card::suit() const
         if (subcardsLength() == 0)
             return NoSuit;
         else if (subcardsLength() == 1)
-            return Sanguosha->getCard(m_subcards.first())->suit();
+            return Sanguosha->card(m_subcards.first())->suit();
         else {
             Color color = Colorless;
             foreach (int id, m_subcards) {
-                Color color2 = Sanguosha->getCard(id)->color();
+                Color color2 = Sanguosha->card(id)->color();
                 if (color == Colorless)
                     color = color2;
                 else if (color != color2)
@@ -367,10 +367,10 @@ QString Card::description(bool yellow) const
     QString desc = Sanguosha->translate(":" + objectName());
     if (desc == ":" + objectName())
         return desc;
-    foreach (const QString &skill_type, Sanguosha->getSkillColorMap().keys()) {
+    foreach (const QString &skill_type, Sanguosha->skillColorMap().keys()) {
         QString to_replace = Sanguosha->translate(skill_type);
         if (to_replace == skill_type) continue;
-        QString color_str = Sanguosha->getSkillColor(skill_type).name();
+        QString color_str = Sanguosha->skillColor(skill_type).name();
         if (desc.contains(to_replace))
             desc.replace(to_replace, QString("<font color=%1><b>%2</b></font>").arg(color_str)
             .arg(to_replace));
@@ -628,7 +628,7 @@ const Card *Card::Parse(const QString &str)
         bool ok;
         int card_id = str.toInt(&ok);
         if (ok)
-            return Sanguosha->getCard(card_id)->realCard();
+            return Sanguosha->card(card_id)->realCard();
         else
             return nullptr;
     }
@@ -1034,7 +1034,7 @@ ArraySummonCard::ArraySummonCard(const QString &name)
 
 const Card *ArraySummonCard::validate(CardUseStruct &card_use) const
 {
-    const BattleArraySkill *skill = qobject_cast<const BattleArraySkill *>(Sanguosha->getTriggerSkill(objectName()));
+    const BattleArraySkill *skill = qobject_cast<const BattleArraySkill *>(Sanguosha->triggerSkill(objectName()));
     if (skill) {
         card_use.from->showGeneral(card_use.from->inHeadSkills(skill));
         skill->summonFriends(card_use.from);

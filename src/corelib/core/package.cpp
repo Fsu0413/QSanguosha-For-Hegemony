@@ -20,25 +20,36 @@
 
 #include "package.h"
 #include "skill.h"
+#include "card.h"
 
-void Package::insertRelatedSkills(const QString &main_skill, int n, ...)
+void QSgsPackage::insertRelatedSkills(const QString &main_skill, int n, ...)
 {
     va_list ap;
     va_start(ap, n);
     for (int i = 0; i < n; ++i) {
         QString c = va_arg(ap, const char *);
-        related_skills.insertMulti(main_skill, c);
+        m_relatedSkills.insertMulti(main_skill, c);
     }
     va_end(ap);
 }
 
-Package::~Package()
+void QSgsPackage::registerCards()
 {
-    foreach (const Skill *skill, skills)
+    foreach (Card *c,m_cards){
+        if (!m_className2objectName.keys().contains(c->className()))
+            m_className2objectName.insert(c->className(),c->objectName());
+    }
+
+QSgsPackage::~QSgsPackage()
+{
+    foreach (const Skill *skill, m_skills)
         delete skill;
 
-    foreach (const QString key, patterns.keys())
-        delete patterns[key];
+    foreach (const QString key, m_patterns.keys())
+        delete m_patterns[key];
+    foreach (Card *c,m_cards)
+        delete c;
+    m_className2objectName.clear();
 }
 
 Q_GLOBAL_STATIC(PackageHash, Packages)

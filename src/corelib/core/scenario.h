@@ -29,7 +29,7 @@ class ScenarioRule;
 
 #include <QMap>
 
-class Scenario : public Package
+class Scenario : public QSgsPackage
 {
     Q_OBJECT
 
