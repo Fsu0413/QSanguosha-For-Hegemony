@@ -29,7 +29,7 @@
 #include <QSize>
 #include <QFile>
 
-General::General(Package *package, const QString &name, const QString &kingdom,
+General::General(QSgsPackage *package, const QString &name, const QString &kingdom,
     int double_max_hp, bool male, bool hidden, bool never_shown)
     : QObject(package), m_kingdom(kingdom),
     m_doubleMaxHp(double_max_hp), m_gender(male ? Male : Female),
@@ -49,12 +49,12 @@ General::General(Package *package, const QString &name, const QString &kingdom,
     }
 }
 
-int General::getDoubleMaxHp() const
+int General::doubleMaxHp() const
 {
     return m_doubleMaxHp;
 }
 
-QString General::getKingdom() const
+QString General::kingdom() const
 {
     return m_kingdom;
 }
@@ -79,7 +79,7 @@ void General::setGender(Gender gender)
     this->m_gender = gender;
 }
 
-General::Gender General::getGender() const
+General::Gender General::gender() const
 {
     return m_gender;
 }
@@ -99,12 +99,12 @@ bool General::isTotallyHidden() const
     return m_neverShown;
 }
 
-int General::getMaxHpHead() const
+int General::maxHpHead() const
 {
     return m_doubleMaxHp + m_headMaxHpAdjustedValue;
 }
 
-int General::getMaxHpDeputy() const
+int General::maxHpDeputy() const
 {
     return m_doubleMaxHp + m_deputyMaxHpAdjustedValue;
 }
@@ -134,7 +134,7 @@ QList<const Skill *> General::getSkillList(bool relate_to_place, bool head_only)
 {
     QList<const Skill *> skills;
     foreach (const QString &skill_name, m_skillnameList) {
-        const Skill *skill = Sanguosha->getSkill(skill_name);
+        const Skill *skill = Sanguosha->skill(skill_name);
         Q_ASSERT(skill != nullptr);
         if (relate_to_place && !skill->relateToPlace(!head_only))
             skills << skill;
@@ -163,7 +163,7 @@ QSet<const TriggerSkill *> General::getTriggerSkills() const
 {
     QSet<const TriggerSkill *> skills;
     foreach (const QString &skill_name, m_skillnameList) {
-        const TriggerSkill *skill = Sanguosha->getTriggerSkill(skill_name);
+        const TriggerSkill *skill = Sanguosha->triggerSkill(skill_name);
         if (skill)
             skills << skill;
     }
@@ -175,12 +175,12 @@ void General::addRelateSkill(const QString &skill_name)
     m_relatedSkills << skill_name;
 }
 
-QStringList General::getRelatedSkillNames() const
+QStringList General::relatedSkillNames() const
 {
     return m_relatedSkills;
 }
 
-QString General::getPackage() const
+QString General::package() const
 {
     QObject *p = parent();
     if (p)
@@ -189,14 +189,14 @@ QString General::getPackage() const
         return QString(); // avoid null pointer exception;
 }
 
-QString General::getCompanions() const
+QString General::companions() const
 {
     if (isLord())
-        return tr("%1 Generals").arg(Sanguosha->translate(getKingdom()));
+        return tr("%1 Generals").arg(Sanguosha->translate(kingdom()));
     QStringList name;
     foreach (const QString &general, m_companions)
         name << QString("%1").arg(Sanguosha->translate(general));
-    GeneralList generals(Sanguosha->getGeneralList());
+    GeneralList generals(Sanguosha->generalList());
     foreach(const General *gnr, generals) {
         if (!gnr)
             continue;
@@ -206,7 +206,7 @@ QString General::getCompanions() const
     return name.join(" ");
 }
 
-QString General::getSkillDescription(bool include_name, bool inToolTip) const
+QString General::skillDescription(bool include_name, bool inToolTip) const
 {
     QString description;
 
@@ -218,7 +218,7 @@ QString General::getSkillDescription(bool include_name, bool inToolTip) const
     }
 
     if (include_name) {
-        QString color_str = Sanguosha->getKingdomColor(m_kingdom).name();
+        QString color_str = Sanguosha->kingdomColor(m_kingdom).name();
         QString name = QString("<font color=%1><b>%2</b></font>     ").arg(color_str).arg(Sanguosha->translate(objectName()));
         name.prepend(QString("<img src='image/kingdom/icon/%1.png'/>    ").arg(m_kingdom));
         int region = m_doubleMaxHp;
@@ -251,10 +251,10 @@ QString General::getSkillDescription(bool include_name, bool inToolTip) const
             if (qAbs(waken) % 2)
                 name.append("<img src='image/system/magatamas/half-waken.png' height = 12/>");
         }
-        if (!getCompanions().isEmpty()) {
+        if (!companions().isEmpty()) {
             name.append("<br/> <br/>");
             name.append(QString("<font color=%1><b>%2:</b></font>     ").arg(color_str).arg(Sanguosha->translate("Companions")));
-            name.append(QString("<font color=%1>%2</font>").arg(color_str).arg(getCompanions()));
+            name.append(QString("<font color=%1>%2</font>").arg(color_str).arg(companions()));
         }
         name.append("<br/> <br/>");
         description.prepend(name);
@@ -310,7 +310,7 @@ void General::tryLoadingSkinTranslation(const int skinId) const
 
     if (QFile::exists(file)) {
         Sanguosha->setProperty("CurrentSkinId", skinId);
-        DoLuaScript(Sanguosha->getLuaState(), file.toLatin1().constData());
+        DoLuaScript(Sanguosha->luaState(), file.toLatin1().constData());
     }
 
     translated_skins << skinId;
@@ -323,7 +323,7 @@ void General::addCompanion(const QString &name)
 
 bool General::isCompanionWith(const QString &name) const
 {
-    const General *other = Sanguosha->getGeneral(name);
+    const General *other = Sanguosha->general(name);
     Q_ASSERT(other);
     if (m_kingdom != other->m_kingdom)
         return false;

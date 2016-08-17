@@ -23,7 +23,7 @@
 
 using namespace QSanProtocol;
 
-unsigned int QSanProtocol::Packet::globalSerialSequence = 0;
+unsigned int QSanProtocol::Packet::m_globalSerialSequence = 0;
 const int QSanProtocol::Packet::S_MAX_PACKET_SIZE = 65535;
 const char *QSanProtocol::S_PLAYER_SELF_REFERENCE_ID = "MG_SELF";
 
@@ -76,14 +76,14 @@ QVariant QSanProtocol::Countdown::toVariant() const
 
 QSanProtocol::Packet::Packet(int packetDescription, CommandType command)
     : globalSerial(0), localSerial(0),
-    command(command),
-    packetDescription(static_cast<PacketDescription>(packetDescription))
+    m_command(command),
+    m_packetDescription(static_cast<PacketDescription>(packetDescription))
 {
 }
 
 unsigned int QSanProtocol::Packet::createGlobalSerial()
 {
-    globalSerial = ++globalSerialSequence;
+    globalSerial = ++m_globalSerialSequence;
     return globalSerial;
 }
 
@@ -101,11 +101,11 @@ bool QSanProtocol::Packet::parse(const QByteArray &raw)
 
     globalSerial = result[0].toUInt();
     localSerial = result[1].toUInt();
-    packetDescription = static_cast<PacketDescription>(result[2].toInt());
-    command = (CommandType)result[3].toInt();
+    m_packetDescription = static_cast<PacketDescription>(result[2].toInt());
+    m_command = (CommandType)result[3].toInt();
 
     if (result.size() == 5)
-        messageBody = result[4];
+        m_messageBody = result[4];
     return true;
 }
 
@@ -114,10 +114,10 @@ QByteArray QSanProtocol::Packet::toJson() const
     JsonArray result;
     result << globalSerial;
     result << localSerial;
-    result << packetDescription;
-    result << command;
-    if (!messageBody.isNull())
-        result << messageBody;
+    result << m_packetDescription;
+    result << m_command;
+    if (!m_messageBody.isNull())
+        result << m_messageBody;
 
     JsonDocument doc(result);
     const QByteArray &msg = doc.toJson();

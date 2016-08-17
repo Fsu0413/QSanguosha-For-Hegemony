@@ -23,7 +23,7 @@
 
 class Skill;
 class TriggerSkill;
-class Package;
+class QSgsPackage;
 class QSize;
 
 #include <QObject>
@@ -36,21 +36,21 @@ class General : public QObject
 {
     Q_OBJECT
     Q_ENUMS(Gender)
-    Q_PROPERTY(QString m_kingdom READ getKingdom CONSTANT)
-    Q_PROPERTY(int maxhp READ getDoubleMaxHp CONSTANT)
+    Q_PROPERTY(QString m_kingdom READ kingdom CONSTANT)
+    Q_PROPERTY(int maxhp READ doubleMaxHp CONSTANT)
     Q_PROPERTY(bool male READ isMale STORED false CONSTANT)
     Q_PROPERTY(bool female READ isFemale STORED false CONSTANT)
-    Q_PROPERTY(Gender m_gender READ getGender CONSTANT)
+    Q_PROPERTY(Gender m_gender READ gender CONSTANT)
     Q_PROPERTY(bool m_lord READ isLord CONSTANT)
     Q_PROPERTY(bool m_hidden READ isHidden CONSTANT)
 
 public:
-    explicit General(Package *package, const QString &name, const QString &m_kingdom,
+    explicit General(QSgsPackage *package, const QString &name, const QString &m_kingdom,
         int m_doubleMaxHp = 4, bool male = true, bool m_hidden = false, bool m_neverShown = false);
 
     // property getters/setters
-    int getDoubleMaxHp() const;
-    QString getKingdom() const;
+    int doubleMaxHp() const;
+    QString kingdom() const;
     bool isMale() const;
     bool isFemale() const;
     bool isNeuter() const;
@@ -58,14 +58,14 @@ public:
     bool isHidden() const;
     bool isTotallyHidden() const;
 
-    int getMaxHpHead() const;
-    int getMaxHpDeputy() const;
+    int maxHpHead() const;
+    int maxHpDeputy() const;
 
     enum Gender
     {
         Sexless, Male, Female, Neuter
     };
-    Gender getGender() const;
+    Gender gender() const;
     void setGender(Gender m_gender);
 
     void addSkill(Skill *skill);
@@ -77,13 +77,13 @@ public:
     QSet<const TriggerSkill *> getTriggerSkills() const;
 
     void addRelateSkill(const QString &skill_name);
-    QStringList getRelatedSkillNames() const;
+    QStringList relatedSkillNames() const;
 
-    QString getPackage() const;
-    QString getCompanions() const;
-    QString getSkillDescription(bool include_name = false, bool inToolTip = true) const;
+    QString package() const;
+    QString companions() const;
+    QString skillDescription(bool include_name = false, bool inToolTip = true) const;
 
-    inline QSet<QString> getExtraSkillSet() const
+    inline QSet<QString> extraSkillSet() const
     {
         return m_extraSet;
     }
