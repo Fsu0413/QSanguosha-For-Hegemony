@@ -24,7 +24,10 @@
 #include <QObject>
 #include <QVersionNumber>
 
+#include "card.h"
+
 struct lua_State;
+
 
 class QSgsEngine : public QObject
 {

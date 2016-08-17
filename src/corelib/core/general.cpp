@@ -22,9 +22,7 @@
 #include "engine.h"
 #include "skill.h"
 #include "package.h"
-#include "client.h"
 #include "settings.h"
-#include "skinbank.h"
 
 #include <QSize>
 #include <QFile>

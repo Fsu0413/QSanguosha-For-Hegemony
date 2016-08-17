@@ -27,7 +27,6 @@ class Card;
 class QDialog;
 class GuhuoBox;
 
-#include "room.h"
 #include "namespace.h"
 
 #include <QMap>

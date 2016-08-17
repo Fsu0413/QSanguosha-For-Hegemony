@@ -27,7 +27,6 @@ class Card;
 class Slash;
 
 #include "player.h"
-#include "serverplayer.h"
 #include "namespace.h"
 
 #include <QVariant>

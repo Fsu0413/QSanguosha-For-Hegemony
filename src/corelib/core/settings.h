@@ -22,10 +22,7 @@
 #define _SETTINGS_H
 
 #include <QSettings>
-#include <QFont>
 #include <QRectF>
-#include <QPixmap>
-#include <QBrush>
 
 class Settings : public QSettings
 {

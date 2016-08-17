@@ -23,7 +23,6 @@
 #include <QStringList>
 #include <QFile>
 #include <QRect>
-#include <QColor>
 #include <QJsonDocument>
 
 JsonDocument::JsonDocument()

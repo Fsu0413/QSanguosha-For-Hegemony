@@ -23,7 +23,6 @@
 
 #include <QObject>
 #include <QMap>
-#include <QIcon>
 
 class Room;
 class Player;
@@ -35,7 +34,7 @@ class CardItem;
 struct CardEffectStruct;
 struct CardUseStruct;
 
-
+class Card;
 
 class CardPattern
 {

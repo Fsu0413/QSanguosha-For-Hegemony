@@ -10,10 +10,10 @@ libQSgsClient.depends = libQSgsCore
 libQSgsUi.depends = libQSgsClient
 libQSgsAi.depends = libQSgsClient
 
-QSanguosha.depends = libQSgsCore libQSgsSkills libQSgsClient libQSgsUi libQSgsAi
-QSgsAiClient.depends = libQSgsCore libQSgsSkills libQSgsClient libQSgsAi
-QSgsServer.depends = libQSgsCore libQSgsSkills
-QSgsGameLogic.depends = libQSgsCore libQSgsSkills libQSgsGameLogic
+QSanguosha.depends = libQSgsCore libQSgsPackages libQSgsClient libQSgsUi libQSgsAi
+QSgsAiClient.depends = libQSgsCore libQSgsPackages libQSgsClient libQSgsAi
+QSgsServer.depends = libQSgsCore libQSgsPackages
+QSgsGameLogic.depends = libQSgsCore libQSgsPackages libQSgsGameLogic
 
 
 libQSgsCore.file = corelib/libQSgsCore.pro

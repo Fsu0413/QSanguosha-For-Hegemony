@@ -30,9 +30,6 @@ struct lua_State;
 
 typedef int LuaFunction;
 
-#include "card.h"
-#include "structs.h"
-
 #include <QString>
 #include <QObject>
 
