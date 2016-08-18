@@ -222,7 +222,7 @@ public:
 
 protected:
     QList<int> m_subcards;
-    bool m_targetixed;
+    bool m_targetFixed;
     bool m_mute;
     bool m_willThrow;
     bool m_hasPreact;

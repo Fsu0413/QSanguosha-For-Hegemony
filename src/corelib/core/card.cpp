@@ -35,7 +35,7 @@ const Card::Suit Card::AllSuits[4] = {
 };
 
 Card::Card(Suit suit, int number, bool target_fixed)
-    :target_fixed(target_fixed), m_mute(false),
+    : m_targetFixed(target_fixed), m_mute(false),
     m_willThrow(true), m_hasPreact(false), m_canRecast(false), m_transferable(false),
     m_suit(suit), m_number(number), m_id(-1)
 {
@@ -677,7 +677,7 @@ Card *Card::Clone(const Card *card)
 
 bool Card::targetFixed() const
 {
-    return target_fixed;
+    return m_targetFixed;
 }
 
 bool Card::targetsFeasible(const QList<const Player *> &targets, const Player *) const
