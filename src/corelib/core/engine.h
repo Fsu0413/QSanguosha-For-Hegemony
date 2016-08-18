@@ -28,7 +28,6 @@
 
 struct lua_State;
 
-
 class QSgsEngine : public QObject
 {
     Q_OBJECT
@@ -50,7 +49,7 @@ public:
 
     QStringList banPackages() const;
     Card *cloneCard(const Card *card) const;
-    Card *cloneCard(const QString &name, Card::Suit suit = Card::SuitToBeDecided, int number = -1, const QStringList &flags = QStringList()) const;
+    Card *cloneCard(const QString &name, Card::Suit suit = Card::Suit::Tbd, int number = -1, const QStringList &flags = QStringList()) const;
     SkillCard *cloneSkillCard(const QString &name) const;
 
     QVersionNumber versionNumber() const;
