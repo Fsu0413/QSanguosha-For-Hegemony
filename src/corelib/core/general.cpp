@@ -210,7 +210,7 @@ QString General::skillDescription(bool include_name, bool inToolTip) const
 
     foreach (const Skill *skill, getVisibleSkillList()) {
         QString skill_name = Sanguosha->translate(skill->objectName());
-        QString desc = skill->getDescription(inToolTip);
+        QString desc = skill->description(inToolTip);
         desc.replace("\n", "<br/>");
         description.append(QString("<font color=%1><b>%2</b>:</font> %3 <br/> <br/>").arg(inToolTip ? Config.SkillDescriptionInToolTipColor.name() : Config.SkillDescriptionInOverviewColor.name()).arg(skill_name).arg(desc));
     }

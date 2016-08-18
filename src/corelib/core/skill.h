@@ -50,21 +50,21 @@ public:
     explicit Skill(const QString &name, Frequency frequent = NotFrequent);
     bool isLordSkill() const;
     bool isAttachedLordSkill() const;
-    QString getDescription(bool inToolTip = true) const;
-    QString getNotice(int index) const;
+    QString description(bool inToolTip = true) const;
+    QString notice(int index) const;
     bool isVisible() const;
 
-    virtual int getEffectIndex(const ServerPlayer *player, const Card *card) const;
-    virtual QDialog *getDialog() const;
+//    virtual int getEffectIndex(const ServerPlayer *player, const Card *card) const;
+//    virtual QDialog *getDialog() const;
 
-    virtual QString getGuhuoBox() const;
+//    virtual QString getGuhuoBox() const;
 
-    void initMediaSource();
-    void playAudioEffect(int index = -1) const;
-    Frequency getFrequency() const;
-    QString getLimitMark() const;
-    QStringList getSources(const QString &general, const int skinId) const;
-    QStringList getSources() const;
+//    void initMediaSource();
+//    void playAudioEffect(int index = -1) const;
+    Frequency frequency() const;
+    QString limitMark() const;
+//    QStringList getSources(const QString &general, const int skinId) const;
+//    QStringList getSources() const;
 
     virtual bool canPreshow() const;
     virtual bool relateToPlace(bool head = true) const;
@@ -72,19 +72,19 @@ public:
     //for LUA
     inline void setRelateToPlace(const char *rtp)
     {
-        relate_to_place = rtp;
+        m_relateToPlace = rtp;
     }
 
 protected:
-    Frequency frequency;
-    QString limit_mark;
-    QString relate_to_place;
-    bool attached_lord_skill;
+    Frequency m_frequency;
+    QString m_limitMark;
+    QString m_relateToPlace;
+    bool m_attachedLordSkill;
 
 private:
-    bool lord_skill;
-    QStringList sources;
-    mutable QHash<const QString, QStringList> skinSourceHash;
+    bool m_lordSkill;
+    //QStringList sources;
+    //mutable QHash<const QString, QStringList> skinSourceHash;
 };
 
 class ViewAsSkill : public Skill
@@ -105,17 +105,17 @@ public:
 
     inline bool isResponseOrUse() const
     {
-        return response_or_use;
+        return m_responseOrUse;
     }
-    inline QString getExpandPile() const
+    inline QString expandPile() const
     {
-        return expand_pile;
+        return m_expandPile;
     }
 
 protected:
-    QString response_pattern;
-    bool response_or_use;
-    QString expand_pile;
+    QString m_responsePattern;
+    bool m_responseOrUse;
+    QString m_expandPile;
 };
 
 class ZeroCardViewAsSkill : public ViewAsSkill
@@ -144,7 +144,7 @@ public:
     virtual const Card *viewAs(const Card *originalCard) const = 0;
 
 protected:
-    QString filter_pattern;
+    QString m_filterPattern;
 };
 
 class FilterSkill : public OneCardViewAsSkill
@@ -163,11 +163,11 @@ class TriggerSkill : public Skill
 
 public:
     TriggerSkill(const QString &name);
-    const ViewAsSkill *getViewAsSkill() const;
-    QList<TriggerEvent> getTriggerEvents() const;
+    const ViewAsSkill *viewAsSkill() const;
+    QList<TriggerEvent> triggerEvents() const;
 
-    virtual int getPriority() const;
-    virtual double getDynamicPriority(TriggerEvent e) const;
+    virtual int priority() const;
+    //virtual double getDynamicPriority(TriggerEvent e) const;
     //     double getCurrentPriority() const
     //     {
     //         return current_priority;
@@ -190,33 +190,33 @@ public:
 
     inline bool isGlobal() const
     {
-        return global;
+        return m_global;
     }
 
     virtual ~TriggerSkill();
 
 protected:
-    const ViewAsSkill *view_as_skill;
-    QList<TriggerEvent> events;
-    bool global;
-    QHash<TriggerEvent, double> priority;
+    const ViewAsSkill *m_viewAsSkill;
+    QList<TriggerEvent> m_events;
+    bool m_global;
+    QHash<TriggerEvent, double> m_priority;
 
-private:
-    mutable double current_priority;
+//private:
+//    mutable double current_priority;
 };
 
 class Scenario;
 
-class ScenarioRule : public TriggerSkill
-{
-    Q_OBJECT
+//class ScenarioRule : public TriggerSkill
+//{
+//    Q_OBJECT
 
-public:
-    ScenarioRule(Scenario *scenario);
+//public:
+//    ScenarioRule(Scenario *scenario);
 
-    virtual int getPriority() const;
-    virtual bool triggerable(const ServerPlayer *target) const;
-};
+//    virtual int m_priority() const;
+//    virtual bool triggerable(const ServerPlayer *target) const;
+//};
 
 class MasochismSkill : public TriggerSkill
 {
@@ -276,10 +276,10 @@ public:
 
     inline HegemonyMode::ArrayType getArrayType() const
     {
-        return array_type;
+        return m_arrayType;
     }
 private:
-    HegemonyMode::ArrayType array_type;
+    HegemonyMode::ArrayType m_arrayType;
 };
 
 class ArraySummonSkill : public ZeroCardViewAsSkill
@@ -339,14 +339,14 @@ public:
     };
 
     TargetModSkill(const QString &name);
-    virtual QString getPattern() const;
+    virtual QString pattern() const;
 
-    virtual int getResidueNum(const Player *from, const Card *card) const;
-    virtual int getDistanceLimit(const Player *from, const Card *card) const;
-    virtual int getExtraTargetNum(const Player *from, const Card *card) const;
+    virtual int residueNum(const Player *from, const Card *card) const;
+    virtual int distanceLimit(const Player *from, const Card *card) const;
+    virtual int extraTargetNum(const Player *from, const Card *card) const;
 
 protected:
-    QString pattern;
+    QString m_pattern;
 };
 
 class SlashNoDistanceLimitSkill : public TargetModSkill
@@ -356,10 +356,10 @@ class SlashNoDistanceLimitSkill : public TargetModSkill
 public:
     SlashNoDistanceLimitSkill(const QString &skill_name);
 
-    virtual int getDistanceLimit(const Player *from, const Card *card) const;
+    virtual int distanceLimit(const Player *from, const Card *card) const;
 
 protected:
-    QString name;
+    QString m_name;
 };
 
 class AttackRangeSkill : public Skill
@@ -369,8 +369,8 @@ class AttackRangeSkill : public Skill
 public:
     AttackRangeSkill(const QString &name);
 
-    virtual int getExtra(const Player *target, bool include_weapon) const;
-    virtual int getFixed(const Player *target, bool include_weapon) const;
+    virtual int extra(const Player *target, bool include_weapon) const;
+    virtual int fixed(const Player *target, bool include_weapon) const;
 };
 
 
@@ -382,12 +382,12 @@ class FakeMoveSkill : public TriggerSkill
 public:
     FakeMoveSkill(const QString &skillname);
 
-    virtual int getPriority() const;
+    virtual int priority() const;
     virtual QStringList triggerable(TriggerEvent, Room *, ServerPlayer *target, QVariant &, ServerPlayer * &ask_who) const;
     virtual bool effect(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data, ServerPlayer *ask_who = NULL) const;
 
 private:
-    QString name;
+    QString m_name;
 };
 
 class DetachEffectSkill : public TriggerSkill
@@ -402,7 +402,7 @@ public:
     virtual void onSkillDetached(Room *room, ServerPlayer *player) const;
 
 private:
-    QString name, pile_name;
+    QString m_name, m_pileName;
 };
 
 class WeaponSkill : public TriggerSkill
@@ -412,7 +412,7 @@ class WeaponSkill : public TriggerSkill
 public:
     WeaponSkill(const QString &name);
 
-    virtual int getPriority() const;
+    virtual int priority() const;
     virtual bool triggerable(const ServerPlayer *target) const;
 };
 
@@ -423,7 +423,7 @@ class ArmorSkill : public TriggerSkill
 public:
     ArmorSkill(const QString &name);
 
-    virtual int getPriority() const;
+    virtual int priority() const;
     virtual bool triggerable(const ServerPlayer *target) const;
 };
 
@@ -434,7 +434,7 @@ class TreasureSkill : public TriggerSkill
 public:
     TreasureSkill(const QString &name);
 
-    virtual int getPriority() const;
+    virtual int priority() const;
     virtual bool triggerable(const ServerPlayer *target) const;
 };
 

@@ -9,15 +9,15 @@ TARGET = QSgsCore
 QT -= widgets gui
 QT += network
 
-INCLUDEPATH += ../aiclient
-INCLUDEPATH += ../ailib
-INCLUDEPATH += ../clientlib
+#INCLUDEPATH += ../aiclient
+#INCLUDEPATH += ../ailib
+#INCLUDEPATH += ../clientlib
 INCLUDEPATH += ../corelib
-INCLUDEPATH += ../gamelogic
-INCLUDEPATH += ../maincpp
-INCLUDEPATH += ../server
-INCLUDEPATH += ../skillslib
-INCLUDEPATH += ../uilib
+#INCLUDEPATH += ../gamelogic
+#INCLUDEPATH += ../maincpp
+#INCLUDEPATH += ../server
+#INCLUDEPATH += ../skillslib
+#INCLUDEPATH += ../uilib
 
 DEFINES += LIBQSGSCORE_BUILDING_LIBQSGSCORE
 
@@ -42,7 +42,9 @@ HEADERS += pch.h testlink.h \
     core/lua-wrapper.h \
     core/namespace.h \
     core/package.h \
-    core/protocol.h
+    core/protocol.h \
+    core/scenario.h \
+    core/skill.h
 SOURCES += testlink.cpp \
     core/engine.cpp \
     core/card.cpp \
@@ -50,7 +52,9 @@ SOURCES += testlink.cpp \
     core/json.cpp \
     core/lua-wrapper.cpp \
     core/package.cpp \
-    core/protocol.cpp
+    core/protocol.cpp \
+    core/scenario.cpp \
+    core/skill.cpp
 
 DESTDIR = $$OUT_PWD/../../inst/lib
 DLLDESTDIR = $$OUT_PWD/../../inst/bin

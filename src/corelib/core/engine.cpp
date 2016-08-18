@@ -790,7 +790,7 @@ int QSgsEngine::playerCount(const QString &mode) const
         // scenario mode
         const Scenario *scenario = scenario(mode);
         Q_ASSERT(scenario);
-        return scenario->getPlayerCount();
+        return scenario->playerCount();
     }
 
     return -1;
@@ -1000,7 +1000,7 @@ const ViewAsSkill *QSgsEngine::viewAsSkill(const QString &skill_name) const
         return qobject_cast<const ViewAsSkill *>(skill);
     else if (skill->inherits("TriggerSkill")) {
         const TriggerSkill *trigger_skill = qobject_cast<const TriggerSkill *>(skill);
-        return trigger_skill->getViewAsSkill();
+        return trigger_skill->viewAsSkill();
     } else
         return nullptr;
 }
@@ -1048,27 +1048,27 @@ int QSgsEngine::correctCardTarget(const TargetModSkill::ModType type, const Play
 
     if (type == TargetModSkill::Residue) {
         foreach (const TargetModSkill *skill, m_targetmodSkills) {
-            ExpPattern p(skill->getPattern());
+            ExpPattern p(skill->pattern());
             if (p.match(from, card)) {
-                int residue = skill->getResidueNum(from, card);
+                int residue = skill->residueNum(from, card);
                 if (residue >= 998) return residue;
                 x += residue;
             }
         }
     } else if (type == TargetModSkill::DistanceLimit) {
         foreach (const TargetModSkill *skill, m_targetmodSkills) {
-            ExpPattern p(skill->getPattern());
+            ExpPattern p(skill->pattern());
             if (p.match(from, card)) {
-                int distance_limit = skill->getDistanceLimit(from, card);
+                int distance_limit = skill->distanceLimit(from, card);
                 if (distance_limit >= 998) return distance_limit;
                 x += distance_limit;
             }
         }
     } else if (type == TargetModSkill::ExtraTarget) {
         foreach (const TargetModSkill *skill, m_targetmodSkills) {
-            ExpPattern p(skill->getPattern());
+            ExpPattern p(skill->pattern());
             if (p.match(from, card)) {
-                x += skill->getExtraTargetNum(from, card);
+                x += skill->extraTargetNum(from, card);
             }
         }
     }
@@ -1083,11 +1083,11 @@ int QSgsEngine::correctAttackRange(const Player *target, bool include_weapon, bo
 
     foreach (const AttackRangeSkill *skill, m_attackrangeSkills) {
         if (fixed) {
-            int f = skill->getFixed(target, include_weapon);
+            int f = skill->fixed(target, include_weapon);
             if (f > extra)
                 extra = f;
         } else {
-            extra += skill->getExtra(target, include_weapon);
+            extra += skill->extra(target, include_weapon);
         }
     }
 

@@ -22,7 +22,6 @@
 #define _SCENARIO_H
 
 #include "package.h"
-#include "ai.h"
 
 class Room;
 class ScenarioRule;
@@ -35,25 +34,25 @@ class Scenario : public QSgsPackage
 
 public:
     explicit Scenario(const QString &name);
-    ScenarioRule *getRule() const;
+    ScenarioRule *rule() const;
 
     virtual bool exposeRoles() const;
-    virtual int getPlayerCount() const;
+    virtual int playerCount() const;
     virtual QString getRoles() const;
-    virtual void assign(QStringList &generals, QStringList &generals2, QStringList &roles, Room *room) const;
-    virtual AI::Relation relationTo(const ServerPlayer *a, const ServerPlayer *b) const;
-    virtual void onTagSet(Room *room, const QString &key) const;
+    //virtual void assign(QStringList &generals, QStringList &generals2, QStringList &roles, Room *room) const;
+    //virtual AI::Relation relationTo(const ServerPlayer *a, const ServerPlayer *b) const;
+    //virtual void onTagSet(Room *room, const QString &key) const;
     virtual bool generalSelection() const;
     inline bool isRandomSeat() const
     {
-        return random_seat;
+        return m_randomSeat;
     }
 
 protected:
-    QString lord;
-    QStringList loyalists, rebels, renegades;
-    ScenarioRule *rule;
-    bool random_seat;
+    QString m_lord;
+    QStringList m_loyalists, m_rebels, m_renegades;
+    //ScenarioRule *m_rule;
+    bool m_randomSeat;
 };
 
 #endif
