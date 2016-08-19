@@ -29,8 +29,7 @@ class GuhuoBox;
 
 #include "namespace.h"
 
-#include <QMap>
-#include <QObject>
+#include "libqsgscoreglobal.h"
 
 class Skill : public QObject
 {

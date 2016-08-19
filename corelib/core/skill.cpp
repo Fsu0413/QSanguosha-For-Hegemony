@@ -559,22 +559,22 @@ bool ArraySummonSkill::isEnabledAtPlay(const Player *player) const
         ArrayType type = skill->getArrayType();
         switch (type) {
             case Siege: {
-                if (player->willBeFriendWith(player->getNextAlive())
-                    && player->willBeFriendWith(player->getLastAlive()))
+                if (player->willBeFriendWith(player->nextAlive())
+                    && player->willBeFriendWith(player->lastAlive()))
                     return false;
-                if (!player->willBeFriendWith(player->getNextAlive())) {
-                    if (!player->getNextAlive(2)->hasShownOneGeneral() && player->getNextAlive()->hasShownOneGeneral())
+                if (!player->willBeFriendWith(player->nextAlive())) {
+                    if (!player->nextAlive(2)->hasShownOneGeneral() && player->nextAlive()->hasShownOneGeneral())
                         return true;
                 }
-                if (!player->willBeFriendWith(player->getLastAlive()))
-                    return !player->getLastAlive(2)->hasShownOneGeneral() && player->getLastAlive()->hasShownOneGeneral();
+                if (!player->willBeFriendWith(player->lastAlive()))
+                    return !player->lastAlive(2)->hasShownOneGeneral() && player->lastAlive()->hasShownOneGeneral();
                 break;
             }
             case Formation: {
                 int n = player->aliveCount(false);
                 int asked = n;
                 for (int i = 1; i < n; ++i) {
-                    Player *target = player->getNextAlive(i);
+                    Player *target = player->nextAlive(i);
                     if (player->isFriendWith(target))
                         continue;
                     else if (!target->hasShownOneGeneral())
@@ -586,7 +586,7 @@ bool ArraySummonSkill::isEnabledAtPlay(const Player *player) const
                 }
                 n -= asked;
                 for (int i = 1; i < n; ++i) {
-                    Player *target = player->getLastAlive(i);
+                    Player *target = player->lastAlive(i);
                     if (player->isFriendWith(target))
                         continue;
                     else return !target->hasShownOneGeneral();

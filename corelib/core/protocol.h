@@ -21,8 +21,7 @@
 #ifndef _PROTOCOL_H
 #define _PROTOCOL_H
 
-#include <QByteArray>
-#include <QVariant>
+#include "libqsgscoreglobal.h"
 
 namespace QSanProtocol
 {

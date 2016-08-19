@@ -21,8 +21,7 @@
 #ifndef _ENGINE_H
 #define _ENGINE_H
 
-#include <QObject>
-#include <QVersionNumber>
+#include "libqsgscoreglobal.h"
 
 #include "card.h"
 

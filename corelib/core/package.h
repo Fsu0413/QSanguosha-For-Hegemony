@@ -21,11 +21,7 @@
 #ifndef _PACKAGE_H
 #define _PACKAGE_H
 
-#include <QObject>
-#include <QHash>
-#include <QStringList>
-#include <QMap>
-
+#include "libqsgscoreglobal.h"
 class Card;
 class Player;
 class Skill;
@@ -52,83 +48,38 @@ class QSgsPackage
 {
 
 public:
-    enum Type
-    {
-        GeneralPack, CardPack, MixedPack, SpecialPack
-    };
 
-    QSgsPackage(const QString &name, Type pack_type = GeneralPack)
-    {
-        setObjectName(name);
-        m_type = pack_type;
+    enum Type {
+        GeneralPackage,
+        CardPackage,
+        OtherPackage
     }
 
-    QList<const QMetaObject *> getMetaObjects() const
-    {
-        return m_metaobjects;
-    }
-
-    QList<const Skill *> getSkills() const
-    {
-        return m_skills;
-    }
-
-    QMap<QString, const CardPattern *> getPatterns() const
-    {
-        return m_patterns;
-    }
-
-    QMultiMap<QString, QString> getRelatedSkills() const
-    {
-        return m_relatedSkills;
-    }
-
-    QMultiMap<QString, QString> getConvertPairs() const
-    {
-        return m_convertPairs;
-    }
-
-    Type getType() const
-    {
-        return m_type;
-    }
-
-    template<typename T>
-    void addMetaObject()
-    {
-        m_metaobjects << &T::staticMetaObject;
-    }
-
-    inline void insertRelatedSkills(const QString &main_skill, const QString &related_skill)
-    {
-        m_relatedSkills.insertMulti(main_skill, related_skill);
-    }
-
-    void insertRelatedSkills(const QString &main_skill, int n, ...);
-
-    inline void insertConvertPairs(const QString &from, const QString &to)
-    {
-        m_convertPairs.insertMulti(from, to);
-    }
-
-    void registerCards();
-
-    QList <Card *> &cards() const{
-        return m_cards;
-    }
-
+    QSgsPackage(const QString &name);
     virtual ~QSgsPackage();
 
+    const QHash<QString, const General *> generals() const;
+    const General *general(const QString &generalName) const;
+    const QHash<QString, const CardFace *> cardFaces() const;
+    const CardFace *cardFace(const QString &cardFaceName) const;
+    const QList<const Card *> cards() const;
+    const QHash<QString, const Skill *> skills() const;
+    const Skill *skill(const QString &skillName) const;
+    const QMultiMap<QString, QString> relatedSkills() const;
+    const QStringList relatedSkills(const QString &mainSkill) const;
+
+    virtual const QVersionNumber &version() const = 0;
+    virtual Type type() const = 0;
+
 protected:
-    QList<const QMetaObject *> m_metaobjects;
-    QList<const Skill *> m_skills;
-    QMap<QString, const CardPattern *> m_patterns;
+    QHash<QString, const General *> m_generals;
+    QHash<QString, const CardFace *> m_cardFaces;
+    QList<const Card *> m_cards;
+    QHash<QString, const Skill *> m_skills;
     QMultiMap<QString, QString> m_relatedSkills;
-    QMultiMap<QString, QString> m_convertPairs;
-    Type m_type;
-    QList <Card *> m_cards;
-    QHash<QString, QString> m_className2objectName;
 };
+
+Q_DECLARE_INTERFACE(QSgsPackage, "org.qsanguosha.Hegemony.QSgsPackage")
 
 
 typedef QHash<QString, QSgsPackage *> PackageHash;

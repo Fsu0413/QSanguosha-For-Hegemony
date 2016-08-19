@@ -25,8 +25,7 @@
 #include "wrappedcard.h"
 #include "namespace.h"
 
-#include <QObject>
-#include <QTcpSocket>
+#include "libqsgscoreglobal.h"
 
 class EquipCard;
 class Weapon;
@@ -41,37 +40,37 @@ class Player : public QObject
     Q_OBJECT
 
     Q_PROPERTY(QString screenname READ screenName WRITE setScreenName)
-    Q_PROPERTY(int hp READ getHp WRITE setHp)
-    Q_PROPERTY(int maxhp READ getMaxHp WRITE setMaxHp)
-    Q_PROPERTY(QString kingdom READ getKingdom WRITE setKingdom)
+    Q_PROPERTY(int m_hp READ hp WRITE setHp)
+    Q_PROPERTY(int maxhp READ maxHp WRITE setMaxHp)
+    Q_PROPERTY(QString m_kingdom READ kingdom WRITE setKingdom)
     Q_PROPERTY(bool wounded READ isWounded STORED false)
-    Q_PROPERTY(QString role READ getRole WRITE setRole)
-    Q_PROPERTY(QString general READ getGeneralName WRITE setGeneralName)
-    Q_PROPERTY(QString general2 READ getGeneral2Name WRITE setGeneral2Name)
-    Q_PROPERTY(QString state READ getState WRITE setState)
-    Q_PROPERTY(int handcard_num READ getHandcardNum)
-    Q_PROPERTY(int seat READ getSeat WRITE setSeat)
-    Q_PROPERTY(QString phase READ getPhaseString WRITE setPhaseString)
+    Q_PROPERTY(QString m_role READ role WRITE setRole)
+    Q_PROPERTY(QString m_general READ generalName WRITE setGeneralName)
+    Q_PROPERTY(QString m_general2 READ general2Name WRITE setGeneral2Name)
+    Q_PROPERTY(QString m_state READ state WRITE setState)
+    Q_PROPERTY(int handcard_num READ handcardNum)
+    Q_PROPERTY(int m_seat READ seat WRITE setSeat)
+    Q_PROPERTY(QString m_phase READ phaseString WRITE setPhaseString)
     Q_PROPERTY(bool faceup READ faceUp WRITE setFaceUp)
-    Q_PROPERTY(bool alive READ isAlive WRITE setAlive)
-    Q_PROPERTY(QString flags READ getFlags WRITE setFlags)
-    Q_PROPERTY(bool chained READ isChained WRITE setChained)
-    Q_PROPERTY(bool removed READ isRemoved WRITE setRemoved)
-    Q_PROPERTY(bool owner READ isOwner WRITE setOwner)
-    Q_PROPERTY(bool role_shown READ hasShownRole WRITE setShownRole)
+    Q_PROPERTY(bool m_alive READ isAlive WRITE setAlive)
+    Q_PROPERTY(QString m_flags READ flags WRITE setFlags)
+    Q_PROPERTY(bool m_chained READ isChained WRITE setChained)
+    Q_PROPERTY(bool m_removed READ isRemoved WRITE setRemoved)
+    Q_PROPERTY(bool m_owner READ isOwner WRITE setOwner)
+    Q_PROPERTY(bool m_roleShown READ hasShownRole WRITE setShownRole)
 
     Q_PROPERTY(bool kongcheng READ isKongcheng)
     Q_PROPERTY(bool nude READ isNude)
     Q_PROPERTY(bool all_nude READ isAllNude)
 
-    Q_PROPERTY(QString actual_general1 READ getActualGeneral1Name WRITE setActualGeneral1Name)
-    Q_PROPERTY(QString actual_general2 READ getActualGeneral2Name WRITE setActualGeneral2Name)
-    Q_PROPERTY(bool general1_showed READ hasShownGeneral1 WRITE setGeneral1Showed)
-    Q_PROPERTY(bool general2_showed READ hasShownGeneral2 WRITE setGeneral2Showed)
+    Q_PROPERTY(QString m_actualGeneral1 READ actualGeneral1Name WRITE setActualGeneral1Name)
+    Q_PROPERTY(QString m_actualGeneral2 READ actualGeneral2Name WRITE setActualGeneral2Name)
+    Q_PROPERTY(bool m_general1Showed READ hasShownGeneral1 WRITE setGeneral1Showed)
+    Q_PROPERTY(bool m_general2Showed READ hasShownGeneral2 WRITE setGeneral2Showed)
 
-    Q_PROPERTY(QString next READ getNextName WRITE setNext)
+    Q_PROPERTY(QString m_next READ nextName WRITE setNext)
 
-    Q_PROPERTY(bool scenario_role_shown READ getScenarioRoleShown WRITE setScenarioRoleShown)
+    Q_PROPERTY(bool m_scenarioRoleShown READ scenarioRoleShown WRITE setScenarioRoleShown)
 
     Q_PROPERTY(int head_skin_id READ getHeadSkinId WRITE setHeadSkinId)
     Q_PROPERTY(int deputy_skin_id READ getDeputySkinId WRITE setDeputySkinId)
@@ -91,24 +90,33 @@ public:
         PlaceSpecial, DiscardPile, DrawPile, PlaceTable, PlaceUnknown,
         PlaceWuGu, DrawPileBottom
     };
+    enum Relation
+    {
+        Friend, Enemy, Neutrality
+    };
     enum Role
     {
         Lord, Loyalist, Rebel, Renegade
     };
+    enum ArrayType
+    {
+        Siege,
+        Formation
+    };
 
     explicit Player(QObject *parent);
 
-    void setScreenName(const QString &screen_name);
+    void setScreenName(const QString &m_screenName);
     QString screenName() const;
 
     // property setters/getters
-    int getHp() const;
+    int hp() const;
     void setHp(int hp);
-    int getMaxHp() const;
-    void setMaxHp(int max_hp);
-    int getLostHp() const;
+    int maxHp() const;
+    void setMaxHp(int maxHp);
+    int lostHp() const;
     bool isWounded() const;
-    General::Gender getGender() const;
+    General::Gender gender() const;
     virtual void setGender(General::Gender gender);
     bool isMale() const;
     bool isFemale() const;
@@ -120,59 +128,59 @@ public:
     bool hasShownRole() const;
     void setShownRole(bool shown);
 
-    void setDisableShow(const QString &flags, const QString &reason);
+    void setDisableShow(const QString &m_flags, const QString &reason);
     void removeDisableShow(const QString &reason);
     QStringList disableShow(bool head) const;
 
-    QString getKingdom() const;
-    void setKingdom(const QString &kingdom);
+    QString kingdom() const;
+    void setKingdom(const QString &m_kingdom);
 
-    void setRole(const QString &role);
-    QString getRole() const;
-    Role getRoleEnum() const;
+    void setRole(const QString &m_role);
+    QString role() const;
+    Role roleEnum() const;
 
-    void setGeneral(const General *general);
+    void setGeneral(const General *m_general);
     void setGeneralName(const QString &general_name);
-    QString getGeneralName() const;
+    QString generalName() const;
 
     void setGeneral2Name(const QString &general_name);
-    QString getGeneral2Name() const;
-    const General *getGeneral2() const;
+    QString general2Name() const;
+    const General *general2() const;
 
-    QString getFootnoteName() const;
+    QString footnoteName() const;
 
     void setState(const QString &state);
-    QString getState() const;
+    QString state() const;
 
-    int getSeat() const;
+    int seat() const;
     void setSeat(int seat);
     bool isAdjacentTo(const Player *another) const;
-    QString getPhaseString() const;
+    QString phaseString() const;
     void setPhaseString(const QString &phase_str);
-    Phase getPhase() const;
-    void setPhase(Phase phase);
+    Phase phase() const;
+    void setPhase(Phase m_phase);
 
-    int getAttackRange(bool include_weapon = true) const;
+    int attackRange(bool include_weapon = true) const;
     bool inMyAttackRange(const Player *other) const;
 
     bool isAlive() const;
     bool isDead() const;
     void setAlive(bool alive);
 
-    QString getFlags() const;
-    QStringList getFlagList() const;
+    QString flags() const;
+    QStringList flagList() const;
     virtual void setFlags(const QString &flag);
     bool hasFlag(const QString &flag) const;
     void clearFlags();
 
     bool faceUp() const;
-    void setFaceUp(bool face_up);
+    void setFaceUp(bool faceUp);
 
     void setFixedDistance(const Player *player, int distance);
     int originalRightDistanceTo(const Player *other) const;
     int distanceTo(const Player *other, int distance_fix = 0) const;
-    const General *getAvatarGeneral() const;
-    const General *getGeneral() const;
+    const General *avatarGeneral() const;
+    const General *general() const;
 
     bool isLord() const;
 
@@ -192,25 +200,25 @@ public:
     bool hasEquip(const Card *card) const;
     bool hasEquip() const;
 
-    QList<const Card *> getJudgingArea() const;
-    QList<int> getJudgingAreaID() const; //for marshal
+    QList<const Card *> judgingArea() const;
+    QList<int> judgingAreaID() const; //for marshal
     void addDelayedTrick(const Card *trick);
     void removeDelayedTrick(const Card *trick);
     bool containsTrick(const QString &trick_name) const;
 
-    virtual int getHandcardNum() const = 0;
+    virtual int handcardNum() const = 0;
     virtual void removeCard(const Card *card, Place place) = 0;
     virtual void addCard(const Card *card, Place place) = 0;
-    virtual QList<const Card *> getHandcards() const = 0;
+    virtual QList<const Card *> handcards() const = 0;
 
-    WrappedCard *getWeapon() const;
-    WrappedCard *getArmor() const;
-    WrappedCard *getDefensiveHorse() const;
-    WrappedCard *getOffensiveHorse() const;
-    WrappedCard *getTreasure() const;
+    WrappedCard *weapon() const;
+    WrappedCard *armor() const;
+    WrappedCard *defensiveHorse() const;
+    WrappedCard *offensiveHorse() const;
+    WrappedCard *treasure() const;
 
-    QList<const Card *> getEquips() const;
-    const EquipCard *getEquip(int index) const;
+    QList<const Card *> equips() const;
+    const EquipCard *equip(int index) const;
 
     bool hasWeapon(const QString &weapon_name) const;
     bool hasArmorEffect(const QString &armor_name) const;
@@ -220,19 +228,19 @@ public:
     bool isNude() const;
     bool isAllNude() const;
 
-    bool canDiscard(const Player *to, const QString &flags) const;
+    bool canDiscard(const Player *to, const QString &m_flags) const;
     bool canDiscard(const Player *to, int card_id) const;
 
     void addMark(const QString &mark, int add_num = 1);
     void removeMark(const QString &mark, int remove_num = 1);
     virtual void setMark(const QString &mark, int value);
-    int getMark(const QString &mark) const;
+    int mark(const QString &mark) const;
 
-    void setChained(bool chained);
+    void setChained(bool m_chained);
     bool isChained() const;
     bool canBeChainedBy(const Player *source = NULL) const;
 
-    void setRemoved(bool removed);
+    void setRemoved(bool m_removed);
     bool isRemoved() const;
 
     bool isDuanchang(const bool head = true) const;
@@ -243,13 +251,13 @@ public:
         int rangefix = 0, const QList<const Player *> &others = QList<const Player *>()) const;
     int getCardCount(bool include_equip) const;
 
-    QList<int> getPile(const QString &pile_name) const;
-    QStringList getPileNames() const;
-    QString getPileName(int card_id) const;
+    QList<int> pile(const QString &pile_name) const
+    QStringList pileNames() const;
+    QString pileName(int card_id) const;
 
     //Xusine:
-    QList<int> getHandPile() const;
-    QStringList getHandPileList(bool view_as_skill = true) const;
+    QList<int> handPile() const;
+    QStringList handPileList(bool view_as_skill = true) const;
 
     bool pileOpen(const QString &pile_name, const QString &player) const;
     void setPileOpen(const QString &pile_name, const QString &player);
@@ -258,24 +266,24 @@ public:
     void clearHistory(const QString &name = QString());
     bool hasUsed(const QString &card_class) const;
     int usedTimes(const QString &card_class) const;
-    int getSlashCount() const;
+    int slashCount() const;
 
     bool hasEquipSkill(const QString &skill_name) const;
-    QSet<const TriggerSkill *> getTriggerSkills() const;
-    QSet<const Skill *> getSkills(bool include_equip = false, bool visible_only = true) const;
-    QList<const Skill *> getSkillList(bool include_equip = false, bool visible_only = true) const;
-    QList<const Skill *> getHeadSkillList(bool visible_only = true) const;
-    QList<const Skill *> getDeputySkillList(bool visible_only = true) const;
-    QSet<const Skill *> getVisibleSkills(bool include_equip = false) const;
-    QList<const Skill *> getVisibleSkillList(bool include_equip = false) const;
-    QSet<QString> getAcquiredSkills() const;
+    QSet<const TriggerSkill *> triggerSkills() const;
+    QSet<const Skill *> skills(bool include_equip = false, bool visible_only = true) const;
+    QList<const Skill *> skillList(bool include_equip = false, bool visible_only = true) const;
+    QList<const Skill *> headSkillList(bool visible_only = true) const;
+    QList<const Skill *> deputySkillList(bool visible_only = true) const;
+    QSet<const Skill *> visibleSkills(bool include_equip = false) const;
+    QList<const Skill *> visibleSkillList(bool include_equip = false) const;
+    QSet<QString> acquiredSkills() const;
 
     //Xusine:
-    QStringList getAcquiredSkills(const QString &flags) const;
+    QStringList acquiredSkills(const QString &flags) const;
 
-    QString getSkillDescription(bool inToolTip = true) const;
-    QString getHeadSkillDescription() const;
-    QString getDeputySkillDescription() const;
+    QString skillDescription(bool inToolTip = true) const;
+    QString headSkillDescription() const;
+    QString deputySkillDescription() const;
 
     virtual bool isProhibited(const Player *to, const Card *card, const QList<const Player *> &others = QList<const Player *>()) const;
     bool canSlashWithoutCrossbow(const Card *slash = NULL) const;
@@ -302,8 +310,8 @@ public:
 
     void copyFrom(Player *p);
 
-    QList<const Player *> getSiblings() const;
-    QList<const Player *> getAliveSiblings() const;
+    virtual QList<const Player *> getSiblings() const = 0;
+    virtual QList<const Player *> getAliveSiblings() const = 0;
 
     bool hasShownSkill(const Skill *skill) const;
     bool hasShownSkill(const QString &skill_name) const;
@@ -313,12 +321,12 @@ public:
     bool inHeadSkills(const Skill *skill) const;
     bool inDeputySkills(const QString &skill_name) const;
     bool inDeputySkills(const Skill *skill) const;
-    const General *getActualGeneral1() const;
-    const General *getActualGeneral2() const;
-    QString getActualGeneral1Name() const;
-    QString getActualGeneral2Name() const;
-    void setActualGeneral1(const General *general);
-    void setActualGeneral2(const General *general);
+    const General *actualGeneral1() const;
+    const General *actualGeneral2() const;
+    QString actualGeneral1Name() const;
+    QString actualGeneral2Name() const;
+    void setActualGeneral1(const General *m_general);
+    void setActualGeneral2(const General *m_general);
     void setActualGeneral1Name(const QString &name);
     void setActualGeneral2Name(const QString &name);
     bool hasShownGeneral1() const;
@@ -333,13 +341,13 @@ public:
     bool hasPreshowedSkill(const Skill *skill) const;
     bool isHidden(const bool &head_general) const;
 
-    inline bool getScenarioRoleShown() const
+    inline bool scenarioRoleShown() const
     {
-        return scenario_role_shown;
+        return m_scenarioRoleShown;
     }
     inline void setScenarioRoleShown(bool show)
     {
-        scenario_role_shown = show;
+        m_scenarioRoleShown = show;
     }
 
     bool ownSkill(const QString &skill_name) const;
@@ -347,71 +355,71 @@ public:
     bool isFriendWith(const Player *player) const;
     bool willBeFriendWith(const Player *player) const;
 
-    void setNext(Player *next);
-    void setNext(const QString &next);
-    Player *getNext(bool ignoreRemoved = true) const;
-    QString getNextName() const;
-    Player *getLast(bool ignoreRemoved = true) const;
-    Player *getNextAlive(int n = 1, bool ignoreRemoved = true) const;
-    Player *getLastAlive(int n = 1, bool ignoreRemoved = true) const;
+    void setNext(Player *m_next);
+    void setNext(const QString &m_next);
+    Player *next(bool ignoreRemoved = true) const;
+    QString nextName() const;
+    Player *last(bool ignoreRemoved = true) const;
+    Player *nextAlive(int n = 1, bool ignoreRemoved = true) const;
+    Player *lastAlive(int n = 1, bool ignoreRemoved = true) const;
 
-    QList<const Player *> getFormation() const;
+    QList<const Player *> formation() const;
 
-    virtual void setHeadSkinId(int id);
-    int getHeadSkinId() const;
+//    virtual void setHeadSkinId(int id);
+//    int getHeadSkinId() const;
 
-    virtual void setDeputySkinId(int id);
-    int getDeputySkinId() const;
+//    virtual void setDeputySkinId(int id);
+//    int getDeputySkinId() const;
 
     virtual QStringList getBigKingdoms(const QString &reason, MaxCardsType::MaxCardsCount type = MaxCardsType::Min) const = 0;
 
     QVariantMap tag;
 
 protected:
-    QMap<QString, int> marks;
-    QMap<QString, QList<int> > piles;
-    QMap<QString, QStringList> pile_open;
-    QSet<QString> head_acquired_skills, deputy_acquired_skills;
-    QMap<QString, bool> head_skills;
-    QMap<QString, bool> deputy_skills;
-    QSet<QString> flags;
-    QHash<QString, int> history;
+    QMap<QString, int> m_marks;
+    QMap<QString, QList<int> > m_piles;
+    QMap<QString, QStringList> m_pileOpen;
+    QSet<QString> m_headAcquiredSkills, m_deputyAcquiredSkills;
+    QMap<QString, bool> m_headSkills;
+    QMap<QString, bool> m_deputySkills;
+    QSet<QString> m_flags;
+    QHash<QString, int> m_history;
 
-    const General *general, *general2;
-    int headSkinId, deputySkinId;
+    const General *m_general, *m_general2;
+    int m_headSkinId, m_deputySkinId;
 
 private:
-    QString screen_name;
-    bool owner;
+    QString m_screenName;
+    bool m_owner;
     General::Gender m_gender;
-    int hp, max_hp;
-    QString kingdom;
-    QString role;
-    bool role_shown;
-    QString state;
-    int seat;
-    bool alive;
+    int m_hp, m_maxHp;
+    QString m_kingdom;
+    QString m_role;
+    bool m_roleShown;
+    QString m_state;
+    int m_seat;
+    bool m_alive;
 
-    const General *actual_general1, *actual_general2;
+    const General *m_actualGeneral1, *m_actualGeneral2;
 
-    bool general1_showed, general2_showed;
+    bool m_general1Showed, m_general2Showed;
 
-    Phase phase;
-    WrappedCard *weapon, *armor, *defensive_horse, *offensive_horse, *treasure;
-    bool face_up;
-    bool chained;
-    bool removed;
-    QList<int> judging_area;
-    QHash<const Player *, int> fixed_distance;
-    QString next;
+    Phase m_phase;
+    WrappedCard *m_weapon, *m_armor, *m_defensiveHorse, *m_offensiveHorse, *m_treasure;
+    bool m_faceUp;
+    bool m_chained;
+    bool m_removed;
+    QList<int> m_judgingArea;
+    QHash<const Player *, int> m_fixedDistance;
+    QString m_next;
 
-    QMap<Card::HandlingMethod, QStringList> card_limitation;
+    QMap<Card::HandlingMethod, QStringList> m_cardLimitation;
 
-    QStringList disable_show;
+    QStringList m_disableShow;
     // head and/or deputy, reason
     // example: "hd,Blade"
 
-    bool scenario_role_shown;
+    bool m_scenarioRoleShown;
 
 signals:
     void general_changed();
@@ -421,7 +429,7 @@ signals:
     void hp_changed();
     void kingdom_changed(const QString &new_kingdom);
     void phase_changed();
-    void owner_changed(bool owner);
+    void owner_changed(bool m_owner);
     void head_state_changed();
     void deputy_state_changed();
     void disable_show_changed();

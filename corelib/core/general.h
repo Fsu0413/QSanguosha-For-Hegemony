@@ -26,11 +26,7 @@ class TriggerSkill;
 class QSgsPackage;
 class QSize;
 
-#include <QObject>
-#include <QSet>
-#include <QMap>
-#include <QStringList>
-#include <QMetaType>
+#include "libqsgscoreglobal.h"
 
 class General : public QObject
 {

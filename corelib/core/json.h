@@ -21,8 +21,7 @@
 #ifndef JSON_H
 #define JSON_H
 
-#include <QVariantList>
-#include <QVariantMap>
+#include "libqsgscoreglobal.h"
 
 //Directly apply two containers of Qt here. Reimplement the 2 classes if necessary.
 typedef QVariantList JsonArray;

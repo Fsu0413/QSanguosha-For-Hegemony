@@ -21,18 +21,14 @@
 #ifndef _NAMESPACE_H
 #define _NAMESPACE_H
 
-#include <QString>
+#include "libqsgscoreglobal.h"
 
 namespace HegemonyMode
 {
     //QString GetMappedRole(const QString &kingdom);
     //QString GetMappedKingdom(const QString &role);
 
-    enum ArrayType
-    {
-        Siege,
-        Formation
-    };
+
 }
 
 //namespace MaxCardsType

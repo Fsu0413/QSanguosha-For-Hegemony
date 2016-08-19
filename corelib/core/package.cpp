@@ -33,28 +33,57 @@ void QSgsPackage::insertRelatedSkills(const QString &main_skill, int n, ...)
     va_end(ap);
 }
 
-void QSgsPackage::registerCards()
-{
-    foreach (Card *c,m_cards){
-        if (!m_className2objectName.keys().contains(c->className()))
-            m_className2objectName.insert(c->className(),c->objectName());
-    }
 
-QSgsPackage::~QSgsPackage()
-{
-    foreach (const Skill *skill, m_skills)
-        delete skill;
 
-    foreach (const QString key, m_patterns.keys())
-        delete m_patterns[key];
-    foreach (Card *c,m_cards)
-        delete c;
-    m_className2objectName.clear();
+
+const QHash<QString, const General *> QSgsPackage::generals() const
+{
+    return m_generals;
 }
+
+const General *QSgsPackage::general(const QString &generalName) const
+{
+    return m_generals.value(generalName,nullptr);
+}
+
+const QHash<QString, const CardFace *> QSgsPackage::cardFaces() const
+{
+    return m_cardFaces;
+}
+
+const CardFace *QSgsPackage::cardFace(const QString &cardFaceName) const
+{
+    return m_cardFaces.value(cardFaceName,nullptr);
+}
+
+const QList<const Card *> QSgsPackage::cards() const
+{
+    return m_cards;
+}
+
+const QHash<QString, const Skill *> QSgsPackage::skills() const
+{
+    return m_skills;
+}
+
+const Skill *QSgsPackage::skill(const QString &skillName) const
+{
+    return m_skills.value(skillName,nullptr);
+}
+
+const QMultiMap<QString, QString> QSgsPackage::relatedSkills() const
+{
+    return m_relatedSkills;
+}
+
+const QStringList QSgsPackage::relatedSkills(const QString &mainSkill) const
+{
+    return m_relatedSkills.values(mainSkill);
+}
+
 
 Q_GLOBAL_STATIC(PackageHash, Packages)
 PackageHash &PackageAdder::packages()
 {
     return *(::Packages());
 }
-

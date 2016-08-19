@@ -26,7 +26,7 @@
 class Room;
 class ScenarioRule;
 
-#include <QMap>
+#include "libqsgscoreglobal.h"
 
 class Scenario : public QSgsPackage
 {
