@@ -26,7 +26,6 @@
 #include <QThread>
 #include <QMutex>
 #include <QSemaphore>
-#include <QImage>
 #include <QMap>
 
 class Recorder : public QObject
@@ -35,7 +34,7 @@ class Recorder : public QObject
 
 public:
     explicit Recorder(QObject *parent);
-    static QImage TXT2PNG(const QByteArray &data);
+    //static QImage TXT2PNG(const QByteArray &data);
     bool save(const QString &filename) const;
     QList<QByteArray> getRecords() const;
 
@@ -47,13 +46,13 @@ private:
     QByteArray data;
 };
 
-class Replayer : public QThread
+class Replayer /*: public QThread*/
 {
-    Q_OBJECT
+    //Q_OBJECT
 
 public:
     explicit Replayer(QObject *parent, const QString &filename);
-    static QByteArray PNG2TXT(const QString &filename);
+    //static QByteArray PNG2TXT(const QString &filename);
 
     int getDuration() const
     {

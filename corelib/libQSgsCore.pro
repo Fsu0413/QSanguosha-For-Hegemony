@@ -37,7 +37,10 @@ HEADERS += testlink.h \
     core/skill.h \
     libqsgscoreglobal.h \
     core/structs.h \
-    core/player.h
+    core/player.h \
+    util/nativesocket.h \
+    util/recorder.h \
+    util/socket.h
 
 SOURCES += testlink.cpp \
     core/engine.cpp \
@@ -50,7 +53,9 @@ SOURCES += testlink.cpp \
     core/scenario.cpp \
     core/skill.cpp \
     core/structs.cpp \
-    core/player.cpp
+    core/player.cpp \
+    util/nativesocket.cpp \
+    util/recorder.cpp
 
 DESTDIR = $$OUT_PWD/../../inst/lib
 DLLDESTDIR = $$OUT_PWD/../../inst/bin

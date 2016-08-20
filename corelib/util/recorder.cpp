@@ -22,9 +22,9 @@
 #include "client.h"
 #include "protocol.h"
 
-#include <QFile>
-#include <QBuffer>
-#include <QMessageBox>
+#include "libqsgscoreglobal.h"
+
+//#include <QMessageBox>
 
 #include <cmath>
 using namespace QSanProtocol;
@@ -130,17 +130,17 @@ Replayer::Replayer(QObject *parent, const QString &filename)
     duration = pairs.last().elapsed - time_offset;
 }
 
-QByteArray Replayer::PNG2TXT(const QString &filename)
-{
-    QImage image(filename);
-    image = image.convertToFormat(QImage::Format_ARGB32);
-    const uchar *imageData = image.bits();
-    qint32 actual_size = *(const qint32 *)imageData;
-    QByteArray data((const char *)(imageData + 4), actual_size);
-    data = qUncompress(data);
+//QByteArray Replayer::PNG2TXT(const QString &filename)
+//{
+//    QImage image(filename);
+//    image = image.convertToFormat(QImage::Format_ARGB32);
+//    const uchar *imageData = image.bits();
+//    qint32 actual_size = *(const qint32 *)imageData;
+//    QByteArray data((const char *)(imageData + 4), actual_size);
+//    data = qUncompress(data);
 
-    return data;
-}
+//    return data;
+//}
 
 qreal Replayer::getSpeed()
 {

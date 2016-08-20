@@ -21,9 +21,7 @@
 #ifndef _SOCKET_H
 #define _SOCKET_H
 
-#include <QObject>
-#include <QTcpSocket>
-#include <QTcpServer>
+#include "libqsgscoreglobal.h"
 
 class ClientSocket;
 

@@ -23,6 +23,8 @@
 
 #include "socket.h"
 
+#include "libqsgscoreglobal.h"
+
 class QUdpSocket;
 
 class NativeServerSocket : public ServerSocket
