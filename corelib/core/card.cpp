@@ -34,7 +34,7 @@ const Card::Suit Card::AllSuits[4] = {
     Card::Diamond
 };
 
-Card::Card(Suit suit, int number, bool target_fixed)
+Card::Card(const QString &cardFaceName, Suit suit, int number, int id)
     : m_targetFixed(target_fixed), m_mute(false),
     m_willThrow(true), m_hasPreact(false), m_canRecast(false), m_transferable(false),
     m_suit(suit), m_number(number), m_id(-1)
@@ -116,7 +116,8 @@ QString Card::numberString() const
 {
     int number = number();
     if (isVirtualCard()) {
-        if (subcardsLength() == 0 || subcardsLength() >= 2) number = 0;
+        if (subcardsLength() == 0 || subcardsLength() >= 2)
+            number = 0;
     }
     if (number == 10)
         return "10";
@@ -160,7 +161,7 @@ bool Card::sameColorWith(const Card *other) const
     return color() == other->color();
 }
 
-Card::Color Card::color() const
+Card::Suit Card::color() const
 {
     switch (suit()) {
         case Spade:
@@ -184,8 +185,7 @@ bool Card::isEquipped() const
 bool Card::match(const QString &pattern) const
 {
     QStringList patterns = pattern.split("+");
-    foreach(const QString &ptn, patterns)
-    {
+    foreach (const QString &ptn, patterns) {
         if (objectName() == ptn || type() == ptn || subtype() == ptn)
             return true;
     }
@@ -216,66 +216,6 @@ bool Card::CompareBySuit(const Card *a, const Card *b)
         return a->m_number < b->m_number;
 }
 
-bool Card::CompareByType(const Card *a, const Card *b)
-{
-    int order1 = a->typeId();
-    int order2 = b->typeId();
-    if (order1 != order2)
-        return order1 < order2;
-    else {
-        static QStringList basic;
-        if (basic.isEmpty())
-            basic << "slash" << "thunder_slash" << "fire_slash" << "jink" << "peach" << "analeptic";
-        switch (a->typeId()) {
-            case TypeBasic: {
-                foreach (const QString &object_name, basic) {
-                    if (a->objectName() == object_name) {
-                        if (b->objectName() == object_name)
-                            return CompareBySuit(a, b);
-                        else
-                            return true;
-                    }
-                    if (b->objectName() == object_name)
-                        return false;
-                }
-                return CompareBySuit(a, b);
-                break;
-            }
-            case TypeTrick: {
-                if (a->objectName() == b->objectName())
-                    return CompareBySuit(a, b);
-                else
-                    return a->objectName() < b->objectName();
-                break;
-            }
-            case TypeEquip: {
-                const EquipCard *eq_a = qobject_cast<const EquipCard *>(a->realCard());
-                const EquipCard *eq_b = qobject_cast<const EquipCard *>(b->realCard());
-                if (eq_a->location() == eq_b->location()) {
-                    if (eq_a->isKindOf("Weapon")) {
-                        const Weapon *wep_a = qobject_cast<const Weapon *>(a->realCard());
-                        const Weapon *wep_b = qobject_cast<const Weapon *>(b->realCard());
-                        if (wep_a->getRange() == wep_b->getRange())
-                            return CompareBySuit(a, b);
-                        else
-                            return wep_a->getRange() < wep_b->getRange();
-                    } else {
-                        if (a->objectName() == b->objectName())
-                            return CompareBySuit(a, b);
-                        else
-                            return a->objectName() < b->objectName();
-                    }
-                } else {
-                    return eq_a->location() < eq_b->location();
-                }
-                break;
-            }
-            default:
-                return CompareBySuit(a, b);
-        }
-    }
-}
-
 bool Card::isNDTrick() const
 {
     return typeId() == TypeTrick && !isKindOf("DelayedTrick");
@@ -287,11 +227,6 @@ QString Card::package() const
         return parent()->objectName();
     else
         return QString();
-}
-
-QString Card::className() const
-{
-    return metaObject()->className();
 }
 
 QString Card::fullName(bool include_suit) const
@@ -337,11 +272,6 @@ QString Card::logName() const
         number_string = numberString();
 
     return QString("%1[%2%3]").arg(name()).arg(suit_char).arg(number_string);
-}
-
-QString Card::commonEffectName() const
-{
-    return QString();
 }
 
 QString Card::name() const
@@ -432,7 +362,7 @@ bool Card::isTransferable() const
     return m_transferable;
 }
 
-void Card::setTransferable(const bool transferbale)
+void Card::setTransferable(bool transferbale)
 {
     this->m_transferable = transferbale;
 }
@@ -824,6 +754,11 @@ bool Card::isCancelable(const CardEffectStruct &) const
     return false;
 }
 
+QStringList Card::checkTargetModSkillShow(const CardUseStruct &) const
+{
+    return QStringList();
+}
+
 QString Card::showSkill() const
 {
     return m_showSkill;
@@ -832,6 +767,26 @@ QString Card::showSkill() const
 void Card::setShowSkill(const QString &skill_name)
 {
     m_showSkill = skill_name;
+}
+
+bool Card::isKindOf(const char *cardType) const
+{
+    Q_ASSERT(cardType); return inherits(cardType);
+}
+
+QStringList Card::flags() const
+{
+    return m_flags;
+}
+
+bool Card::isModified() const
+{
+    return false;
+}
+
+void Card::onNullified(ServerPlayer *) const
+{
+    return;
 }
 
 void Card::addSubcard(int card_id)
@@ -902,7 +857,7 @@ Card::HandlingMethod Card::handlingMethod() const
     return m_handlingMethod;
 }
 
-void Card::canRecast(bool can)
+void Card::setCanRecast(bool can)
 {
     m_canRecast = can;
 }
@@ -921,6 +876,11 @@ void Card::setFlags(const QString &flag) const
         m_flags.removeOne(copy);
     } else if (!m_flags.contains(flag))
         m_flags << flag;
+}
+
+void Card::setFlags(const QStringList &fs)
+{
+    m_flags = fs;
 }
 
 bool Card::hasFlag(const QString &flag) const

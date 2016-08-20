@@ -23,17 +23,7 @@
 
 #include "libqsgscoreglobal.h"
 
-class Room;
-class Player;
-class ServerPlayer;
-class Client;
-class ClientPlayer;
-class CardItem;
 
-struct CardEffectStruct;
-struct CardUseStruct;
-
-class Card;
 
 class CardPattern
 {
@@ -53,18 +43,16 @@ public:
     }
 };
 
+class CardFace;
 
 class Card : public QObject
 {
     Q_OBJECT
 
-    Q_ENUMS(Suit)
-    Q_ENUMS(CardType)
-    Q_ENUMS(HandlingMethod)
 
 public:
     // enumeration type
-    enum class Suit {
+    enum Suit {
         NoSuit = 0x0,
         Black = 0x100,
         Red = 0x200,
@@ -74,100 +62,150 @@ public:
         Diamond = Red + 2,
         Tbd = -1
     };
+    Q_ENUM(Suit)
+    static const Suit AllSuits[4];
 
-    enum Color
-    {
-        Red, Black, Colorless
-    };
+    // constructor
+    explicit Card(const QString &cardFaceName, Suit suit = Card::Tbd, int number = -1, int id = -1);
+    explicit Card(const CardFace *cardFace, Suit suit = Card::Tbd, int number = -1, int id = -1);
+
+    // property getters/setters
+    int id() const;
+    void setId(int id);
+    int effectiveId() const;
+
+    QString suitString() const;
+    Suit suit() const;
+    void setSuit(Suit suit);
+
+    bool isRed() const;
+    bool isBlack() const;
+    Suit color() const;
+    bool sameColorWith(const Card *other) const;
+
+    int number() const;
+    void setNumber(int number);
+    QString numberString() const;
+
+    QString fullName(bool include_suit = false) const;
+    QString logName() const;
+    QString name() const;
+    QString description(bool inToolTip = true) const;
+
+    QString skillName(bool removePrefix = true) const;
+    void setSkillName(const QString &skill_name);
+    QString effectName() const;
+    QString commonEffectName() const;
+
+    bool isMute() const;
+
+    bool canRecast() const;
+    void setCanRecast(bool can);
+
+    bool isTransferable() const;
+    void setTransferable(bool transferbale);
+
+    void setFlag(const QString &flag);
+    void setFlags(const QStringList &fs);
+    bool hasFlag(const QString &flag);
+    void clearFlags();
+
+    bool isVirtualCard() const;
+    bool isEquipped() const;
+    bool match(const QString &pattern) const;
+
+    void addSubcard(int card_id);
+    void addSubcard(const Card *card);
+    QList<int> subcards() const;
+    void clearSubcards();
+    QString subcardString() const;
+    void addSubcards(const QList<const Card *> &cards);
+    void addSubcards(const QList<int> &subcards_list);
+    int subcardsLength() const;
+
+    QString showSkill() const;
+    void setShowSkill(const QString &skill_name);
+
+    bool isKindOf(const char *cardType) const;
+    QStringList flags() const;
+
+    bool isModified() const;
+
+    const QString &cardFaceName() const;
+    const CardFace *cardFace() const;
+
+    // static functions
+    static bool CompareByNumber(const Card *a, const Card *b);
+    static bool CompareBySuit(const Card *a, const Card *b);
+    static Card *Clone(const Card *card);
+    static QString Suit2String(Suit suit);
+    static const int S_UNKNOWN_CARD_ID;
+
+
+private:
+    QString m_cardFaceName;
+    QList<int> m_subcards;
+    bool m_mute;
+    bool m_canRecast;
+    bool m_transferable;
+    Suit m_suit;
+    int m_number;
+    int m_id;
+    QString m_skillName;
+
+    QString m_showSkill;
+
+    QStringList m_flags;
+};
+
+class CardFace
+{
+public:
     enum HandlingMethod
     {
-        MethodNone, MethodUse, MethodResponse, MethodDiscard, MethodRecast, MethodPindian
+        NoMethod,
+        Use,
+        Response,
+        Discard,
+        Recast,
+        Pindian
     };
-
-    static const Suit AllSuits[4];
+    Q_ENUM(HandlingMethod)
 
     // card types
     enum CardType
     {
-        TypeSkill, TypeBasic, TypeTrick, TypeEquip
+        Skill,
+        Basic,
+        Equip,
+        Trick
     };
+    Q_ENUM(CardType)
 
-    // constructor
-    Card(Suit suit, int number, bool target_fixed = false);
 
-    // property getters/setters
-    QString suitString() const;
-    bool isRed() const;
-    bool isBlack() const;
-    int id() const;
-    virtual void setId(int id);
-    int effectiveId() const;
+    // In fact there is no such grammar in C++, but I set it here.
+    // Every subclass should own this function.
+#if 0
+    static virtual CardFace *instance() = 0;
+#endif
+    virtual ~CardFace();
 
-    int number() const;
-    virtual void setNumber(int number);
-    QString numberString() const;
-
-    Suit suit() const;
-    virtual void setSuit(Suit suit);
-
-    bool sameColorWith(const Card *other) const;
-    Color color() const;
-    QString fullName(bool include_suit = false) const;
-    QString logName() const;
-    QString name() const;
-    QString skillName(bool removePrefix = true) const;
-    virtual void setSkillName(const QString &skill_name);
-    QString description(bool inToolTip = true) const;
-
-    virtual bool isMute() const;
     virtual bool willThrow() const;
-    virtual bool canRecast() const;
     virtual bool hasPreAction() const;
-    virtual Card::HandlingMethod handlingMethod() const;
-    void canRecast(bool can);
+    virtual HandlingMethod handlingMethod() const;
 
-    virtual void setFlags(const QString &flag) const;
-    inline virtual void setFlags(const QStringList &fs)
-    {
-        m_flags = fs;
-    }
-    bool hasFlag(const QString &flag) const;
-    virtual void clearFlags() const;
-
-    virtual QString package() const;
-    inline virtual QString className() const;
-    virtual bool isVirtualCard() const;
-    virtual bool isEquipped() const;
-    virtual QString commonEffectName() const;
-    virtual bool match(const QString &pattern) const;
-
-    virtual void addSubcard(int card_id);
-    virtual void addSubcard(const Card *card);
-    virtual QList<int> subcards() const;
-    virtual void clearSubcards();
-    virtual QString subcardString() const;
-    virtual void addSubcards(const QList<const Card *> &cards);
-    virtual void addSubcards(const QList<int> &subcards_list);
-    virtual int subcardsLength() const;
-
-    virtual QString type() const = 0;
-    virtual QString subtype() const = 0;
     virtual CardType typeId() const = 0;
     virtual bool isNDTrick() const;
+    virtual QString package() const;
 
     // card target selection
     virtual bool targetFixed() const;
     virtual bool targetsFeasible(const QList<const Player *> &targets, const Player *Self) const;
     // @todo: the following two functions should be merged into one.
     virtual bool targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const;
-    virtual bool targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self,
-        int &maxVotes) const;
+    virtual bool targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self, int &maxVotes) const;
     virtual bool isAvailable(const Player *player) const;
 
-    inline virtual const Card *realCard() const
-    {
-        return this;
-    }
     virtual const Card *validate(CardUseStruct &cardUse) const;
     virtual const Card *validateInResponse(ServerPlayer *user) const;
 
@@ -177,69 +215,33 @@ public:
     virtual void onEffect(const CardEffectStruct &effect) const;
     virtual bool isCancelable(const CardEffectStruct &effect) const;
 
-    inline virtual QStringList checkTargetModSkillShow(const CardUseStruct & /* use */) const
-    {
-        return QStringList();
-    }
+    virtual QStringList checkTargetModSkillShow(const CardUseStruct & /* use */) const;
 
-    virtual QString showSkill() const;
-    virtual void setShowSkill(const QString &skill_name);
-
-    inline virtual bool isKindOf(const char *cardType) const
-    {
-        Q_ASSERT(cardType); return inherits(cardType);
-    }
-    inline virtual QStringList flags() const
-    {
-        return m_flags;
-    }
-
-    inline virtual bool isModified() const
-    {
-        return false;
-    }
-    inline virtual void onNullified(ServerPlayer * /* target */) const
-    {
-        return;
-    }
-
-    // static functions
-    static bool CompareByNumber(const Card *a, const Card *b);
-    static bool CompareBySuit(const Card *a, const Card *b);
-    static bool CompareByType(const Card *a, const Card *b);
-    static Card *Clone(const Card *card);
-    static QString Suit2String(Suit suit);
-    static const int S_UNKNOWN_CARD_ID;
-
-    static const Card *Parse(const QString &str);
-    virtual QString toString(bool hidden = false) const;
-
-    virtual QString effectName() const;
-
-    virtual bool isTransferable() const;
-    virtual void setTransferable(const bool transferbale);
+    virtual void onNullified(ServerPlayer * /* target */) const;
 
 protected:
-    QList<int> m_subcards;
+    explicit CardFace(const QString &name);
+
+    HandlingMethod m_handlingMethod;
+
     bool m_targetFixed;
-    bool m_mute;
     bool m_willThrow;
     bool m_hasPreact;
-    bool m_canRecast;
-    bool m_transferable;
-    Suit m_suit;
-    int m_number;
-    int m_id;
-    QString m_skillName;
-    Card::HandlingMethod m_handlingMethod;
 
-    QString m_showSkill;
-
-    mutable QStringList m_flags;
 };
 
-typedef QList<const Card *> CardList;
+class DummyCardFace : public CardFace
+{
+    static DummyCardFace *instance();
 
+    virtual CardType typeId() const final override;
+
+private:
+    static DummyCardFace *self;
+    DummyCardFace();
+};
+
+#if 0
 class SkillCard : public Card
 {
     Q_OBJECT
@@ -293,6 +295,6 @@ public:
     virtual QString type() const;
     virtual QString toString(bool hidden = false) const;
 };
-
+#endif
 #endif
 

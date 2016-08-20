@@ -22,27 +22,11 @@
 #define _PACKAGE_H
 
 #include "libqsgscoreglobal.h"
+
 class Card;
-class Player;
+class CardFace;
+class General;
 class Skill;
-
-class CardPattern
-{
-public:
-    virtual bool match(const Player *player, const Card *card) const = 0;
-    virtual bool willThrow() const
-    {
-        return true;
-    }
-    virtual QString getPatternString() const
-    {
-        return QString();
-    }
-
-    virtual ~CardPattern()
-    {
-    }
-};
 
 class QSgsPackage
 {
@@ -55,7 +39,7 @@ public:
         OtherPackage
     }
 
-    QSgsPackage(const QString &name);
+    explicit QSgsPackage(const QString &name);
     virtual ~QSgsPackage();
 
     const QHash<QString, const General *> generals() const;
@@ -67,6 +51,8 @@ public:
     const Skill *skill(const QString &skillName) const;
     const QMultiMap<QString, QString> relatedSkills() const;
     const QStringList relatedSkills(const QString &mainSkill) const;
+    const QString &name() const;
+
 
     virtual const QVersionNumber &version() const = 0;
     virtual Type type() const = 0;
@@ -77,25 +63,12 @@ protected:
     QList<const Card *> m_cards;
     QHash<QString, const Skill *> m_skills;
     QMultiMap<QString, QString> m_relatedSkills;
+
+    QString m_name;
 };
 
 Q_DECLARE_INTERFACE(QSgsPackage, "org.qsanguosha.Hegemony.QSgsPackage")
 
-
-typedef QHash<QString, QSgsPackage *> PackageHash;
-
-class PackageAdder
-{
-public:
-    PackageAdder(const QString &name, QSgsPackage *pack)
-    {
-        packages()[name] = pack;
-    }
-
-    static PackageHash &packages(void);
-};
-
-#define ADD_PACKAGE(name) static PackageAdder name##PackageAdder(#name, new name##Package);
 
 #endif
 

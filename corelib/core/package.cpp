@@ -22,19 +22,17 @@
 #include "skill.h"
 #include "card.h"
 
-void QSgsPackage::insertRelatedSkills(const QString &main_skill, int n, ...)
+
+QSgsPackage::QSgsPackage(const QString &name)
+    : m_name(name)
 {
-    va_list ap;
-    va_start(ap, n);
-    for (int i = 0; i < n; ++i) {
-        QString c = va_arg(ap, const char *);
-        m_relatedSkills.insertMulti(main_skill, c);
-    }
-    va_end(ap);
+
 }
 
+QSgsPackage::~QSgsPackage()
+{
 
-
+}
 
 const QHash<QString, const General *> QSgsPackage::generals() const
 {
@@ -81,9 +79,8 @@ const QStringList QSgsPackage::relatedSkills(const QString &mainSkill) const
     return m_relatedSkills.values(mainSkill);
 }
 
-
-Q_GLOBAL_STATIC(PackageHash, Packages)
-PackageHash &PackageAdder::packages()
+const QString &QSgsPackage::name() const
 {
-    return *(::Packages());
+    return m_name;
 }
+
