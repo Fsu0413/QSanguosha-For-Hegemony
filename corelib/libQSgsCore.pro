@@ -40,7 +40,8 @@ HEADERS += testlink.h \
     core/player.h \
     util/nativesocket.h \
     util/recorder.h \
-    util/socket.h
+    util/socket.h \
+    core/roomobject.h
 
 SOURCES += testlink.cpp \
     core/engine.cpp \
@@ -55,7 +56,8 @@ SOURCES += testlink.cpp \
     core/structs.cpp \
     core/player.cpp \
     util/nativesocket.cpp \
-    util/recorder.cpp
+    util/recorder.cpp \
+    core/roomobject.cpp
 
 DESTDIR = $$OUT_PWD/../../inst/lib
 DLLDESTDIR = $$OUT_PWD/../../inst/bin
