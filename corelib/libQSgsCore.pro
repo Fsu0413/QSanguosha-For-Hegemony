@@ -30,7 +30,6 @@ HEADERS += testlink.h \
     core/general.h \
     core/json.h \
     core/lua-wrapper.h \
-    core/namespace.h \
     core/package.h \
     core/protocol.h \
     core/scenario.h \
