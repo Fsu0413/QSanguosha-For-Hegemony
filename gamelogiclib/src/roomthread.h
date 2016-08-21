@@ -23,9 +23,7 @@
 
 #include "structs.h"
 
-#include <QThread>
-#include <QSemaphore>
-#include <QVariant>
+#include "libqsgsgamelogicglobal.h"
 
 class GameRule;
 

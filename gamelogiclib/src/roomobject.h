@@ -1,9 +1,7 @@
 #ifndef ROOMOBJECT_H
 #define ROOMOBJECT_H
 
-#include <QObject>
-#include <QList>
-#include <QHash>
+#include "libqsgsgamelogicglobal.h"
 
 class RoomObject : public QObject
 {

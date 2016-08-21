@@ -21,12 +21,7 @@
 #ifndef _RECORDER_H
 #define _RECORDER_H
 
-#include <QObject>
-#include <QTime>
-#include <QThread>
-#include <QMutex>
-#include <QSemaphore>
-#include <QMap>
+#include "libqsgsgamelogicglobal.h"
 
 class Recorder : public QObject
 {

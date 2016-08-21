@@ -19,10 +19,9 @@
     *********************************************************************/
 
 #include "recorder.h"
-#include "client.h"
-#include "protocol.h"
+//#include "client.h"
+//#include "protocol.h"
 
-#include "libqsgscoreglobal.h"
 
 //#include <QMessageBox>
 

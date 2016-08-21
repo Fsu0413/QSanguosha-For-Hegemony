@@ -21,9 +21,9 @@
 #include "player.h"
 #include "engine.h"
 #include "room.h"
-#include "client.h"
-#include "standard-basics.h"
-#include "settings.h"
+//#include "client.h"
+//#include "standard-basics.h"
+//#include "settings.h"
 
 Player::Player(QObject *parent)
     : QObject(parent), m_general(nullptr), m_general2(nullptr),

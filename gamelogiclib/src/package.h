@@ -21,7 +21,7 @@
 #ifndef _PACKAGE_H
 #define _PACKAGE_H
 
-#include "libqsgscoreglobal.h"
+#include "libqsgsgamelogicglobal.h"
 
 class Card;
 class CardFace;

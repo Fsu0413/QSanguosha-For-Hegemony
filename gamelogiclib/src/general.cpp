@@ -19,10 +19,10 @@
     *********************************************************************/
 
 #include "general.h"
-#include "engine.h"
+//#include "engine.h"
 #include "skill.h"
 #include "package.h"
-#include "settings.h"
+//#include "settings.h"
 
 #include <QSize>
 #include <QFile>
