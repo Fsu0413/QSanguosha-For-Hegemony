@@ -4,7 +4,7 @@
 #include <QtCore>
 #include <QtNetwork>
 #include <lua.hpp>
-
+#include <libqsgscoreglobal.h>
 
 #ifdef LIBQSGGAMELOGIC_BUILDING_LIBQSGSGAMELOGIC
 #define LIBQSGSGAMELOGIC_EXPORT Q_DECL_EXPORT

@@ -24,6 +24,10 @@ CONFIG += precompiled_header
 
 PRECOMPILED_HEADER = libqsgsgamelogicglobal.h
 
+INCLUDEPATH += \
+    ../corelib/ \
+    ../corelib/include
+
 HEADERS += \
     libqsgsgamelogicglobal.h \
     src/card.h \
