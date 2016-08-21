@@ -18,13 +18,13 @@
     Mogara
     *********************************************************************/
 
-//#include "structs.h"
+#include "structs.h"
 //#include "json.h"
 //#include "exppattern.h"
 //#include "room.h"
 
-//bool CardsMoveStruct::tryParse(const QVariant &arg)
-//{
+bool CardsMoveStruct::tryParse(const QVariant &arg)
+{
 //    JsonArray args = arg.value<JsonArray>();
 //    if (args.size() != 8) return false;
 
@@ -47,10 +47,11 @@
 //    to_pile_name = args[6].toString();
 //    reason.tryParse(args[7]);
 //    return true;
-//}
+    return false;
+}
 
-//QVariant CardsMoveStruct::toVariant() const
-//{
+QVariant CardsMoveStruct::toVariant() const
+{
 //    JsonArray arg;
 //    if (open) {
 //        arg << JsonUtils::toJsonArray(card_ids);
@@ -66,10 +67,11 @@
 //    arg << to_pile_name;
 //    arg << reason.toVariant();
 //    return arg;
-//}
+    return QVariant();
+}
 
-//bool CardMoveReason::tryParse(const QVariant &arg)
-//{
+bool CardMoveReason::tryParse(const QVariant &arg)
+{
 //    JsonArray args = arg.value<JsonArray>();
 //    if (args.size() != 5 || !args[0].canConvert<int>() || !JsonUtils::isStringArray(args, 1, 4))
 //        return false;
@@ -81,10 +83,11 @@
 //    m_targetId = args[4].toString();
 
 //    return true;
-//}
+    return false;
+}
 
-//QVariant CardMoveReason::toVariant() const
-//{
+QVariant CardMoveReason::toVariant() const
+{
 //    JsonArray result;
 //    result << m_reason;
 //    result << m_playerId;
@@ -92,15 +95,16 @@
 //    result << m_eventName;
 //    result << m_targetId;
 //    return result;
-//}
+    return QVariant();
+}
 
-//LogMessage::LogMessage()
-//    : from(nullptr)
-//{
-//}
+LogMessage::LogMessage()
+    //: from(nullptr)
+{
+}
 
-//QString LogMessage::toString() const
-//{
+QString LogMessage::toString() const
+{
 //    QStringList tos;
 //    foreach (ServerPlayer *player, to)
 //        if (player != nullptr) tos << player->objectName();
@@ -110,10 +114,11 @@
 //        .arg(from ? from->objectName() : "")
 //        .arg(tos.join("+"))
 //        .arg(card_str).arg(arg).arg(arg2);
-//}
+    return QString();
+}
 
-//QVariant LogMessage::toVariant() const
-//{
+QVariant LogMessage::toVariant() const
+{
 //    QStringList tos;
 //    foreach (ServerPlayer *player, to)
 //        if (player != nullptr) tos << player->objectName();
@@ -121,12 +126,13 @@
 //    QStringList log;
 //    log << type << (from ? from->objectName() : "") << tos.join("+") << card_str << arg << arg2;
 //    return JsonUtils::toJsonArray(log);
-//}
+    return QVariant();
+}
 
-//DamageStruct::DamageStruct()
+DamageStruct::DamageStruct()
 //    : from(nullptr), to(nullptr), card(nullptr), damage(1), nature(Normal), chain(false), transfer(false), by_user(true), reason(QString()), transfer_reason(QString()), prevented(false)
-//{
-//}
+{
+}
 
 //DamageStruct::DamageStruct(const Card *card, ServerPlayer *from, ServerPlayer *to, int damage, DamageStruct::Nature nature)
 //    : chain(false), transfer(false), by_user(true), reason(QString()), transfer_reason(QString()), prevented(false)
@@ -148,96 +154,97 @@
 //    this->reason = reason;
 //}
 
-//QString DamageStruct::getReason() const
-//{
+QString DamageStruct::getReason() const
+{
 //    if (reason != QString())
 //        return reason;
 //    else if (card)
 //        return card->objectName();
-//    return QString();
-//}
+    return QString();
+}
 
-//CardEffectStruct::CardEffectStruct()
+CardEffectStruct::CardEffectStruct()
 //    : card(nullptr), from(nullptr), to(nullptr), multiple(false), nullptrified(false)
-//{
-//}
+{
+}
 
-//SlashEffectStruct::SlashEffectStruct()
+SlashEffectStruct::SlashEffectStruct()
 //    : jink_num(1), slash(nullptr), jink(nullptr), from(nullptr), to(nullptr), drank(0), nature(DamageStruct::Normal), nullptrified(false)
-//{
-//}
+{
+}
 
-//DyingStruct::DyingStruct()
-//    : who(nullptr), damage(nullptr)
-//{
-//}
+DyingStruct::DyingStruct()
+  //  : who(nullptr), damage(nullptr)
+{
+}
 
-//DeathStruct::DeathStruct()
-//    : who(nullptr), damage(nullptr)
-//{
-//}
+DeathStruct::DeathStruct()
+  //  : who(nullptr), damage(nullptr)
+{
+}
 
-//RecoverStruct::RecoverStruct()
-//    : recover(1), who(nullptr), card(nullptr)
-//{
-//}
+RecoverStruct::RecoverStruct()
+    //: recover(1), who(nullptr), card(nullptr)
+{
+}
 
-//PindianStruct::PindianStruct()
-//    : from(nullptr), to(nullptr), from_card(nullptr), to_card(nullptr), success(false)
-//{
-//}
+PindianStruct::PindianStruct()
+  //  : from(nullptr), to(nullptr), from_card(nullptr), to_card(nullptr), success(false)
+{
+}
 
-//bool PindianStruct::isSuccess() const
-//{
-//    return success;
-//}
+bool PindianStruct::isSuccess() const
+{
+    return false;
+}
 
-//JudgeStruct::JudgeStruct()
+JudgeStruct::JudgeStruct()
 //    : who(nullptr), card(nullptr), pattern("."), good(true), time_consuming(false),
 //    negative(false), play_animation(true), _m_result(TRIAL_RESULT_UNKNOWN)
-//{
-//}
+{
+}
 
-//bool JudgeStruct::isEffected() const
-//{
-//    return negative ? isBad() : isGood();
-//}
+bool JudgeStruct::isEffected() const
+{
+ //   return negative ? isBad() : isGood();
+    return false;
+}
 
-//void JudgeStruct::updateResult()
-//{
+void JudgeStruct::updateResult()
+{
 //    bool effected = (good == ExpPattern(pattern).match(who, card));
 //    if (effected)
 //        _m_result = TRIAL_RESULT_GOOD;
 //    else
 //        _m_result = TRIAL_RESULT_BAD;
-//}
+}
 
-//bool JudgeStruct::isGood() const
-//{
+bool JudgeStruct::isGood() const
+{
 //    Q_ASSERT(_m_result != TRIAL_RESULT_UNKNOWN);
 //    return _m_result == TRIAL_RESULT_GOOD;
-//}
+}
 
-//bool JudgeStruct::isBad() const
-//{
-//    return !isGood();
-//}
+bool JudgeStruct::isBad() const
+{
+ //   return !isGood();
+}
 
-//bool JudgeStruct::isGood(const Card *card) const
-//{
+bool JudgeStruct::isGood(const Card *card) const
+{
 //    Q_ASSERT(card);
 //    return (good == ExpPattern(pattern).match(who, card));
-//}
+}
 
-//PhaseChangeStruct::PhaseChangeStruct()
+PhaseChangeStruct::PhaseChangeStruct()
 //    : from(Player::NotActive), to(Player::NotActive)
-//{
-//}
+{
+}
 
-//CardUseStruct::CardUseStruct()
+CardUseStruct::CardUseStruct()
 //    : card(nullptr), from(nullptr), m_isOwnerUse(true), m_addHistory(true), nullptrified_list(QStringList())
-//{
-//}
+{
+}
 
 //CardUseStruct::CardUseStruct(const Card *card, ServerPlayer *from, QList<ServerPlayer *> to, bool isOwnerUse)
 //{
@@ -257,55 +264,56 @@
 //    this->m_addHistory = true;
 //}
 
-//bool CardUseStruct::isValid(const QString &pattern) const
-//{
+bool CardUseStruct::isValid(const QString &pattern) const
+{
 //    Q_UNUSED(pattern)
 //        return card != nullptr;
-//    /*if (card == nullptr) return false;
-//    if (!card->getSkillName().isEmpty()) {
-//    bool validSkill = false;
-//    QString skillName = card->getSkillName();
-//    QSet<const Skill *> skills = from->getVisibleSkills();
-//    for (int i = 0; i < 4; i++) {
-//    const EquipCard *equip = from->getEquip(i);
-//    if (equip == nullptr) continue;
-//    const Skill *skill = Sanguosha->getSkill(equip);
-//    if (skill)
-//    skills.insert(skill);
-//    }
-//    foreach (const Skill *skill, skills) {
-//    if (skill->objectName() != skillName) continue;
-//    const ViewAsSkill *vsSkill = ViewAsSkill::parseViewAsSkill(skill);
-//    if (vsSkill) {
-//    if (!vsSkill->isAvailable(from, m_reason, pattern))
-//    return false;
-//    else {
-//    validSkill = true;
-//    break;
-//    }
-//    } else if (skill->getFrequency() == Skill::Wake) {
-//    bool valid = (from->getMark(skill->objectName()) > 0);
-//    if (!valid)
-//    return false;
-//    else
-//    validSkill = true;
-//    } else
-//    return false;
-//    }
-//    if (!validSkill) return false;
-//    }
-//    if (card->targetFixed())
-//    return true;
-//    else {
-//    QList<const Player *> targets;
-//    foreach (const ServerPlayer *player, to)
-//    targets.push_back(player);
-//    return card->targetsFeasible(targets, from);
-//    }*/
-//}
+    /*if (card == nullptr) return false;
+    if (!card->getSkillName().isEmpty()) {
+    bool validSkill = false;
+    QString skillName = card->getSkillName();
+    QSet<const Skill *> skills = from->getVisibleSkills();
+    for (int i = 0; i < 4; i++) {
+    const EquipCard *equip = from->getEquip(i);
+    if (equip == nullptr) continue;
+    const Skill *skill = Sanguosha->getSkill(equip);
+    if (skill)
+    skills.insert(skill);
+    }
+    foreach (const Skill *skill, skills) {
+    if (skill->objectName() != skillName) continue;
+    const ViewAsSkill *vsSkill = ViewAsSkill::parseViewAsSkill(skill);
+    if (vsSkill) {
+    if (!vsSkill->isAvailable(from, m_reason, pattern))
+    return false;
+    else {
+    validSkill = true;
+    break;
+    }
+    } else if (skill->getFrequency() == Skill::Wake) {
+    bool valid = (from->getMark(skill->objectName()) > 0);
+    if (!valid)
+    return false;
+    else
+    validSkill = true;
+    } else
+    return false;
+    }
+    if (!validSkill) return false;
+    }
+    if (card->targetFixed())
+    return true;
+    else {
+    QList<const Player *> targets;
+    foreach (const ServerPlayer *player, to)
+    targets.push_back(player);
+    return card->targetsFeasible(targets, from);
+    }*/
+    return false;
+}
 
-//bool CardUseStruct::tryParse(const QVariant &usage, Room *room)
-//{
+bool CardUseStruct::tryParse(const QVariant &usage, Room *room)
+{
 //    JsonArray use = usage.value<JsonArray>();
 //    if (use.size() < 2 || !JsonUtils::isString(use[0]) || !use[1].canConvert<JsonArray>())
 //        return false;
@@ -318,10 +326,11 @@
 //        this->to << room->findChild<ServerPlayer *>(target.toString());
 //    }
 //    return true;
-//}
+    return false;
+}
 
-//void CardUseStruct::parse(const QString &str, Room *room)
-//{
+void CardUseStruct::parse(const QString &str, Room *room)
+{
 //    QStringList words = str.split("->", QString::KeepEmptyParts);
 //    Q_ASSERT(words.length() == 1 || words.length() == 2);
 
@@ -338,11 +347,11 @@
 //        foreach (const QString &target_name, target_names)
 //            to << room->findChild<ServerPlayer *>(target_name);
 //    }
-//}
+}
 
-//AskForMoveCardsStruct::AskForMoveCardsStruct()
-//{
+AskForMoveCardsStruct::AskForMoveCardsStruct()
+{
 //    is_success = false;
 //    top.clear();
 //    bottom.clear();
-//}
+}
