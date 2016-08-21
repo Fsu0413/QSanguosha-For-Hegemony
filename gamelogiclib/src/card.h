@@ -48,7 +48,6 @@ class Card : public QObject
 {
     Q_OBJECT
 
-
 public:
     // enumeration type
     enum Suit {
