@@ -21,15 +21,10 @@
 #ifndef _SKILL_H
 #define _SKILL_H
 
-class Player;
-class ServerPlayer;
-class Card;
-class QDialog;
-class GuhuoBox;
-
+#include "libqsgscoreglobal.h"
 #include "namespace.h"
 
-#include "libqsgscoreglobal.h"
+class Card;
 
 class Skill : public QObject
 {

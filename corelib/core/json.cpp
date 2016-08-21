@@ -211,7 +211,7 @@ bool JsonUtils::tryParse(const QVariant &arg, QPoint &result)
     result.setY(args[1].toInt());
     return true;
 }
-
+#if 0
 bool JsonUtils::tryParse(const QVariant &arg, QColor &color)
 {
     JsonArray args = arg.value<JsonArray>();
@@ -224,7 +224,7 @@ bool JsonUtils::tryParse(const QVariant &arg, QColor &color)
 
     return true;
 }
-
+#endif
 QByteArray clearComment(const QByteArray &src)
 {
     QByteArray result(src);

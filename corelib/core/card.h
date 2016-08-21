@@ -23,7 +23,8 @@
 
 #include "libqsgscoreglobal.h"
 
-
+class Player;
+class Card;
 
 class CardPattern
 {
@@ -42,8 +43,6 @@ public:
     {
     }
 };
-
-class CardFace;
 
 class Card : public QObject
 {
@@ -67,7 +66,6 @@ public:
 
     // constructor
     explicit Card(const QString &cardFaceName, Suit suit = Card::Tbd, int number = -1, int id = -1);
-    explicit Card(const CardFace *cardFace, Suit suit = Card::Tbd, int number = -1, int id = -1);
 
     // property getters/setters
     int id() const;
@@ -132,7 +130,6 @@ public:
     bool isModified() const;
 
     const QString &cardFaceName() const;
-    const CardFace *cardFace() const;
 
     // static functions
     static bool CompareByNumber(const Card *a, const Card *b);

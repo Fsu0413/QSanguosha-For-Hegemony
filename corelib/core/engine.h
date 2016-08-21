@@ -26,6 +26,9 @@
 #include "card.h"
 
 struct lua_State;
+class QSgsPackage;
+class Skill;
+class Scenario;
 
 class QSgsEngine : public QObject
 {
@@ -42,14 +45,14 @@ public:
 
     int miniSceneCounts();
 
-    void addPackage(Package *package);
+    void addPackage(QSgsPackage *package);
     void addBanPackage(const QString &package_name);
-    QList<const Package *> packages() const;
+    QList<const QSgsPackage *> packages() const;
 
     QStringList banPackages() const;
     Card *cloneCard(const Card *card) const;
-    Card *cloneCard(const QString &name, Card::Suit suit = Card::Suit::Tbd, int number = -1, const QStringList &flags = QStringList()) const;
-    SkillCard *cloneSkillCard(const QString &name) const;
+    Card *cloneCard(const QString &name, Card::Suit suit = Card::Tbd, int number = -1, const QStringList &flags = QStringList()) const;
+    // SkillCard *cloneSkillCard(const QString &name) const;
 
     QVersionNumber versionNumber() const;
     QString version() const;
@@ -71,7 +74,6 @@ public:
 
     const CardPattern *pattern(const QString &name) const;
     bool matchExpPattern(const QString &pattern, const Player *player, const Card *card) const;
-    Card::HandlingMethod cardHandlingMethod(const QString &method_name) const;
     QList<const Skill *> relatedSkills(const QString &skill_name) const;
     const Skill *mainSkill(const QString &skill_name) const;
 
@@ -191,7 +193,7 @@ private:
     QList<const AttackRangeSkill *> m_attackrangeSkills;
     QList<const TriggerSkill *> m_globalTriggerSkills;
 
-    QList<const Package *> m_packages;
+    QList<const QSgsPackage *> m_packages;
     QList<Card *> m_cards;
     QStringList m_lordList;
     QSet<QString> m_banPackage;

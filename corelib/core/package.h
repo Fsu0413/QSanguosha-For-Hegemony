@@ -32,12 +32,11 @@ class QSgsPackage
 {
 
 public:
-
     enum Type {
         GeneralPackage,
         CardPackage,
         OtherPackage
-    }
+    };
 
     explicit QSgsPackage(const QString &name);
     virtual ~QSgsPackage();

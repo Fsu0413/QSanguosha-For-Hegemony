@@ -656,5 +656,5 @@
 //Q_DECLARE_METATYPE(JudgeStruct *)
 //Q_DECLARE_METATYPE(PindianStruct *)
 //Q_DECLARE_METATYPE(AskForMoveCardsStruct)
-//#endif
+#endif
 

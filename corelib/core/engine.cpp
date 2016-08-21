@@ -20,13 +20,9 @@
 
 #include "engine.h"
 #include "card.h"
-#include "settings.h"
 #include "scenario.h"
-#include "audio.h"
 #include "structs.h"
 #include "lua-wrapper.h"
-#include "roomstate.h"
-#include "banpair.h"
 
 #include <lua.hpp>
 #include <QFile>
