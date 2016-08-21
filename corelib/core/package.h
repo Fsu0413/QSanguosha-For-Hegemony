@@ -44,8 +44,11 @@ public:
 
     const QHash<QString, const General *> generals() const;
     const General *general(const QString &generalName) const;
-    const QHash<QString, const CardFace *> cardFaces() const;
-    const CardFace *cardFace(const QString &cardFaceName) const;
+#if 0
+    // if the package contains card faces, the package must rewrite both functions, and mark them as Q_INVOKEABLE, it could be called using the meta-object system.
+    Q_INVOKABLE virtual const QHash<QString, const CardFace *> &cardFaces() const;
+    Q_INVOKABLE virtual const CardFace *cardFace(const QString &cardFaceName) const;
+#endif
     const QList<const Card *> cards() const;
     const QHash<QString, const Skill *> skills() const;
     const Skill *skill(const QString &skillName) const;
@@ -59,7 +62,9 @@ public:
 
 protected:
     QHash<QString, const General *> m_generals;
+#if 0
     QHash<QString, const CardFace *> m_cardFaces;
+#endif
     QList<const Card *> m_cards;
     QHash<QString, const Skill *> m_skills;
     QMultiMap<QString, QString> m_relatedSkills;
