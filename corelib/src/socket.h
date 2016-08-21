@@ -25,7 +25,7 @@
 
 class ClientSocket;
 
-class ServerSocket : public QObject
+class LIBQSGSCORE_EXPORT ServerSocket : public QObject
 {
     Q_OBJECT
 
@@ -37,7 +37,7 @@ signals:
     void new_connection(ClientSocket *connection);
 };
 
-class ClientSocket : public QObject
+class LIBQSGSCORE_EXPORT ClientSocket : public QObject
 {
     Q_OBJECT
 

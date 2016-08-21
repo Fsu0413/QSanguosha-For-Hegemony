@@ -20,7 +20,6 @@
 
 #include "nativesocket.h"
 #include "settings.h"
-#include "clientplayer.h"
 
 #include <QTcpSocket>
 #include <QRegExp>
@@ -36,13 +35,13 @@ NativeServerSocket::NativeServerSocket()
 
 bool NativeServerSocket::listen()
 {
-    return server->listen(QHostAddress::Any, Config.ServerPort);
+    return server->listen(QHostAddress::Any, QSgsCoreSettings::serverPort());
 }
 
 void NativeServerSocket::daemonize()
 {
     daemon = new QUdpSocket(this);
-    daemon->bind(Config.ServerPort, QUdpSocket::ShareAddress);
+    daemon->bind(QSgsCoreSettings::serverPort(), QUdpSocket::ShareAddress);
     connect(daemon, &QUdpSocket::readyRead, this, &NativeServerSocket::processNewDatagram);
 }
 
@@ -54,8 +53,8 @@ void NativeServerSocket::processNewDatagram()
 
         daemon->readDatagram(ask_str, sizeof(ask_str), &from);
 
-        QByteArray data = Config.ServerName.toUtf8();
-        daemon->writeDatagram(data, from, Config.DetectorPort);
+        QByteArray data = QSgsCoreSettings::serverName().toUtf8();
+        daemon->writeDatagram(data, from, QSgsCoreSettings::detectorPort());
         daemon->flush();
     }
 }
@@ -95,14 +94,14 @@ void NativeClientSocket::connectToHost()
     QString address = "127.0.0.1";
     ushort port = 9527u;
 
-    if (Config.HostAddress.contains(QChar(':'))) {
-        QStringList texts = Config.HostAddress.split(QChar(':'));
+    if (QSgsCoreSettings::hostAddress().contains(QChar(':'))) {
+        QStringList texts = QSgsCoreSettings::hostAddress().split(QChar(':'));
         address = texts.value(0);
         port = texts.value(1).toUShort();
     } else {
-        address = Config.HostAddress;
+        address = QSgsCoreSettings::hostAddress();
         if (address == "127.0.0.1")
-            port = Config.value("ServerPort", 9527u).toUInt();
+            port = QSgsCoreSettings::serverPort();
     }
 
     socket->connectToHost(address, port);
@@ -110,7 +109,7 @@ void NativeClientSocket::connectToHost()
 
 void NativeClientSocket::connectToHost(const QHostAddress &address)
 {
-    ushort port = Config.value("ServerPort", 9527u).toUInt();
+    ushort port = QSgsCoreSettings::serverPort();
     socket->connectToHost(address, port);
 }
 
@@ -182,14 +181,8 @@ void NativeClientSocket::raiseError(QAbstractSocket::SocketError socket_error)
     switch (socket_error) {
     case QAbstractSocket::ConnectionRefusedError:
         reason = tr("Connection was refused or timeout"); break;
-    case QAbstractSocket::RemoteHostClosedError:{
-        if (Self && Self->hasFlag("is_kicked"))
-            reason = tr("You are kicked from server");
-        else
-            reason = tr("Remote host close this connection");
-
-        break;
-    }
+    case QAbstractSocket::RemoteHostClosedError:
+        reason = tr("Remote host close this connection"); break;
     case QAbstractSocket::HostNotFoundError:
         reason = tr("Host not found"); break;
     case QAbstractSocket::SocketAccessError:

@@ -27,7 +27,7 @@
 
 class QUdpSocket;
 
-class NativeServerSocket : public ServerSocket
+class LIBQSGSCORE_EXPORT NativeServerSocket : public ServerSocket
 {
     Q_OBJECT
 
@@ -47,7 +47,7 @@ private:
 };
 
 
-class NativeClientSocket : public ClientSocket
+class LIBQSGSCORE_EXPORT NativeClientSocket : public ClientSocket
 {
     Q_OBJECT
 

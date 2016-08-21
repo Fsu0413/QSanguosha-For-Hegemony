@@ -21,9 +21,12 @@
 #include "util.h"
 #include "lua.hpp"
 
+#include <iostream>
+using std::cerr;
+using std::endl;
+
 #include <QVariant>
 #include <QStringList>
-#include <QMessageBox>
 
 extern "C" {
     int luaopen_sgs(lua_State *);
@@ -85,7 +88,7 @@ lua_State *CreateLuaState()
 {
     lua_State *L = luaL_newstate();
     luaL_openlibs(L);
-    luaopen_sgs(L);
+    //luaopen_sgs(L);
 
     return L;
 }
@@ -94,8 +97,8 @@ void DoLuaScript(lua_State *L, const char *script)
 {
     int error = luaL_dofile(L, script);
     if (error) {
-        QString error_msg = lua_tostring(L, -1);
-        QMessageBox::critical(NULL, QObject::tr("Lua script error"), error_msg);
+        const char *error_msg = lua_tostring(L, -1);
+        cerr << error_msg << endl << endl;
         exit(1);
     }
 }
@@ -138,9 +141,4 @@ QList<int> VariantList2IntList(const QVariantList &variantlist)
         if (!ok) return QList<int>();
     }
     return intlist;
-}
-
-bool isNormalGameMode(const QString &mode)
-{
-    return mode.endsWith("p") || mode.endsWith("pd") || mode.endsWith("pz");
 }
