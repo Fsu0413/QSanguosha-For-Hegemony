@@ -54,8 +54,8 @@ QString Card::Suit2String(Suit suit)
         case Heart: return "heart";
         case Club: return "club";
         case Diamond: return "diamond";
-        case NoSuitBlack: return "no_suit_black";
-        case NoSuitRed: return "no_suit_red";
+        case Black: return "no_suit_black";
+        case Red: return "no_suit_red";
         default: return "no_suit";
     }
 }
@@ -166,14 +166,14 @@ Card::Suit Card::color() const
     switch (suit()) {
         case Spade:
         case Club:
-        case NoSuitBlack:
+        case Black:
             return Black;
         case Heart:
         case Diamond:
-        case NoSuitRed:
+        case Red:
             return Red;
         default:
-            return Colorless;
+            return NoSuit;
     }
 }
 
