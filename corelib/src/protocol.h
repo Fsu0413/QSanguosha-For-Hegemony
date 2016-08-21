@@ -262,7 +262,7 @@ namespace QSanProtocol
 //        virtual CommandType getCommandType() const = 0;
 //    };
 
-    class Packet/* : public AbstractPacket*/
+    class LIBQSGSCORE_EXPORT Packet/* : public AbstractPacket*/
     {
     public:
         //format: [global_serial, local_serial, packet_type, command_name, command_body]

@@ -30,13 +30,17 @@ HEADERS += \
     src/protocol.h \
     libqsgscoreglobal.h \
     src/nativesocket.h \
-    src/socket.h
+    src/socket.h \
+    src/util.h \
+    src/settings.h
 
 SOURCES += \
     src/engine.cpp \
     src/json.cpp \
     src/protocol.cpp \
-    src/nativesocket.cpp
+    src/nativesocket.cpp \
+    src/util.cpp \
+    src/settings.cpp
 
 DESTDIR = $$OUT_PWD/../../inst/lib
 DLLDESTDIR = $$OUT_PWD/../../inst/bin

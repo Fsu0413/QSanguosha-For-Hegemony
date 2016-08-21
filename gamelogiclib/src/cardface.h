@@ -2,6 +2,12 @@
 #ifndef CARDFACE_H__
 #define CARDFACE_H__
 
+#include "libqsgsgamelogicglobal.h"
+
+class Player;
+class Card;
+class Room;
+
 class CardFace
 {
 public:
@@ -14,7 +20,6 @@ public:
         Recast,
         Pindian
     };
-    Q_ENUM(HandlingMethod)
 
     // card types
     enum CardType
@@ -24,8 +29,6 @@ public:
         Equip,
         Trick
     };
-    Q_ENUM(CardType)
-
 
     // In fact there is no such grammar in C++, but I set it here.
     // Every subclass should own this function.

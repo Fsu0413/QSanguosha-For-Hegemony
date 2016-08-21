@@ -22,13 +22,14 @@
 #define _ENGINE_H
 
 #include "libqsgscoreglobal.h"
+#include "util.h"
 
 struct lua_State;
 class QSgsPackage;
 class Skill;
 class Scenario;
 
-class QSgsEngine : public QObject
+class LIBQSGSCORE_EXPORT QSgsEngine : public QObject
 {
     Q_OBJECT
 
@@ -49,6 +50,7 @@ public:
 
 private:
     lua_State *m_lua;
+    QHash<QString, QString> m_translations;
 
 };
 

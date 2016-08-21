@@ -3,6 +3,12 @@
 
 #include "libqsgsgamelogicglobal.h"
 
+#include "card.h"
+class QSgsPackage;
+class Skill;
+class General;
+
+
 class GameLogicCore: public QObject
 {
     Q_OBJECT
@@ -60,8 +66,6 @@ public:
     //const Card *getEngineCard(int cardId) const;
     // @todo: consider making this const Card *
     Card *card(int cardId);
-    WrappedCard *wrappedCard(int cardId);
-
     //************************************
     // Method:    getRandomGenerals
     // FullName:  Engine::getRandomGenerals
@@ -161,16 +165,16 @@ private:
     QHash<QString, Scenario *> m_miniScenes;
     Scenario *m_customScene;
 
-   // QHash<QString, QString> luaBasicCard_className2objectName;
-    //QHash<QString, const LuaBasicCard *> m_luaBasicCards;
-   // QHash<QString, QString> luaTrickCard_className2objectName;
-    //QHash<QString, const LuaTrickCard *> m_luaTrickCards;
-   // QHash<QString, QString> luaWeapon_className2objectName;
-    //QHash<QString, const LuaWeapon*> m_luaWeapons;
-   // QHash<QString, QString> luaArmor_className2objectName;
-    //QHash<QString, const LuaArmor *> m_luaArmors;
-    //QHash<QString, QString> luaTreasure_className2objectName;
-    //QHash<QString, const LuaTreasure *> m_luaTreasures;
+//    QHash<QString, QString> luaBasicCard_className2objectName;
+//    QHash<QString, const LuaBasicCard *> m_luaBasicCards;
+//    QHash<QString, QString> luaTrickCard_className2objectName;
+//    QHash<QString, const LuaTrickCard *> m_luaTrickCards;
+//    QHash<QString, QString> luaWeapon_className2objectName;
+//    QHash<QString, const LuaWeapon*> m_luaWeapons;
+//    QHash<QString, QString> luaArmor_className2objectName;
+//    QHash<QString, const LuaArmor *> m_luaArmors;
+//    QHash<QString, QString> luaTreasure_className2objectName;
+//    QHash<QString, const LuaTreasure *> m_luaTreasures;
 
     QMultiMap<QString, QString> m_spConvertPairs;
 

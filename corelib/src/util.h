@@ -21,7 +21,9 @@
 #ifndef _UTIL_H
 #define _UTIL_H
 
-struct lua_State;
+#include "libqsgscoreglobal.h"
+#include "lua.hpp"
+
 class QVariant;
 
 #include <QList>
@@ -39,19 +41,19 @@ void qShuffle(QList<T> &list)
 }
 
 // lua interpreter related
-lua_State *CreateLuaState();
-void DoLuaScript(lua_State *L, const char *script);
 
-QVariant GetValueFromLuaState(lua_State *L, const char *table_name, const char *key);
+// to be discovered that this grammar is correct or not
+LIBQSGSCORE_EXPORT lua_State * CreateLuaState();
 
-QStringList IntList2StringList(const QList<int> &intlist);
-QList<int> StringList2IntList(const QStringList &stringlist);
-QVariantList IntList2VariantList(const QList<int> &intlist);
-QList<int> VariantList2IntList(const QVariantList &variantlist);
+void LIBQSGSCORE_EXPORT DoLuaScript(lua_State *L, const char *script);
 
-bool isNormalGameMode(const QString &mode);
+QVariant LIBQSGSCORE_EXPORT GetValueFromLuaState(lua_State *L, const char *table_name, const char *key);
 
-static const int S_EQUIP_AREA_LENGTH = 5;
+QStringList LIBQSGSCORE_EXPORT IntList2StringList(const QList<int> &intlist);
+QList<int> LIBQSGSCORE_EXPORT StringList2IntList(const QStringList &stringlist);
+QVariantList LIBQSGSCORE_EXPORT IntList2VariantList(const QList<int> &intlist);
+QList<int> LIBQSGSCORE_EXPORT VariantList2IntList(const QVariantList &variantlist);
+
 
 #endif
 
