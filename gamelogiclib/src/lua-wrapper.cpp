@@ -19,7 +19,7 @@
     *********************************************************************/
 
 #include "lua-wrapper.h"
-#include "util.h"
+//#include "util.h"
 
 //LuaTriggerSkill::LuaTriggerSkill(const char *name, Frequency frequency, const char *limit_mark)
 //    : TriggerSkill(name), can_trigger(0), on_cost(0),

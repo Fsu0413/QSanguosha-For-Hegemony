@@ -26,7 +26,7 @@ class TriggerSkill;
 class QSgsPackage;
 class QSize;
 
-#include "libqsgscoreglobal.h"
+#include "libqsgsgamelogicglobal.h"
 
 class General : public QObject
 {

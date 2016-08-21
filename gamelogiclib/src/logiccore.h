@@ -1,6 +1,8 @@
 #ifndef LOGICCORE_H__
 #define LOGICCORE_H__
 
+#include "libqsgsgamelogicglobal.h"
+
 class GameLogicCore: public QObject
 {
     Q_OBJECT

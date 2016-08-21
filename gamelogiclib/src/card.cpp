@@ -19,8 +19,8 @@
     *********************************************************************/
 
 #include "card.h"
-#include "settings.h"
-#include "engine.h"
+//#include "settings.h"
+//#include "engine.h"
 #include "structs.h"
 #include "lua-wrapper.h"
 #include <QFile>

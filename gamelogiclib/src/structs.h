@@ -21,7 +21,7 @@
 #ifndef _STRUCTS_H
 #define _STRUCTS_H
 
-#include "libqsgscoreglobal.h"
+#include "libqsgsgamelogicglobal.h"
 
 //class Room;
 //class TriggerSkill;

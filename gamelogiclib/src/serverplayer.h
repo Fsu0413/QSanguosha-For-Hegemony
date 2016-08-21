@@ -31,9 +31,6 @@ struct PindianStruct;
 
 #include "structs.h"
 #include "player.h"
-#include "socket.h"
-#include "protocol.h"
-#include "namespace.h"
 
 #include <QSemaphore>
 #include <QDateTime>

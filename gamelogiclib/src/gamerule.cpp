@@ -21,10 +21,10 @@
 #include "gamerule.h"
 #include "serverplayer.h"
 #include "room.h"
-#include "standard.h"
-#include "engine.h"
-#include "settings.h"
-#include "json.h"
+//#include "standard.h"
+//#include "engine.h"
+//#include "settings.h"
+//#include "json.h"
 #include "roomthread.h"
 
 #include <QTime>

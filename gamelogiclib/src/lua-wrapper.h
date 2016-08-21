@@ -21,7 +21,7 @@
 #ifndef _LUA_WRAPPER_H
 #define _LUA_WRAPPER_H
 
-#include "libqsgscoreglobal.h"
+#include "libqsgsgamelogicglobal.h"
 
 #include "skill.h"
 //#include "standard.h"

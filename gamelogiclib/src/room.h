@@ -32,13 +32,9 @@ struct lua_State;
 struct LogMessage;
 
 #include "serverplayer.h"
-#include "protocol.h"
-#include "roomstate.h"
 
-#include <QMutex>
-#include <QStack>
-#include <QWaitCondition>
-#include <QThread>
+#include "libqsgsgamelogicglobal.h"
+
 
 typedef QMap<const ServerPlayer *, QStringList> SPlayerDataMap;
 

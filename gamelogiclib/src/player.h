@@ -22,10 +22,8 @@
 #define _PLAYER_H
 
 #include "general.h"
-#include "wrappedcard.h"
-#include "namespace.h"
 
-#include "libqsgscoreglobal.h"
+#include "libqsgsgamelogicglobal.h"
 
 class EquipCard;
 class Weapon;

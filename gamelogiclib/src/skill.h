@@ -21,8 +21,7 @@
 #ifndef _SKILL_H
 #define _SKILL_H
 
-#include "libqsgscoreglobal.h"
-#include "namespace.h"
+#include "libqsgsgamelogicglobal.h"
 
 class Card;
 
