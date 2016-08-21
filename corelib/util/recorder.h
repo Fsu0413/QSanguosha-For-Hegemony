@@ -46,9 +46,9 @@ private:
     QByteArray data;
 };
 
-class Replayer /*: public QThread*/
+class Replayer : public QThread
 {
-    //Q_OBJECT
+    Q_OBJECT
 
 public:
     explicit Replayer(QObject *parent, const QString &filename);
