@@ -1,63 +1,21 @@
-/********************************************************************
-    Copyright (c) 2013-2015 - Mogara
+#ifndef LOGICCORE_H__
+#define LOGICCORE_H__
 
-    This file is part of QSanguosha-Hegemony.
-
-    This game is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public License as
-    published by the Free Software Foundation; either version 3.0
-    of the License, or (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    General Public License for more details.
-
-    See the LICENSE file for more details.
-
-    Mogara
-    *********************************************************************/
-
-#ifndef _ENGINE_H
-#define _ENGINE_H
-
-#include "libqsgscoreglobal.h"
-
-#include "card.h"
-
-struct lua_State;
-class QSgsPackage;
-class Skill;
-class Scenario;
-
-class QSgsEngine : public QObject
+class GameLogicCore: public QObject
 {
     Q_OBJECT
-
+    
 public:
-    QSgsEngine();
-    ~QSgsEngine();
-
-    void addTranslationEntry(const char *key, const char *value);
-    QString translate(const QString &toTranslate) const;
-    QString translate(const QString &toTranslate, const QString &defaultValue) const;
-    lua_State *luaState() const;
-
-    int miniSceneCounts();
-
+    
     void addPackage(QSgsPackage *package);
     void addBanPackage(const QString &package_name);
     QList<const QSgsPackage *> packages() const;
-
+    
+    int miniSceneCounts();
     QStringList banPackages() const;
     Card *cloneCard(const Card *card) const;
     Card *cloneCard(const QString &name, Card::Suit suit = Card::Tbd, int number = -1, const QStringList &flags = QStringList()) const;
     // SkillCard *cloneSkillCard(const QString &name) const;
-
-    QVersionNumber versionNumber() const;
-    QString version() const;
-    QString versionName() const;
-    QString ModName() const;
     QStringList extensions() const;
     QStringList kingdoms() const;
     QColor kingdomColor(const QString &kingdom) const;
@@ -201,8 +159,6 @@ private:
     QHash<QString, Scenario *> m_miniScenes;
     Scenario *m_customScene;
 
-    lua_State *m_lua;
-
    // QHash<QString, QString> luaBasicCard_className2objectName;
     //QHash<QString, const LuaBasicCard *> m_luaBasicCards;
    // QHash<QString, QString> luaTrickCard_className2objectName;
@@ -216,34 +172,6 @@ private:
 
     QMultiMap<QString, QString> m_spConvertPairs;
 
-
-//#if 1
-
-//public:
-
-//    void registerRoom(QObject *room);
-//    void unregisterRoom();
-//    QObject *currentRoomObject();
-//    Room *currentRoom();
-//    RoomState *currentRoomState();
-
-//private:
-
-    // todo: delete me after the code has completely finished
-
-    //QMutex m_mutex;
-    //QHash<QThread *, QObject *> m_rooms;
-
-    //TransferSkill *transfer;
-//#endif
-};
-
-static inline QVariant GetConfigFromLuaState(lua_State *L, const char *key)
-{
-    return GetValueFromLuaState(L, "config", key);
 }
 
-extern QSgsEngine *Sanguosha;
-
 #endif
-
