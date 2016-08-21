@@ -17,7 +17,7 @@ CONFIG(bundledlua) {
 } else {
     QMAKE_CFLAGS += $$QSANGUOSHA_LUA_CFLAGS
     QMAKE_CXXFLAGS += $$QSANGUOSHA_LUA_CFLAGS
-    LIBS += $$QSANGUOSHA_LUA_LIBS
+    LIBS += $$QSANGUOSHA_LUA_LIB
 }
 
 CONFIG += precompiled_header
