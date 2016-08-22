@@ -72,12 +72,12 @@ bool General::isNeuter() const
     return m_gender == Neuter;
 }
 
-void General::setGender(Gender gender)
+void General::setGender(QSgsEnum::GeneralGender gender)
 {
     this->m_gender = gender;
 }
 
-General::Gender General::gender() const
+QSgsEnum::GeneralGender General::gender() const
 {
     return m_gender;
 }

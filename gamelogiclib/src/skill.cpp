@@ -160,7 +160,7 @@ bool Skill::isVisible() const
 //    }
 //}
 
-Skill::Frequency Skill::frequency() const
+QSgsEnum::SkillFrequency Skill::frequency() const
 {
     return m_frequency;
 }

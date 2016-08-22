@@ -43,7 +43,6 @@ class General : public QObject
 public:
     explicit General(QSgsPackage *package, const QString &name, const QString &m_kingdom,
         int m_doubleMaxHp = 4, bool male = true, bool m_hidden = false, bool m_neverShown = false);
-
     // property getters/setters
     int doubleMaxHp() const;
     QString kingdom() const;
@@ -57,12 +56,8 @@ public:
     int maxHpHead() const;
     int maxHpDeputy() const;
 
-    enum Gender
-    {
-        Sexless, Male, Female, Neuter
-    };
-    Gender gender() const;
-    void setGender(Gender m_gender);
+    QSgsEnum::GeneralGender gender() const;
+    void setGender(QSgsEnum::GeneralGender m_gender);
 
     void addSkill(Skill *skill);
     void addSkill(const QString &skill_name);
@@ -101,7 +96,7 @@ public:
 private:
     QString m_kingdom;
     int m_doubleMaxHp;
-    Gender m_gender;
+    QSgsEnum::GeneralGender m_gender;
     bool m_lord;
     QSet<QString> m_skillSet;
     QSet<QString> m_extraSet;

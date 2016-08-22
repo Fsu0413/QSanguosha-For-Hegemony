@@ -28,17 +28,8 @@ class Card;
 class Skill : public QObject
 {
     Q_OBJECT
-    Q_ENUMS(Frequency)
 
 public:
-    enum Frequency
-    {
-        Frequent,
-        NotFrequent,
-        Compulsory,
-        Limited,
-        Wake
-    };
 
     explicit Skill(const QString &name, Frequency frequent = NotFrequent);
     bool isLordSkill() const;
@@ -54,7 +45,7 @@ public:
 
 //    void initMediaSource();
 //    void playAudioEffect(int index = -1) const;
-    Frequency frequency() const;
+    QSgsEnum::SkillFrequency frequency() const;
     QString limitMark() const;
 //    QStringList getSources(const QString &general, const int skinId) const;
 //    QStringList getSources() const;

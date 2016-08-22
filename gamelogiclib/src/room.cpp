@@ -5546,7 +5546,7 @@ ServerPlayer *Room::getLord(const QString &kingdom, bool include_death) const
     return NULL;
 }
 
-void Room::askForGuanxing(ServerPlayer *zhuge, const QList<int> &cards, GuanxingType guanxing_type)
+void Room::askForGuanxing(ServerPlayer *zhuge, const QList<int> &cards, QSgsEnum::GuanxingType guanxing_type)
 {
     QList<int> top_cards, bottom_cards;
     tryPause();
