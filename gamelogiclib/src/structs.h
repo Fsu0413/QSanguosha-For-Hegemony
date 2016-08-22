@@ -90,7 +90,6 @@ struct SlashEffectStruct
 
 struct CardUseStruct
 {
-    m_reason;
 
     CardUseStruct();
 //    CardUseStruct(const Card *card, ServerPlayer *from, QList<ServerPlayer *> to, bool isOwnerUse = true);
@@ -106,6 +105,7 @@ struct CardUseStruct
 //    bool m_addHistory;
 //    bool m_isHandcard;
 //    QStringList nullptrified_list;
+    QSgsEnum::CardUseReason m_reason;
 };
 
 class CardMoveReason

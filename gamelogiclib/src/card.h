@@ -51,10 +51,10 @@ class Card : public QObject
 public:
 
 
-    static const QSgsEnum::CaedSuit AllSuits[4];
+    static const QSgsEnum::CardSuit AllSuits[4];
 
     // constructor
-    explicit Card(const QString &cardFaceName, Suit suit = Card::Tbd, int number = -1, int id = -1);
+    explicit Card(const QString &cardFaceName, QSgsEnum::CardSuit suit = QSgsEnum::CardSuit::Tbd, int number = -1, int id = -1);
 
     // property getters/setters
     int id() const;
@@ -124,7 +124,7 @@ public:
     static bool CompareByNumber(const Card *a, const Card *b);
     static bool CompareBySuit(const Card *a, const Card *b);
     static Card *Clone(const Card *card);
-    static QString Suit2String(Suit suit);
+    static QString Suit2String(QSgsEnum::CardSuit suit);
     static const int S_UNKNOWN_CARD_ID;
 
 

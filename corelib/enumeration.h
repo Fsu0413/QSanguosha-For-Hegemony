@@ -1,8 +1,9 @@
 #ifndef ENUMERATION_H
 #define ENUMERATION_H
+
 namespace QSgsEnum{
 
-enum CardSuit {
+enum class CardSuit {
     NoSuit = 0x0,
     Black = 0x100,
     Red = 0x200,
@@ -13,7 +14,7 @@ enum CardSuit {
     Tbd = -1
 };
 
-enum CardHandlingMethod
+enum class CardHandlingMethod
 {
     NoMethod,
     Use,
@@ -24,7 +25,7 @@ enum CardHandlingMethod
 };
 
 // card types
-enum CardType
+enum class CardType
 {
     Skill,
     Basic,
@@ -32,47 +33,51 @@ enum CardType
     Trick
 };
 
-enum GeneralGender
+enum class GeneralGender
 {
     Sexless, Male, Female, Neuter
 };
 
-enum PackageType {
+enum class PackageType {
     GeneralPackage,
     CardPackage,
     OtherPackage
 };
 
-enum PlayerPhase
+enum class PlayerPhase
 {
     RoundStart, Start, Judge, Draw, Play, Discard, Finish, NotActive, PhaseNone
 };
-enum PlayerPlace
+
+enum class PlayerPlace
 {
     PlaceHand, PlaceEquip, PlaceDelayedTrick, PlaceJudge,
     PlaceSpecial, DiscardPile, DrawPile, PlaceTable, PlaceUnknown,
     PlaceWuGu, DrawPileBottom
 };
-enum PlayerRelation
+
+enum class PlayerRelation
 {
     Friend, Enemy, Neutrality
 };
-enum PlayerRole
+
+enum class PlayerRole
 {
     Lord, Loyalist, Rebel, Renegade
 };
-enum PlayersArrayType
+
+enum class PlayersArrayType
 {
     Siege,
     Formation
 };
 
-enum GuanxingType
+enum class GuanxingType
 {
     GuanxingUpOnly = 1, GuanxingBothSides = 0, GuanxingDownOnly = -1
 };
 
-enum SkillFrequency
+enum class SkillFrequency
 {
     Frequent,
     NotFrequent,
@@ -81,14 +86,14 @@ enum SkillFrequency
     Wake
 };
 
-enum DamageNature
+enum class DamageNature
 {
     Normal, // normal slash, duel and most damage caused by skill
     Fire,  // fire slash, fire attack and few damage skill (Yeyan, etc)
     Thunder // lightning, thunder slash, and few damage skill (Leiji, etc)
 };
 
-enum CardUseReason
+enum class CardUseReason
 {
     CARD_USE_REASON_UNKNOWN = 0x00,
     CARD_USE_REASON_PLAY = 0x01,
@@ -96,7 +101,7 @@ enum CardUseReason
     CARD_USE_REASON_RESPONSE_USE = 0x12
 };
 
-enum TriggerEvent
+enum class TriggerEvent
 {
     NonTrigger,
 

@@ -51,7 +51,7 @@ public:
 protected:
     explicit CardFace(const QString &name);
 
-    HandlingMethod m_handlingMethod;
+    QSgsEnum::CardHandlingMethod m_handlingMethod;
 
     bool m_targetFixed;
     bool m_willThrow;
@@ -63,7 +63,7 @@ class DummyCardFace : public CardFace
 {
     static DummyCardFace *instance();
 
-    virtual CardType typeId() const final override;
+    virtual QSgsEnum::CardType typeId() const final override;
 
 private:
     static DummyCardFace *self;

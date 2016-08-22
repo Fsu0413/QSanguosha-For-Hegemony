@@ -27,19 +27,19 @@
 
 const int Card::S_UNKNOWN_CARD_ID = -1;
 
-const Card::Suit Card::AllSuits[4] = {
-    Card::Spade,
-    Card::Club,
-    Card::Heart,
-    Card::Diamond
+const QSgsEnum::CardSuit Card::AllSuits[4] = {
+    QSgsEnum::CardSuit::Spade,
+    QSgsEnum::CardSuit::Club,
+    QSgsEnum::CardSuit::Heart,
+    QSgsEnum::CardSuit::Diamond
 };
 
-Card::Card(const QString &cardFaceName, Suit suit, int number, int id)
-    : m_targetFixed(target_fixed), m_mute(false),
-    m_willThrow(true), m_hasPreact(false), m_canRecast(false), m_transferable(false),
+Card::Card(const QString &cardFaceName, QSgsEnum::CardSuit suit, int number, int id)
+    : m_mute(false),
+    m_canRecast(false), m_transferable(false),
     m_suit(suit), m_number(number), m_id(-1)
 {
-    m_handlingMethod = m_willThrow ? Card::MethodDiscard : Card::MethodUse;
+
 }
 
 QString Card::suitString() const
@@ -47,27 +47,27 @@ QString Card::suitString() const
     return Suit2String(suit());
 }
 
-QString Card::Suit2String(Suit suit)
+QString Card::Suit2String(QSgsEnum::CardSuit suit)
 {
     switch (suit) {
-        case Spade: return "spade";
-        case Heart: return "heart";
-        case Club: return "club";
-        case Diamond: return "diamond";
-        case Black: return "no_suit_black";
-        case Red: return "no_suit_red";
+        case QSgsEnum::CardSuit::Spade: return "spade";
+        case QSgsEnum::CardSuit::Heart: return "heart";
+        case QSgsEnum::CardSuit::Club: return "club";
+        case QSgsEnum::CardSuit::Diamond: return "diamond";
+        case QSgsEnum::CardSuit::Black: return "no_suit_black";
+        case QSgsEnum::CardSuit::Red: return "no_suit_red";
         default: return "no_suit";
     }
 }
 
 bool Card::isRed() const
 {
-    return color() == Red;
+    return color() == QSgsEnum::CardSuit::Red;
 }
 
 bool Card::isBlack() const
 {
-    return color() == Black;
+    return color() == QSgsEnum::CardSuit::Black;
 }
 
 int Card::id() const
@@ -114,16 +114,16 @@ void Card::setNumber(int number)
 
 QString Card::numberString() const
 {
-    int number = number();
+    int n = number();
     if (isVirtualCard()) {
         if (subcardsLength() == 0 || subcardsLength() >= 2)
-            number = 0;
+            n = 0;
     }
-    if (number == 10)
+    if (n == 10)
         return "10";
     else {
         static const char *number_string = "-A23456789-JQK";
-        return QString(number_string[number]);
+        return QString(number_string[n]);
     }
 }
 

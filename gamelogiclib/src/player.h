@@ -100,7 +100,7 @@ public:
 
     void setRole(const QString &m_role);
     QString role() const;
-    Role roleEnum() const;
+    QSgsEnum::PlayerRole roleEnum() const;
 
     void setGeneral(const General *m_general);
     void setGeneralName(const QString &general_name);
@@ -120,8 +120,8 @@ public:
     bool isAdjacentTo(const Player *another) const;
     QString phaseString() const;
     void setPhaseString(const QString &phase_str);
-    Phase phase() const;
-    void setPhase(Phase m_phase);
+    QSgsEnum::PlayerPhase phase() const;
+    void setPhase(QSgsEnum::PlayerPhase m_phase);
 
     int attackRange(bool include_weapon = true) const;
     bool inMyAttackRange(const Player *other) const;
@@ -170,8 +170,8 @@ public:
     bool containsTrick(const QString &trick_name) const;
 
     virtual int handcardNum() const = 0;
-    virtual void removeCard(const Card *card, Place place) = 0;
-    virtual void addCard(const Card *card, Place place) = 0;
+    virtual void removeCard(const Card *card, QSgsEnum::PlayerPlace place) = 0;
+    virtual void addCard(const Card *card, QSgsEnum::PlayerPlace place) = 0;
     virtual QList<const Card *> handcards() const = 0;
 
     Card *weapon() const;
@@ -254,17 +254,17 @@ public:
 
     inline bool isJilei(const Card *card) const
     {
-        return isCardLimited(card, CardFace::MethodDiscard);
+        return isCardLimited(card, QSgsEnum::CardHandlingMethod::Discard);
     }
     inline bool isLocked(const Card *card) const
     {
-        return isCardLimited(card, CardFace::MethodUse);
+        return isCardLimited(card, QSgsEnum::CardHandlingMethod::Use);
     }
 
     void setCardLimitation(const QString &limit_list, const QString &pattern, bool single_turn = false);
     void removeCardLimitation(const QString &limit_list, const QString &pattern);
     void clearCardLimitation(bool single_turn = false);
-    bool isCardLimited(const Card *card, CardFace::HandlingMethod method, bool isHandcard = false) const;
+    bool isCardLimited(const Card *card, QSgsEnum::CardHandlingMethod method, bool isHandcard = false) const;
 
     // just for convenience
     void addQinggangTag(const Card *card);
@@ -367,7 +367,7 @@ private:
 
     bool m_general1Showed, m_general2Showed;
 
-    Phase m_phase;
+    QSgsEnum::PlayerPhase m_phase;
     Card *m_weapon, *m_armor, *m_defensiveHorse, *m_offensiveHorse, *m_treasure;
     bool m_faceUp;
     bool m_chained;
@@ -376,7 +376,7 @@ private:
     QHash<const Player *, int> m_fixedDistance;
     QString m_next;
 
-    QMap<CardFace::HandlingMethod, QStringList> m_cardLimitation;
+    QMap<QSgsEnum::CardHandlingMethod, QStringList> m_cardLimitation;
 
     QStringList m_disableShow;
     // head and/or deputy, reason

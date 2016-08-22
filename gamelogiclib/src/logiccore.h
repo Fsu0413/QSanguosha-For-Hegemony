@@ -7,6 +7,7 @@
 class QSgsPackage;
 class Skill;
 class General;
+class Scenario;
 
 
 class GameLogicCore: public QObject
@@ -22,7 +23,7 @@ public:
     int miniSceneCounts();
     QStringList banPackages() const;
     Card *cloneCard(const Card *card) const;
-    Card *cloneCard(const QString &name, Card::Suit suit = Card::Tbd, int number = -1, const QStringList &flags = QStringList()) const;
+    Card *cloneCard(const QString &name, QSgsEnum::CardSuit suit = QSgsEnum::CardSuit::Tbd, int number = -1, const QStringList &flags = QStringList()) const;
     // SkillCard *cloneSkillCard(const QString &name) const;
     QStringList extensions() const;
     QStringList kingdoms() const;

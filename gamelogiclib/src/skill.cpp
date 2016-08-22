@@ -19,18 +19,14 @@
     *********************************************************************/
 
 #include "skill.h"
-#include "settings.h"
-#include "engine.h"
 #include "player.h"
 #include "room.h"
-#include "client.h"
-#include "standard.h"
 #include "scenario.h"
 #include "serverplayer.h"
 
 #include <QFile>
 
-Skill::Skill(const QString &name, Frequency frequency)
+Skill::Skill(const QString &name, QSgsEnum::SkillFrequency frequency)
     : m_frequency(frequency), m_limitMark(QString()), m_relateToPlace(QString()), m_attachedLordSkill(false)
 {
     static QChar lord_symbol('$');
@@ -516,7 +512,7 @@ bool GameStartSkill::effect(TriggerEvent, Room *, ServerPlayer *player, QVariant
     return false;
 }
 
-BattleArraySkill::BattleArraySkill(const QString &name, const HegemonyMode::ArrayType type)
+BattleArraySkill::BattleArraySkill(const QString &name, const QSgsEnum::PlayersArrayType type)
     : TriggerSkill(name), m_arrayType(type)
 {
     if (!inherits("LuaBattleArraySkill")) //extremely dirty hack!!!
