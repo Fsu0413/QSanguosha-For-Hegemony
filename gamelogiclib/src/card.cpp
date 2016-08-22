@@ -23,7 +23,6 @@
 //#include "engine.h"
 #include "structs.h"
 #include "lua-wrapper.h"
-#include <QFile>
 
 const int Card::S_UNKNOWN_CARD_ID = -1;
 
@@ -129,23 +128,23 @@ QString Card::numberString() const
 
 QSgsEnum::CardSuit Card::suit() const
 {
-    if (m_suit != NoSuit && m_suit != SuitToBeDecided)
+    if (m_suit != QSgsEnum::CardSuit::NoSuit && m_suit != QSgsEnum::CardSuit::Tbd)
         return m_suit;
     if (isVirtualCard()) {
         if (subcardsLength() == 0)
-            return NoSuit;
+            return QSgsEnum::CardSuit::NoSuit;
         else if (subcardsLength() == 1)
             return Sanguosha->card(m_subcards.first())->suit();
         else {
-            Color color = Colorless;
+            QSgsEnum::CardSuit color = QSgsEnum::CardSuit::NoSuit;
             foreach (int id, m_subcards) {
-                Color color2 = Sanguosha->card(id)->color();
-                if (color == Colorless)
+                QSgsEnum::CardSuit color2 = Sanguosha->card(id)->color();
+                if (color == QSgsEnum::CardSuit::NoSuit)
                     color = color2;
                 else if (color != color2)
-                    return NoSuit;
+                    return QSgsEnum::CardSuit::NoSuit;
             }
-            return (color == Red) ? NoSuitRed : NoSuitBlack;
+            return (color == QSgsEnum::CardSuit::Red) ? QSgsEnum::CardSuit::Red : QSgsEnum::CardSuit::Black;
         }
     } else
         return m_suit;
@@ -164,16 +163,16 @@ bool Card::sameColorWith(const Card *other) const
 QSgsEnum::CardSuit Card::color() const
 {
     switch (suit()) {
-        case Spade:
-        case Club:
-        case Black:
-            return Black;
-        case Heart:
-        case Diamond:
-        case Red:
-            return Red;
+        case QSgsEnum::CardSuit::Spade:
+        case QSgsEnum::CardSuit::Club:
+        case QSgsEnum::CardSuit::Black:
+            return QSgsEnum::CardSuit::Black;
+        case QSgsEnum::CardSuit::Heart:
+        case QSgsEnum::CardSuit::Diamond:
+        case QSgsEnum::CardSuit::Red:
+            return QSgsEnum::CardSuit::Red;
         default:
-            return NoSuit;
+            return QSgsEnum::CardSuit::NoSuit;
     }
 }
 
@@ -186,7 +185,7 @@ bool Card::match(const QString &pattern) const
 {
     QStringList patterns = pattern.split("+");
     foreach (const QString &ptn, patterns) {
-        if (objectName() == ptn || type() == ptn || subtype() == ptn)
+        if (objectName() == ptn || type() == ptn /*|| subtype() == ptn*/)
             return true;
     }
     return false;
@@ -194,9 +193,10 @@ bool Card::match(const QString &pattern) const
 
 bool Card::CompareByNumber(const Card *a, const Card *b)
 {
-    static Suit new_suits[] = {Spade, Heart, Club, Diamond, NoSuitBlack, NoSuitRed, NoSuit};
-    Suit suit1 = new_suits[a->suit()];
-    Suit suit2 = new_suits[b->suit()];
+    static QSgsEnum::CardSuit new_suits[] = {QSgsEnum::CardSuit::Spade, QSgsEnum::CardSuit::Heart, QSgsEnum::CardSuit::Club,
+                                             QSgsEnum::CardSuit::Diamond, QSgsEnum::CardSuit::Black, QSgsEnum::CardSuit::Red, QSgsEnum::CardSuit::NoSuit};
+    QSgsEnum::CardSuit suit1 = new_suits[a->suit()];
+    QSgsEnum::CardSuit suit2 = new_suits[b->suit()];
 
     if (a->m_number != b->m_number)
         return a->m_number < b->m_number;
@@ -206,9 +206,10 @@ bool Card::CompareByNumber(const Card *a, const Card *b)
 
 bool Card::CompareBySuit(const Card *a, const Card *b)
 {
-    static Suit new_suits[] = {Spade, Heart, Club, Diamond, NoSuitBlack, NoSuitRed, NoSuit};
-    Suit suit1 = new_suits[a->suit()];
-    Suit suit2 = new_suits[b->suit()];
+    static QSgsEnum::CardSuit new_suits[] = {QSgsEnum::CardSuit::Spade, QSgsEnum::CardSuit::Heart, QSgsEnum::CardSuit::Club,
+                                             QSgsEnum::CardSuit::Diamond, QSgsEnum::CardSuit::Black, QSgsEnum::CardSuit::Red, QSgsEnum::CardSuit::NoSuit};
+    QSgsEnum::CardSuit suit1 = new_suits[a->suit()];
+    QSgsEnum::CardSuit suit2 = new_suits[b->suit()];
 
     if (suit1 != suit2)
         return suit1 < suit2;
@@ -216,18 +217,18 @@ bool Card::CompareBySuit(const Card *a, const Card *b)
         return a->m_number < b->m_number;
 }
 
-bool Card::isNDTrick() const
-{
-    return typeId() == TypeTrick && !isKindOf("DelayedTrick");
-}
+//bool Card::isNDTrick() const
+//{
+//    return typeId() == TypeTrick && !isKindOf("DelayedTrick");
+//}
 
-QString Card::package() const
-{
-    if (parent())
-        return parent()->objectName();
-    else
-        return QString();
-}
+//QString Card::package() const
+//{
+//    if (parent())
+//        return parent()->objectName();
+//    else
+//        return QString();
+//}
 
 QString Card::fullName(bool include_suit) const
 {
@@ -307,12 +308,10 @@ QString Card::description(bool yellow) const
     }
 
     for (int i = 0; i < 6; i++) {
-        Card::Suit suit = (Card::Suit)i;
+        QSgsEnum::CardSuit suit = (Card::Suit)i;
         QString str = Card::Suit2String(suit);
         QString to_replace = Sanguosha->translate(str);
-        bool red = suit == Card::Heart
-            || suit == Card::Diamond
-            || suit == Card::NoSuitRed;
+        bool red = isRed();
         if (to_replace == str) continue;
         if (desc.contains(to_replace)) {
             if (red)
@@ -400,169 +399,171 @@ bool Card::isVirtualCard() const
     return m_id < 0;
 }
 
-const Card *Card::Parse(const QString &str)
-{
-    static QMap<QString, Card::Suit> suit_map;
-    if (suit_map.isEmpty()) {
-        suit_map.insert("spade", Card::Spade);
-        suit_map.insert("club", Card::Club);
-        suit_map.insert("heart", Card::Heart);
-        suit_map.insert("diamond", Card::Diamond);
-        suit_map.insert("no_suit_red", Card::NoSuitRed);
-        suit_map.insert("no_suit_black", Card::NoSuitBlack);
-        suit_map.insert("no_suit", Card::NoSuit);
-    }
+//@to_do(Xusine): move this function to the logic core.
 
-    if (str.startsWith(QChar('@'))) {
-        // skill card
-        QRegExp pattern1("@(\\w+)=([^:]+)&(.*)(:.+)?");
-        QRegExp pattern2("@(\\w+)=([^:]+)(:.+)?");
-        QRegExp ex_pattern("@(\\w*)\\[(\\w+):(.+)\\]=([^:]+)&(.*)(:.+)?");
+//const Card *Card::Parse(const QString &str)
+//{
+//    static QMap<QString, Card::Suit> suit_map;
+//    if (suit_map.isEmpty()) {
+//        suit_map.insert("spade", Card::Spade);
+//        suit_map.insert("club", Card::Club);
+//        suit_map.insert("heart", Card::Heart);
+//        suit_map.insert("diamond", Card::Diamond);
+//        suit_map.insert("no_suit_red", Card::NoSuitRed);
+//        suit_map.insert("no_suit_black", Card::NoSuitBlack);
+//        suit_map.insert("no_suit", Card::NoSuit);
+//    }
 
-        QStringList texts;
-        QString card_name, card_suit, card_number;
-        QStringList subcard_ids;
-        QString subcard_str;
-        QString show_skill;
-        QString user_string;
+//    if (str.startsWith(QChar('@'))) {
+//        // skill card
+//        QRegExp pattern1("@(\\w+)=([^:]+)&(.*)(:.+)?");
+//        QRegExp pattern2("@(\\w+)=([^:]+)(:.+)?");
+//        QRegExp ex_pattern("@(\\w*)\\[(\\w+):(.+)\\]=([^:]+)&(.*)(:.+)?");
 
-        if (pattern1.exactMatch(str)) {
-            texts = pattern1.capturedTexts();
-            card_name = texts.at(1);
-            subcard_str = texts.at(2);
-            show_skill = texts.at(3);
-            user_string = texts.at(4);
-        } else if (pattern2.exactMatch(str)) {
-            texts = pattern2.capturedTexts();
-            card_name = texts.at(1);
-            subcard_str = texts.at(2);
-            user_string = texts.at(3);
-        } else if (ex_pattern.exactMatch(str)) {
-            texts = ex_pattern.capturedTexts();
-            card_name = texts.at(1);
-            card_suit = texts.at(2);
-            card_number = texts.at(3);
-            subcard_str = texts.at(4);
-            show_skill = texts.at(5);
-            user_string = texts.at(6);
-        } else
-            return nullptr;
+//        QStringList texts;
+//        QString card_name, card_suit, card_number;
+//        QStringList subcard_ids;
+//        QString subcard_str;
+//        QString show_skill;
+//        QString user_string;
 
-        if (subcard_str != ".")
-            subcard_ids = subcard_str.split("+");
+//        if (pattern1.exactMatch(str)) {
+//            texts = pattern1.capturedTexts();
+//            card_name = texts.at(1);
+//            subcard_str = texts.at(2);
+//            show_skill = texts.at(3);
+//            user_string = texts.at(4);
+//        } else if (pattern2.exactMatch(str)) {
+//            texts = pattern2.capturedTexts();
+//            card_name = texts.at(1);
+//            subcard_str = texts.at(2);
+//            user_string = texts.at(3);
+//        } else if (ex_pattern.exactMatch(str)) {
+//            texts = ex_pattern.capturedTexts();
+//            card_name = texts.at(1);
+//            card_suit = texts.at(2);
+//            card_number = texts.at(3);
+//            subcard_str = texts.at(4);
+//            show_skill = texts.at(5);
+//            user_string = texts.at(6);
+//        } else
+//            return nullptr;
 
-        SkillCard *card = Sanguosha->cloneSkillCard(card_name);
+//        if (subcard_str != ".")
+//            subcard_ids = subcard_str.split("+");
 
-        if (card == nullptr)
-            return nullptr;
+//        SkillCard *card = Sanguosha->cloneSkillCard(card_name);
 
-        card->addSubcards(StringList2IntList(subcard_ids));
+//        if (card == nullptr)
+//            return nullptr;
 
-        // skill name
-        // @todo: This is extremely dirty and would cause endless troubles.
-        QString skillName = card->skillName();
-        if (skillName.isNull()) {
-            skillName = card_name.remove("Card").toLower();
-            card->setSkillName(skillName);
-        }
-        if (!card_suit.isEmpty())
-            card->setSuit(suit_map.value(card_suit, Card::NoSuit));
+//        card->addSubcards(StringList2IntList(subcard_ids));
 
-        if (!card_number.isEmpty()) {
-            int number = 0;
-            if (card_number == "A")
-                number = 1;
-            else if (card_number == "J")
-                number = 11;
-            else if (card_number == "Q")
-                number = 12;
-            else if (card_number == "K")
-                number = 13;
-            else
-                number = card_number.toInt();
+//        // skill name
+//        // @todo: This is extremely dirty and would cause endless troubles.
+//        QString skillName = card->skillName();
+//        if (skillName.isNull()) {
+//            skillName = card_name.remove("Card").toLower();
+//            card->setSkillName(skillName);
+//        }
+//        if (!card_suit.isEmpty())
+//            card->setSuit(suit_map.value(card_suit, Card::NoSuit));
 
-            card->setNumber(number);
-        }
+//        if (!card_number.isEmpty()) {
+//            int number = 0;
+//            if (card_number == "A")
+//                number = 1;
+//            else if (card_number == "J")
+//                number = 11;
+//            else if (card_number == "Q")
+//                number = 12;
+//            else if (card_number == "K")
+//                number = 13;
+//            else
+//                number = card_number.toInt();
 
-        if (!show_skill.isEmpty())
-            card->setShowSkill(show_skill);
-        /*
-                else if (!skillName.isEmpty())
-                card->setShowSkill(skillName);
-                */  // The deletion of this code is extremely dangerous, for all the card in server is created in this way.
-        // I(Fs) deleted this in 2015/4/21, for it causes a bug that one cannot use the skill card as the cost.
+//            card->setNumber(number);
+//        }
 
-        if (!user_string.isEmpty()) {
-            user_string.remove(0, 1);
-            card->setUserString(user_string);
-        }
-        card->deleteLater();
-        return card;
-    } else if (str.startsWith(QChar('$'))) {
-        QString copy = str;
-        copy.remove(QChar('$'));
-        QStringList card_strs = copy.split("+");
-        DummyCard *dummy = new DummyCard(StringList2IntList(card_strs));
-        dummy->deleteLater();
-        return dummy;
-    } else if (str.startsWith(QChar('#'))) {
-        LuaSkillCard *new_card = LuaSkillCard::Parse(str);
-        new_card->deleteLater();
-        return new_card;
-    } else if (str.contains(QChar('='))) {
-        QRegExp pattern("(\\w+):(\\w*)\\[(\\w+):(.+)\\]=(.+)&(.*)");
-        if (!pattern.exactMatch(str))
-            return nullptr;
+//        if (!show_skill.isEmpty())
+//            card->setShowSkill(show_skill);
+//        /*
+//                else if (!skillName.isEmpty())
+//                card->setShowSkill(skillName);
+//                */  // The deletion of this code is extremely dangerous, for all the card in server is created in this way.
+//        // I(Fs) deleted this in 2015/4/21, for it causes a bug that one cannot use the skill card as the cost.
 
-        QStringList texts = pattern.capturedTexts();
-        QString card_name = texts.at(1);
-        QString m_skillName = texts.at(2);
-        QString suit_string = texts.at(3);
-        QString number_string = texts.at(4);
-        QString subcard_str = texts.at(5);
-        QString show_skill = texts.at(6);
-        QStringList subcard_ids;
-        if (subcard_str != ".")
-            subcard_ids = subcard_str.split("+");
+//        if (!user_string.isEmpty()) {
+//            user_string.remove(0, 1);
+//            card->setUserString(user_string);
+//        }
+//        card->deleteLater();
+//        return card;
+//    } else if (str.startsWith(QChar('$'))) {
+//        QString copy = str;
+//        copy.remove(QChar('$'));
+//        QStringList card_strs = copy.split("+");
+//        DummyCard *dummy = new DummyCard(StringList2IntList(card_strs));
+//        dummy->deleteLater();
+//        return dummy;
+//    } else if (str.startsWith(QChar('#'))) {
+//        LuaSkillCard *new_card = LuaSkillCard::Parse(str);
+//        new_card->deleteLater();
+//        return new_card;
+//    } else if (str.contains(QChar('='))) {
+//        QRegExp pattern("(\\w+):(\\w*)\\[(\\w+):(.+)\\]=(.+)&(.*)");
+//        if (!pattern.exactMatch(str))
+//            return nullptr;
 
-        Suit suit = Card::NoSuit;
-        DummyCard *dummy = new DummyCard(StringList2IntList(subcard_ids));
-        if (suit_string == "to_be_decided")
-            suit = dummy->suit();
-        else
-            suit = suit_map.value(suit_string, Card::NoSuit);
-        dummy->deleteLater();
+//        QStringList texts = pattern.capturedTexts();
+//        QString card_name = texts.at(1);
+//        QString m_skillName = texts.at(2);
+//        QString suit_string = texts.at(3);
+//        QString number_string = texts.at(4);
+//        QString subcard_str = texts.at(5);
+//        QString show_skill = texts.at(6);
+//        QStringList subcard_ids;
+//        if (subcard_str != ".")
+//            subcard_ids = subcard_str.split("+");
 
-        int number = 0;
-        if (number_string == "A")
-            number = 1;
-        else if (number_string == "J")
-            number = 11;
-        else if (number_string == "Q")
-            number = 12;
-        else if (number_string == "K")
-            number = 13;
-        else
-            number = number_string.toInt();
+//        Suit suit = Card::NoSuit;
+//        DummyCard *dummy = new DummyCard(StringList2IntList(subcard_ids));
+//        if (suit_string == "to_be_decided")
+//            suit = dummy->suit();
+//        else
+//            suit = suit_map.value(suit_string, Card::NoSuit);
+//        dummy->deleteLater();
 
-        Card *card = Sanguosha->cloneCard(card_name, suit, number);
-        if (card == nullptr)
-            return nullptr;
+//        int number = 0;
+//        if (number_string == "A")
+//            number = 1;
+//        else if (number_string == "J")
+//            number = 11;
+//        else if (number_string == "Q")
+//            number = 12;
+//        else if (number_string == "K")
+//            number = 13;
+//        else
+//            number = number_string.toInt();
 
-        card->addSubcards(StringList2IntList(subcard_ids));
-        card->setSkillName(m_skillName);
-        card->setShowSkill(show_skill);
-        card->deleteLater();
-        return card;
-    } else {
-        bool ok;
-        int card_id = str.toInt(&ok);
-        if (ok)
-            return Sanguosha->card(card_id)->realCard();
-        else
-            return nullptr;
-    }
-}
+//        Card *card = Sanguosha->cloneCard(card_name, suit, number);
+//        if (card == nullptr)
+//            return nullptr;
+
+//        card->addSubcards(StringList2IntList(subcard_ids));
+//        card->setSkillName(m_skillName);
+//        card->setShowSkill(show_skill);
+//        card->deleteLater();
+//        return card;
+//    } else {
+//        bool ok;
+//        int card_id = str.toInt(&ok);
+//        if (ok)
+//            return Sanguosha->card(card_id)->realCard();
+//        else
+//            return nullptr;
+//    }
+//}
 
 Card *Card::Clone(const Card *card)
 {

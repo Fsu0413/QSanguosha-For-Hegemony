@@ -594,12 +594,12 @@ bool ArraySummonSkill::isEnabledAtPlay(const Player *player) const
     return false;
 }
 
-int MaxCardsSkill::getExtra(const ServerPlayer *, MaxCardsType::MaxCardsCount) const
+int MaxCardsSkill::getExtra(const ServerPlayer *) const
 {
     return 0;
 }
 
-int MaxCardsSkill::getFixed(const ServerPlayer *, MaxCardsType::MaxCardsCount) const
+int MaxCardsSkill::getFixed(const ServerPlayer *) const
 {
     return -1;
 }

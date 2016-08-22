@@ -307,8 +307,8 @@ class MaxCardsSkill : public Skill
 public:
     MaxCardsSkill(const QString &name);
 
-    virtual int getExtra(const ServerPlayer *target, MaxCardsType::MaxCardsCount type = MaxCardsType::Max) const;
-    virtual int getFixed(const ServerPlayer *target, MaxCardsType::MaxCardsCount type = MaxCardsType::Max) const;
+    virtual int getExtra(const ServerPlayer *target/*, MaxCardsType::MaxCardsCount type = MaxCardsType::Max*/) const;
+    virtual int getFixed(const ServerPlayer *target/*, MaxCardsType::MaxCardsCount type = MaxCardsType::Max*/) const;
 };
 
 class TargetModSkill : public Skill
