@@ -32,11 +32,7 @@ class QSgsPackage
 {
 
 public:
-    enum Type {
-        GeneralPackage,
-        CardPackage,
-        OtherPackage
-    };
+
 
     explicit QSgsPackage(const QString &name);
     virtual ~QSgsPackage();
@@ -57,7 +53,7 @@ public:
 
 
     virtual const QVersionNumber &version() const = 0;
-    virtual Type type() const = 0;
+    virtual QSgsEnum::PackageType type() const = 0;
 
 protected:
     QHash<QString, const General *> m_generals;

@@ -65,34 +65,7 @@ class Player : public QObject
     Q_PROPERTY(int head_skin_id READ getHeadSkinId WRITE setHeadSkinId)
     Q_PROPERTY(int deputy_skin_id READ getDeputySkinId WRITE setDeputySkinId)
 
-    Q_ENUMS(Phase)
-    Q_ENUMS(Place)
-    Q_ENUMS(Role)
-
 public:
-    enum Phase
-    {
-        RoundStart, Start, Judge, Draw, Play, Discard, Finish, NotActive, PhaseNone
-    };
-    enum Place
-    {
-        PlaceHand, PlaceEquip, PlaceDelayedTrick, PlaceJudge,
-        PlaceSpecial, DiscardPile, DrawPile, PlaceTable, PlaceUnknown,
-        PlaceWuGu, DrawPileBottom
-    };
-    enum Relation
-    {
-        Friend, Enemy, Neutrality
-    };
-    enum Role
-    {
-        Lord, Loyalist, Rebel, Renegade
-    };
-    enum ArrayType
-    {
-        Siege,
-        Formation
-    };
 
     explicit Player(QObject *parent);
 
@@ -106,8 +79,8 @@ public:
     void setMaxHp(int maxHp);
     int lostHp() const;
     bool isWounded() const;
-    General::Gender gender() const;
-    virtual void setGender(General::Gender gender);
+    QSgsEnum::GeneralGender gender() const;
+    virtual void setGender(QSgsEnum::GeneralGender gender);
     bool isMale() const;
     bool isFemale() const;
     bool isNeuter() const;
@@ -381,7 +354,7 @@ protected:
 private:
     QString m_screenName;
     bool m_owner;
-    General::Gender m_gender;
+    QSgsEnum::GeneralGender m_gender;
     int m_hp, m_maxHp;
     QString m_kingdom;
     QString m_role;

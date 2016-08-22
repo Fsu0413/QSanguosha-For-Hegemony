@@ -127,7 +127,7 @@ QString Card::numberString() const
     }
 }
 
-Card::Suit Card::suit() const
+QSgsEnum::CardSuit Card::suit() const
 {
     if (m_suit != NoSuit && m_suit != SuitToBeDecided)
         return m_suit;
@@ -151,7 +151,7 @@ Card::Suit Card::suit() const
         return m_suit;
 }
 
-void Card::setSuit(Suit suit)
+void Card::setSuit(QSgsEnum::CardSuit suit)
 {
     this->m_suit = suit;
 }
@@ -161,7 +161,7 @@ bool Card::sameColorWith(const Card *other) const
     return color() == other->color();
 }
 
-Card::Suit Card::color() const
+QSgsEnum::CardSuit Card::color() const
 {
     switch (suit()) {
         case Spade:

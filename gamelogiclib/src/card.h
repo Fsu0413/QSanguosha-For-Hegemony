@@ -49,19 +49,9 @@ class Card : public QObject
     Q_OBJECT
 
 public:
-    // enumeration type
-    enum Suit {
-        NoSuit = 0x0,
-        Black = 0x100,
-        Red = 0x200,
-        Spade = Black + 1,
-        Club = Black + 2,
-        Heart = Red + 1,
-        Diamond = Red + 2,
-        Tbd = -1
-    };
-    Q_ENUM(Suit)
-    static const Suit AllSuits[4];
+
+
+    static const QSgsEnum::CaedSuit AllSuits[4];
 
     // constructor
     explicit Card(const QString &cardFaceName, Suit suit = Card::Tbd, int number = -1, int id = -1);
@@ -72,12 +62,12 @@ public:
     int effectiveId() const;
 
     QString suitString() const;
-    Suit suit() const;
-    void setSuit(Suit suit);
+    QSgsEnum::CardSuit suit() const;
+    void setSuit(QSgsEnum::CardSuit suit);
 
     bool isRed() const;
     bool isBlack() const;
-    Suit color() const;
+    QSgsEnum::CardSuit color() const;
     bool sameColorWith(const Card *other) const;
 
     int number() const;
@@ -144,7 +134,7 @@ private:
     bool m_mute;
     bool m_canRecast;
     bool m_transferable;
-    Suit m_suit;
+    QSgsEnum::CardSuit m_suit;
     int m_number;
     int m_id;
     QString m_skillName;

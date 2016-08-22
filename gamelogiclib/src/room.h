@@ -43,14 +43,7 @@ typedef int LuaFunction;
 class Room : public QThread
 {
     Q_OBJECT
-    Q_ENUMS(GuanxingType)
-
 public:
-    enum GuanxingType
-    {
-        GuanxingUpOnly = 1, GuanxingBothSides = 0, GuanxingDownOnly = -1
-    };
-
     friend class RoomThread;
 
     typedef void (Room::*Callback)(ServerPlayer *, const QVariant &);
@@ -120,7 +113,7 @@ public:
     void sendJudgeResult(const JudgeStruct *judge);
     QList<int> getNCards(int n, bool update_pile_number = true);
     ServerPlayer *getLord(const QString &kingdom, bool include_death = false) const;
-    void askForGuanxing(ServerPlayer *zhuge, const QList<int> &cards, GuanxingType guanxing_type = GuanxingBothSides);
+    void askForGuanxing(ServerPlayer *zhuge, const QList<int> &cards, QSgsEnum::GuanxingType guanxing_type = GuanxingBothSides);
     AskForMoveCardsStruct askForMoveCards(ServerPlayer *zhuge, const QList<int> &upcards, const QList<int> &downcards, bool visible, const QString &reason,
         const QString &pattern, const QString &skillName, int min_num, int max_num, bool can_refuse = true, bool moverestricted = false,const QList<int> &notify_visible_list = QList<int>());
     int doGongxin(ServerPlayer *shenlvmeng, ServerPlayer *target, QList<int> enabled_ids = QList<int>(), const QString &skill_name = "shangyi");

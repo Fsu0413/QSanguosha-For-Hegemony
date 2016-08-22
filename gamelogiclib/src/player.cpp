@@ -112,12 +112,12 @@ bool Player::isWounded() const
         return m_hp < m_maxHp;
 }
 
-General::Gender Player::gender() const
+QSgsEnum::GeneralGender Player::gender() const
 {
     return m_gender;
 }
 
-void Player::setGender(General::Gender gender)
+void Player::setGender(QSgsEnum::GeneralGender gender)
 {
     m_gender = gender;
 }

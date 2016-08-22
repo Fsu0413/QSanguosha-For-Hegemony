@@ -32,7 +32,8 @@ HEADERS += \
     src/nativesocket.h \
     src/socket.h \
     src/util.h \
-    src/settings.h
+    src/settings.h \
+    enumeration.h
 
 SOURCES += \
     src/engine.cpp \

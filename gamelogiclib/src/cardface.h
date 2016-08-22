@@ -11,24 +11,6 @@ class Room;
 class CardFace
 {
 public:
-    enum HandlingMethod
-    {
-        NoMethod,
-        Use,
-        Response,
-        Discard,
-        Recast,
-        Pindian
-    };
-
-    // card types
-    enum CardType
-    {
-        Skill,
-        Basic,
-        Equip,
-        Trick
-    };
 
     // In fact there is no such grammar in C++, but I set it here.
     // Every subclass should own this function.
@@ -39,9 +21,9 @@ public:
 
     virtual bool willThrow() const;
     virtual bool hasPreAction() const;
-    virtual HandlingMethod handlingMethod() const;
+    virtual QSgsEnum::CardHandlingMethod handlingMethod() const;
 
-    virtual CardType typeId() const = 0;
+    virtual QSgsEnum::CardType typeId() const = 0;
     virtual bool isNDTrick() const;
     virtual QString package() const;
 
