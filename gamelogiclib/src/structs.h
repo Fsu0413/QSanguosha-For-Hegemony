@@ -23,7 +23,9 @@
 
 #include "libqsgsgamelogicglobal.h"
 
-//class Room;
+class Room;
+class ServerPlayer;
+class Player;
 //class TriggerSkill;
 //class Card;
 //class Slash;
@@ -652,10 +654,10 @@ Q_DECLARE_METATYPE(RecoverStruct)
 Q_DECLARE_METATYPE(PhaseChangeStruct)
 Q_DECLARE_METATYPE(CardResponseStruct)
 Q_DECLARE_METATYPE(PlayerNumStruct)
-Q_DECLARE_METATYPE(const Card *)
-Q_DECLARE_METATYPE(ServerPlayer *)
-Q_DECLARE_METATYPE(JudgeStruct *)
-Q_DECLARE_METATYPE(PindianStruct *)
+//Q_DECLARE_METATYPE(const Card *)
+//Q_DECLARE_METATYPE(ServerPlayer *)
+//Q_DECLARE_METATYPE(JudgeStruct *)
+//Q_DECLARE_METATYPE(PindianStruct *)
 Q_DECLARE_METATYPE(AskForMoveCardsStruct)
 #endif
 

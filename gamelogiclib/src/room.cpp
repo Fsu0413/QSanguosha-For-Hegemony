@@ -1547,7 +1547,7 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
 
     if (card) {
         if (!card->isVirtualCard()) {
-            WrappedCard *wrapped = Sanguosha->getWrappedCard(card->getEffectiveId());
+            Card *wrapped = Sanguosha->getCard(card->getEffectiveId());
             if (wrapped->isModified())
                 broadcastUpdateCard(getPlayers(), card->getEffectiveId(), wrapped);
             else
@@ -3516,7 +3516,7 @@ bool Room::useCard(const CardUseStruct &use, bool add_history)
             if (card->isKindOf("DelayedTrick") && card->isVirtualCard() && card->subcardsLength() == 1) {
                 Card *trick = Sanguosha->cloneCard(card);
                 Q_ASSERT(trick != NULL);
-                WrappedCard *wrapped = Sanguosha->getWrappedCard(card->getSubcards().first());
+                Card *wrapped = Sanguosha->getCard(card->getSubcards().first());
                 wrapped->takeOver(trick);
                 broadcastUpdateCard(getPlayers(), wrapped->getId(), wrapped);
                 card_use.card = wrapped;
@@ -3527,7 +3527,7 @@ bool Room::useCard(const CardUseStruct &use, bool add_history)
             if (card_use.card->isKindOf("Slash") && add_history && slash_count > 0)
                 card_use.from->setFlags("Global_MoreSlashInOneTurn");
             if (!card_use.card->isVirtualCard()) {
-                WrappedCard *wrapped = Sanguosha->getWrappedCard(card_use.card->getEffectiveId());
+                Card *wrapped = Sanguosha->getCard(card_use.card->getEffectiveId());
                 if (wrapped->isModified())
                     broadcastUpdateCard(getPlayers(), card_use.card->getEffectiveId(), wrapped);
                 else
@@ -4720,7 +4720,7 @@ void Room::_moveCards(QList<CardsMoveStruct> cards_moves, bool forceMoveVisible,
 void Room::updateCardsOnLose(const CardsMoveStruct &move)
 {
     for (int i = 0; i < move.card_ids.size(); i++) {
-        WrappedCard *card = qobject_cast<WrappedCard *>(getCard(move.card_ids[i]));
+        Card *card = qobject_cast<Card *>(getCard(move.card_ids[i]));
         if (card->isModified()) {
             if (move.to_place == Player::DiscardPile) {
                 resetCard(move.card_ids[i]);
@@ -4736,7 +4736,7 @@ void Room::updateCardsOnGet(const CardsMoveStruct &move)
     ServerPlayer *player = qobject_cast<ServerPlayer *>(move.from);
     if (player != NULL && move.to_place == Player::PlaceDelayedTrick) {
         for (int i = 0; i < move.card_ids.size(); i++) {
-            WrappedCard *card = qobject_cast<WrappedCard *>(getCard(move.card_ids[i]));
+            Card *card = qobject_cast<Card *>(getCard(move.card_ids[i]));
             const Card *engine_card = Sanguosha->getEngineCard(move.card_ids[i]);
             if (card->getSuit() != engine_card->getSuit() || card->getNumber() != engine_card->getNumber()) {
                 Card *trick = Sanguosha->cloneCard(card->getRealCard());
@@ -4952,7 +4952,7 @@ void Room::filterCards(ServerPlayer *player, QList<const Card *> cards, bool ref
 {
     if (refilter) {
         for (int i = 0; i < cards.size(); i++) {
-            WrappedCard *card = qobject_cast<WrappedCard *>(getCard(cards[i]->getId()));
+            Card *card = qobject_cast<Card *>(getCard(cards[i]->getId()));
             if (card->isModified()) {
                 int cardId = card->getId();
                 resetCard(cardId);
@@ -5366,7 +5366,7 @@ bool Room::askForDiscard(ServerPlayer *player, const QString &reason, int discar
                 gongxinArgs << JsonUtils::toJsonArray(jilei_list);
 
                 foreach (int cardId, jilei_list) {
-                    WrappedCard *card = Sanguosha->getWrappedCard(cardId);
+                    Card *card = Sanguosha->getCard(cardId);
                     if (card->isModified())
                         broadcastUpdateCard(getOtherPlayers(player), cardId, card);
                     else
@@ -5993,7 +5993,7 @@ int Room::doGongxin(ServerPlayer *shenlvmeng, ServerPlayer *target, QList<int> e
         }
     } else {
         foreach (int cardId, target->handCards()) {
-            WrappedCard *card = Sanguosha->getWrappedCard(cardId);
+            Card *card = Sanguosha->getCard(cardId);
             if (card->isModified())
                 notifyUpdateCard(shenlvmeng, cardId, card);
             else
@@ -6541,7 +6541,7 @@ void Room::showCard(ServerPlayer *player, int card_id, ServerPlayer *only_viewer
     show_arg << player->objectName();
     show_arg << card_id;
 
-    WrappedCard *card = Sanguosha->getWrappedCard(card_id);
+    Card *card = Sanguosha->getCard(card_id);
     bool modified = card->isModified();
     if (only_viewer) {
         QList<ServerPlayer *>players;
@@ -6576,7 +6576,7 @@ void Room::showAllCards(ServerPlayer *player, ServerPlayer *to)
     bool isUnicast = (to != NULL);
 
     foreach (int cardId, player->handCards()) {
-        WrappedCard *card = Sanguosha->getWrappedCard(cardId);
+        Card *card = Sanguosha->getCard(cardId);
         if (card->isModified()) {
             if (isUnicast)
                 notifyUpdateCard(to, cardId, card);

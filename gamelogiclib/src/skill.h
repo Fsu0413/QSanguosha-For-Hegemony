@@ -22,6 +22,7 @@
 #define _SKILL_H
 
 #include "libqsgsgamelogicglobal.h"
+#include "player.h"
 
 class Card;
 
@@ -262,7 +263,7 @@ class BattleArraySkill : public TriggerSkill
 
 public:
 
-    BattleArraySkill(const QString &name, const HegemonyMode::ArrayType type);
+    BattleArraySkill(const QString &name, const Player::ArrayType type);
     virtual bool triggerable(const ServerPlayer *player) const;
 
     virtual void summonFriends(ServerPlayer *player) const;

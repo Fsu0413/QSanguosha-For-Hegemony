@@ -1,4 +1,6 @@
 
+#include "logiccore.h"
+
 GameLogicCore::GameLogicCore()
 {
     QStringList stringlist_sp_convert = GetConfigFromLuaState(lua, "convert_pairs").toStringList();
@@ -32,12 +34,12 @@ GameLogicCore::GameLogicCore()
 
 }
 
-int QSgsEngine::miniSceneCounts()
+int GameEngineCore::miniSceneCounts()
 {
     return m_miniScenes.size();
 }
 
-void QSgsEngine::_loadMiniScenarios()
+void GameEngineCore::_loadMiniScenarios()
 {
     static bool loaded = false;
     if (loaded) return;
@@ -53,13 +55,13 @@ void QSgsEngine::_loadMiniScenarios()
     loaded = true;
 }
 
-void QSgsEngine::_loadModScenarios()
+void GameEngineCore::_loadModScenarios()
 {
     //wait for a new scenario
     addScenario(new JiangeDefenseScenario());
 }
 
-void QSgsEngine::addPackage(const QString &name)
+void GameEngineCore::addPackage(const QString &name)
 {
     QSgsPackage *pack = PackageAdder::packages()[name];
     if (pack)
@@ -68,12 +70,12 @@ void QSgsEngine::addPackage(const QString &name)
         qWarning("Package %s cannot be loaded!", qPrintable(name));
 }
 
-QStringList QSgsEngine::modScenarioNames() const
+QStringList GameEngineCore::modScenarioNames() const
 {
     return m_scenarios.keys();
 }
 
-void QSgsEngine::addScenario(Scenario *scenario)
+void GameEngineCore::addScenario(Scenario *scenario)
 {
     QString key = scenario->objectName();
     if (m_scenarios.contains(key))
@@ -83,7 +85,7 @@ void QSgsEngine::addScenario(Scenario *scenario)
     addPackage(scenario);
 }
 
-const Scenario *QSgsEngine::scenario(const QString &name) const
+const Scenario *GameEngineCore::scenario(const QString &name) const
 {
     if (m_scenarios.contains(name))
         return m_scenarios[name];
@@ -95,7 +97,7 @@ const Scenario *QSgsEngine::scenario(const QString &name) const
         return nullptr;
 }
 
-void QSgsEngine::addSkills(const QList<const Skill *> &all_skills)
+void GameEngineCore::addSkills(const QList<const Skill *> &all_skills)
 {
     foreach (const Skill *skill, all_skills) {
         if (!skill) {
@@ -125,32 +127,32 @@ void QSgsEngine::addSkills(const QList<const Skill *> &all_skills)
     }
 }
 
-QList<const DistanceSkill *> QSgsEngine::distanceSkills() const
+QList<const DistanceSkill *> GameEngineCore::distanceSkills() const
 {
     return distance_skills;
 }
 
-QList<const MaxCardsSkill *> QSgsEngine::maxCardsSkills() const
+QList<const MaxCardsSkill *> GameEngineCore::maxCardsSkills() const
 {
     return maxcards_skills;
 }
 
-QList<const TargetModSkill *> QSgsEngine::targetModSkills() const
+QList<const TargetModSkill *> GameEngineCore::targetModSkills() const
 {
     return targetmod_skills;
 }
 
-QList<const AttackRangeSkill *> QSgsEngine::attackRangeSkills() const
+QList<const AttackRangeSkill *> GameEngineCore::attackRangeSkills() const
 {
     return attackrange_skills;
 }
 
-QList<const TriggerSkill *> QSgsEngine::globalTriggerSkills() const
+QList<const TriggerSkill *> GameEngineCore::globalTriggerSkills() const
 {
     return global_trigger_skills;
 }
 
-void QSgsEngine::addPackage(QSgsPackage *package)
+void GameEngineCore::addPackage(QSgsPackage *package)
 {
     foreach (const QSgsPackage *p, packages) {
         if (p->objectName() == package->objectName())
@@ -227,17 +229,17 @@ void QSgsEngine::addPackage(QSgsPackage *package)
         metaobjects.insert(meta->className(), meta);
 }
 
-void QSgsEngine::addBanPackage(const QString &package_name)
+void GameEngineCore::addBanPackage(const QString &package_name)
 {
     ban_package.insert(package_name);
 }
 
-QList<const QSgsPackage *> QSgsEngine::packages() const
+QList<const QSgsPackage *> GameEngineCore::packages() const
 {
     return packages;
 }
 
-QStringList QSgsEngine::banPackages() const
+QStringList GameEngineCore::banPackages() const
 {
     if (qApp->arguments().contains("-server"))
         return Config.BanPackages;
@@ -246,7 +248,7 @@ QStringList QSgsEngine::banPackages() const
 }
 
 
-const CardPattern *QSgsEngine::pattern(const QString &name) const
+const CardPattern *GameEngineCore::pattern(const QString &name) const
 {
     const CardPattern *ptn = patterns.value(name, nullptr);
     if (ptn) return ptn;
@@ -258,13 +260,13 @@ const CardPattern *QSgsEngine::pattern(const QString &name) const
     return expptn;
 }
 
-bool QSgsEngine::matchExpPattern(const QString &pattern, const Player *player, const Card *card) const
+bool GameEngineCore::matchExpPattern(const QString &pattern, const Player *player, const Card *card) const
 {
     ExpPattern p(pattern);
     return p.match(player, card);
 }
 
-Card::HandlingMethod QSgsEngine::cardHandlingMethod(const QString &method_name) const
+Card::HandlingMethod GameEngineCore::cardHandlingMethod(const QString &method_name) const
 {
     if (method_name == "use")
         return Card::MethodUse;
@@ -284,7 +286,7 @@ Card::HandlingMethod QSgsEngine::cardHandlingMethod(const QString &method_name) 
     }
 }
 
-QList<const Skill *> QSgsEngine::relatedSkills(const QString &skill_name) const
+QList<const Skill *> GameEngineCore::relatedSkills(const QString &skill_name) const
 {
     QList<const Skill *> skills;
     foreach(const QString &name, related_skills.values(skill_name))
@@ -293,7 +295,7 @@ QList<const Skill *> QSgsEngine::relatedSkills(const QString &skill_name) const
     return skills;
 }
 
-const Skill *QSgsEngine::mainSkill(const QString &skill_name) const
+const Skill *GameEngineCore::mainSkill(const QString &skill_name) const
 {
     const Skill *skill = skill(skill_name);
     if (!skill || skill->isVisible() || related_skills.contains(skill_name)) return skill;
@@ -304,7 +306,7 @@ const Skill *QSgsEngine::mainSkill(const QString &skill_name) const
     return skill;
 }
 
-const General *QSgsEngine::general(const QString &name) const
+const General *GameEngineCore::general(const QString &name) const
 {
     if (generalHash.contains(name))
         return generalHash.value(name);
@@ -312,7 +314,7 @@ const General *QSgsEngine::general(const QString &name) const
         return nullptr;
 }
 
-int QSgsEngine::generalCount(bool include_banned) const
+int GameEngineCore::generalCount(bool include_banned) const
 {
     if (include_banned)
         return generalList.size();
@@ -326,26 +328,26 @@ int QSgsEngine::generalCount(bool include_banned) const
     return total;
 }
 
-const Skill *QSgsEngine::skill(const QString &skill_name) const
+const Skill *GameEngineCore::skill(const QString &skill_name) const
 {
 
 }
 
-//void QSgsEngine::registerRoom(QObject *room)
+//void GameEngineCore::registerRoom(QObject *room)
 //{
 //    m_mutex.lock();
 //    m_rooms[QThread::currentThread()] = room;
 //    m_mutex.unlock();
 //}
 
-//void QSgsEngine::unregisterRoom()
+//void GameEngineCore::unregisterRoom()
 //{
 //    m_mutex.lock();
 //    m_rooms.remove(QThread::currentThread());
 //    m_mutex.unlock();
 //}
 
-//QObject *QSgsEngine::currentRoomObject()
+//QObject *GameEngineCore::currentRoomObject()
 //{
 //    QObject *room = nullptr;
 //    m_mutex.lock();
@@ -355,7 +357,7 @@ const Skill *QSgsEngine::skill(const QString &skill_name) const
 //    return room;
 //}
 
-//Room *QSgsEngine::currentRoom()
+//Room *GameEngineCore::currentRoom()
 //{
 //    QObject *roomObject = currentRoomObject();
 //    Room *room = qobject_cast<Room *>(roomObject);
@@ -363,7 +365,7 @@ const Skill *QSgsEngine::skill(const QString &skill_name) const
 //    return room;
 //}
 
-//RoomState *QSgsEngine::currentRoomState()
+//RoomState *GameEngineCore::currentRoomState()
 //{
 //    QObject *roomObject = currentRoomObject();
 //    Room *room = qobject_cast<Room *>(roomObject);
@@ -376,17 +378,17 @@ const Skill *QSgsEngine::skill(const QString &skill_name) const
 //    }
 //}
 
-//QString QSgsEngine::getCurrentCardUsePattern()
+//QString GameEngineCore::getCurrentCardUsePattern()
 //{
 //    return currentRoomState()->getCurrentCardUsePattern();
 //}
 
-//CardUseStruct::CardUseReason QSgsEngine::getCurrentCardUseReason()
+//CardUseStruct::CardUseReason GameEngineCore::getCurrentCardUseReason()
 //{
 //    return currentRoomState()->getCurrentCardUseReason();
 //}
 
-bool QSgsEngine::isGeneralHidden(const QString &general_name) const
+bool GameEngineCore::isGeneralHidden(const QString &general_name) const
 {
     const General *general = general(general_name);
     if (!general) return false;
@@ -396,21 +398,21 @@ bool QSgsEngine::isGeneralHidden(const QString &general_name) const
         return !Config.RemovedHiddenGenerals.contains(general_name);
 }
 
-TransferSkill *QSgsEngine::getTransfer() const
+TransferSkill *GameEngineCore::getTransfer() const
 {
    // return transfer;
     return nullptr;
 }
 
-WrappedCard *QSgsEngine::wrappedCard(int cardId)
+Card *GameEngineCore::wrappedCard(int cardId)
 {
     Card *card = card(cardId);
-    WrappedCard *wrappedCard = qobject_cast<WrappedCard *>(card);
+    Card *wrappedCard = qobject_cast<Card *>(card);
     Q_ASSERT(wrappedCard != nullptr && wrappedCard->id() == cardId);
     return wrappedCard;
 }
 
-Card *QSgsEngine::card(int cardId)
+Card *GameEngineCore::card(int cardId)
 {
 //    Card *card = nullptr;
 //    if (cardId < 0 || cardId >= m_cards.length())
@@ -438,7 +440,7 @@ Card *QSgsEngine::card(int cardId)
     }
 }
 
-//const Card *QSgsEngine::getEngineCard(int cardId) const
+//const Card *GameEngineCore::getEngineCard(int cardId) const
 //{
 //    if (cardId == Card::S_UNKNOWN_CARD_ID)
 //        return nullptr;
@@ -451,7 +453,7 @@ Card *QSgsEngine::card(int cardId)
 //    }
 //}
 
-Card *QSgsEngine::cloneCard(const Card *card) const
+Card *GameEngineCore::cloneCard(const Card *card) const
 {
     Q_ASSERT(card->metaObject() != nullptr);
     QString name = card->metaObject()->className();
@@ -464,7 +466,7 @@ Card *QSgsEngine::cloneCard(const Card *card) const
     return result;
 }
 
-Card *QSgsEngine::cloneCard(const QString &name, Card::Suit suit, int number, const QStringList &flags) const
+Card *GameEngineCore::cloneCard(const QString &name, Card::Suit suit, int number, const QStringList &flags) const
 {
     Card *card = nullptr;
 //    if (luaBasicCard_className2objectName.contains(name)) {
@@ -531,7 +533,7 @@ Card *QSgsEngine::cloneCard(const QString &name, Card::Suit suit, int number, co
     return card;
 }
 
-SkillCard *QSgsEngine::cloneSkillCard(const QString &name) const
+SkillCard *GameEngineCore::cloneSkillCard(const QString &name) const
 {
     const QMetaObject *meta = m_metaobjects.value(name, nullptr);
     if (meta) {
@@ -544,7 +546,7 @@ SkillCard *QSgsEngine::cloneSkillCard(const QString &name) const
 }
 
 
-QStringList QSgsEngine::extensions() const
+QStringList GameEngineCore::extensions() const
 {
     QStringList extensions;
     foreach (const QSgsPackage *package, m_packages) {
@@ -556,7 +558,7 @@ QStringList QSgsEngine::extensions() const
     return extensions;
 }
 
-QStringList QSgsEngine::kingdoms() const
+QStringList GameEngineCore::kingdoms() const
 {
     static QStringList kingdoms;
     if (kingdoms.isEmpty())
@@ -565,7 +567,7 @@ QStringList QSgsEngine::kingdoms() const
     return kingdoms;
 }
 
-QColor QSgsEngine::kingdomColor(const QString &kingdom) const
+QColor GameEngineCore::kingdomColor(const QString &kingdom) const
 {
     static QMap<QString, QColor> color_map;
     if (color_map.isEmpty()) {
@@ -587,7 +589,7 @@ QColor QSgsEngine::kingdomColor(const QString &kingdom) const
     return color_map.value(kingdom);
 }
 
-QMap<QString, QColor> QSgsEngine::skillColorMap() const
+QMap<QString, QColor> GameEngineCore::skillColorMap() const
 {
     static QMap<QString, QColor> color_map;
     if (color_map.isEmpty()) {
@@ -609,12 +611,12 @@ QMap<QString, QColor> QSgsEngine::skillColorMap() const
     return color_map;
 }
 
-QColor QSgsEngine::skillColor(const QString &skill_type) const
+QColor GameEngineCore::skillColor(const QString &skill_type) const
 {
-    return QSgsEngine::skillColorMap().value(skill_type);
+    return GameEngineCore::skillColorMap().value(skill_type);
 }
 
-QStringList QSgsEngine::chattingEasyTexts() const
+QStringList GameEngineCore::chattingEasyTexts() const
 {
     static QStringList easy_texts;
     if (easy_texts.isEmpty())
@@ -623,7 +625,7 @@ QStringList QSgsEngine::chattingEasyTexts() const
     return easy_texts;
 }
 
-QString QSgsEngine::setupString() const
+QString GameEngineCore::setupString() const
 {
     int timeout = Config.OperationNoLimit ? 0 : Config.OperationTimeout;
     QString flags;
@@ -652,12 +654,12 @@ QString QSgsEngine::setupString() const
     return setup_items.join(":");
 }
 
-QMap<QString, QString> QSgsEngine::availableModes() const
+QMap<QString, QString> GameEngineCore::availableModes() const
 {
     return m_modes;
 }
 
-QString QSgsEngine::modeName(const QString &mode) const
+QString GameEngineCore::modeName(const QString &mode) const
 {
     if (m_modes.contains(mode))
         return m_modes.value(mode);
@@ -665,7 +667,7 @@ QString QSgsEngine::modeName(const QString &mode) const
         return tr("%1 [Scenario mode]").arg(translate(mode));
 }
 
-int QSgsEngine::playerCount(const QString &mode) const
+int GameEngineCore::playerCount(const QString &mode) const
 {
     if (m_modes.contains(mode)) {
         QRegExp rx("(\\d+)");
@@ -682,7 +684,7 @@ int QSgsEngine::playerCount(const QString &mode) const
     return -1;
 }
 
-QString QSgsEngine::roles(const QString &mode) const
+QString GameEngineCore::roles(const QString &mode) const
 {
     int n = playerCount(mode);
 
@@ -713,7 +715,7 @@ QString QSgsEngine::roles(const QString &mode) const
     return QString();
 }
 
-QStringList QSgsEngine::roleList(const QString &mode) const
+QStringList GameEngineCore::roleList(const QString &mode) const
 {
     QString roles = roles(mode);
 
@@ -732,12 +734,12 @@ QStringList QSgsEngine::roleList(const QString &mode) const
     return role_list;
 }
 
-int QSgsEngine::cardCount() const
+int GameEngineCore::cardCount() const
 {
     return cards.length();
 }
 
-QStringList QSgsEngine::generalNames() const
+QStringList GameEngineCore::generalNames() const
 {
     QStringList generalNames;
     foreach (const General *general, m_generalList)
@@ -745,12 +747,12 @@ QStringList QSgsEngine::generalNames() const
     return generalNames;
 }
 
-QList<const General *> QSgsEngine::generalList() const
+QList<const General *> GameEngineCore::generalList() const
 {
     return m_generalList;
 }
 
-QStringList QSgsEngine::limitedGeneralNames() const
+QStringList GameEngineCore::limitedGeneralNames() const
 {
     //for later use
     QStringList general_names = generalNames();
@@ -768,7 +770,7 @@ QStringList QSgsEngine::limitedGeneralNames() const
     return general_names;
 }
 
-QStringList QSgsEngine::randomGenerals(int count, const QSet<QString> &ban_set) const
+QStringList GameEngineCore::randomGenerals(int count, const QSet<QString> &ban_set) const
 {
     QStringList all_generals = limitedGeneralNames();
     QSet<QString> general_set = all_generals.toSet();
@@ -787,7 +789,7 @@ QStringList QSgsEngine::randomGenerals(int count, const QSet<QString> &ban_set) 
     return general_list;
 }
 
-QList<int> QSgsEngine::randomCards() const
+QList<int> GameEngineCore::randomCards() const
 {
     QList<int> list;
     foreach (Card *card, cards) {
@@ -814,7 +816,7 @@ QList<int> QSgsEngine::randomCards() const
     return list;
 }
 
-QString QSgsEngine::randomGeneralName() const
+QString GameEngineCore::randomGeneralName() const
 {
     const General *general = generalList.at(qrand() % generalList.size());
     while (general->kingdom() == "programmer")
@@ -822,12 +824,12 @@ QString QSgsEngine::randomGeneralName() const
     return general->objectName();
 }
 
-void QSgsEngine::playSystemAudioEffect(const QString &name) const
+void GameEngineCore::playSystemAudioEffect(const QString &name) const
 {
     playAudioEffect(QString("audio/system/%1.ogg").arg(name));
 }
 
-void QSgsEngine::playAudioEffect(const QString &filename) const
+void GameEngineCore::playAudioEffect(const QString &filename) const
 {
 #ifdef AUDIO_SUPPORT
     if (!Config.EnableEffects)
@@ -839,19 +841,19 @@ void QSgsEngine::playAudioEffect(const QString &filename) const
 #endif
 }
 
-//void QSgsEngine::playSkillAudioEffect(const QString &skill_name, int index) const
+//void GameEngineCore::playSkillAudioEffect(const QString &skill_name, int index) const
 //{
 //    const Skill *skill = m_skills.value(skill_name, nullptr);
 //    if (skill)
 //        skill->playAudioEffect(index);
 //}
 
-//const Skill *QSgsEngine::getSkill(const QString &skill_name) const
+//const Skill *GameEngineCore::getSkill(const QString &skill_name) const
 //{
 //    return m_skills.value(skill_name, nullptr);
 //}
 
-const Skill *QSgsEngine::skill(const EquipCard *equip) const
+const Skill *GameEngineCore::skill(const EquipCard *equip) const
 {
     const Skill *skill;
     if (equip == nullptr)
@@ -862,12 +864,12 @@ const Skill *QSgsEngine::skill(const EquipCard *equip) const
     return skill;
 }
 
-QStringList QSgsEngine::skillNames() const
+QStringList GameEngineCore::skillNames() const
 {
     return m_skills.keys();
 }
 
-const TriggerSkill *QSgsEngine::triggerSkill(const QString &skill_name) const
+const TriggerSkill *GameEngineCore::triggerSkill(const QString &skill_name) const
 {
     const Skill *skill = skill(skill_name);
     if (skill)
@@ -876,7 +878,7 @@ const TriggerSkill *QSgsEngine::triggerSkill(const QString &skill_name) const
         return nullptr;
 }
 
-const ViewAsSkill *QSgsEngine::viewAsSkill(const QString &skill_name) const
+const ViewAsSkill *GameEngineCore::viewAsSkill(const QString &skill_name) const
 {
     const Skill *skill = skill(skill_name);
     if (skill == nullptr)
@@ -891,7 +893,7 @@ const ViewAsSkill *QSgsEngine::viewAsSkill(const QString &skill_name) const
         return nullptr;
 }
 
-const ProhibitSkill *QSgsEngine::isProhibited(const Player *from, const Player *to, const Card *card, const QList<const Player *> &others) const
+const ProhibitSkill *GameEngineCore::isProhibited(const Player *from, const Player *to, const Card *card, const QList<const Player *> &others) const
 {
     foreach (const ProhibitSkill *skill, m_prohibitSkills) {
         if (skill->isProhibited(from, to, card, others))
@@ -901,7 +903,7 @@ const ProhibitSkill *QSgsEngine::isProhibited(const Player *from, const Player *
     return nullptr;
 }
 
-int QSgsEngine::correctDistance(const Player *from, const Player *to) const
+int GameEngineCore::correctDistance(const Player *from, const Player *to) const
 {
     int correct = 0;
 
@@ -911,7 +913,7 @@ int QSgsEngine::correctDistance(const Player *from, const Player *to) const
     return correct;
 }
 
-int QSgsEngine::correctMaxCards(const ServerPlayer *target, bool fixed, MaxCardsType::MaxCardsCount type) const
+int GameEngineCore::correctMaxCards(const ServerPlayer *target, bool fixed, MaxCardsType::MaxCardsCount type) const
 {
     int extra = 0;
 
@@ -928,7 +930,7 @@ int QSgsEngine::correctMaxCards(const ServerPlayer *target, bool fixed, MaxCards
     return extra;
 }
 
-int QSgsEngine::correctCardTarget(const TargetModSkill::ModType type, const Player *from, const Card *card) const
+int GameEngineCore::correctCardTarget(const TargetModSkill::ModType type, const Player *from, const Card *card) const
 {
     int x = 0;
 
@@ -963,7 +965,7 @@ int QSgsEngine::correctCardTarget(const TargetModSkill::ModType type, const Play
 }
 
 
-int QSgsEngine::correctAttackRange(const Player *target, bool include_weapon, bool fixed) const
+int GameEngineCore::correctAttackRange(const Player *target, bool include_weapon, bool fixed) const
 {
     int extra = 0;
 

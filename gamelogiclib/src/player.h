@@ -21,17 +21,9 @@
 #ifndef _PLAYER_H
 #define _PLAYER_H
 
-#include "general.h"
-
 #include "libqsgsgamelogicglobal.h"
-
-class EquipCard;
-class Weapon;
-class Armor;
-class Horse;
-class DelayedTrick;
-class DistanceSkill;
-class TriggerSkill;
+#include "cardface.h"
+#include "general.h"
 
 class Player : public QObject
 {
@@ -193,8 +185,8 @@ public:
     bool hasInnateSkill(const QString &skill_name) const;
     bool hasLordSkill(const QString &skill_name, bool include_lose = false) const;
 
-    void setEquip(WrappedCard *equip);
-    void removeEquip(WrappedCard *equip);
+    void setEquip(Card *equip);
+    void removeEquip(Card *equip);
     bool hasEquip(const Card *card) const;
     bool hasEquip() const;
 
@@ -209,14 +201,14 @@ public:
     virtual void addCard(const Card *card, Place place) = 0;
     virtual QList<const Card *> handcards() const = 0;
 
-    WrappedCard *weapon() const;
-    WrappedCard *armor() const;
-    WrappedCard *defensiveHorse() const;
-    WrappedCard *offensiveHorse() const;
-    WrappedCard *treasure() const;
+    Card *weapon() const;
+    Card *armor() const;
+    Card *defensiveHorse() const;
+    Card *offensiveHorse() const;
+    Card *treasure() const;
 
     QList<const Card *> equips() const;
-    const EquipCard *equip(int index) const;
+    const Card *equip(int index) const;
 
     bool hasWeapon(const QString &weapon_name) const;
     bool hasArmorEffect(const QString &armor_name) const;
@@ -249,7 +241,7 @@ public:
         int rangefix = 0, const QList<const Player *> &others = QList<const Player *>()) const;
     int getCardCount(bool include_equip) const;
 
-    QList<int> pile(const QString &pile_name) const
+    QList<int> pile(const QString &pile_name) const;
     QStringList pileNames() const;
     QString pileName(int card_id) const;
 
@@ -289,17 +281,17 @@ public:
 
     inline bool isJilei(const Card *card) const
     {
-        return isCardLimited(card, Card::MethodDiscard);
+        return isCardLimited(card, CardFace::MethodDiscard);
     }
     inline bool isLocked(const Card *card) const
     {
-        return isCardLimited(card, Card::MethodUse);
+        return isCardLimited(card, CardFace::MethodUse);
     }
 
     void setCardLimitation(const QString &limit_list, const QString &pattern, bool single_turn = false);
     void removeCardLimitation(const QString &limit_list, const QString &pattern);
     void clearCardLimitation(bool single_turn = false);
-    bool isCardLimited(const Card *card, Card::HandlingMethod method, bool isHandcard = false) const;
+    bool isCardLimited(const Card *card, CardFace::HandlingMethod method, bool isHandcard = false) const;
 
     // just for convenience
     void addQinggangTag(const Card *card);
@@ -369,7 +361,7 @@ public:
 //    virtual void setDeputySkinId(int id);
 //    int getDeputySkinId() const;
 
-    virtual QStringList getBigKingdoms(const QString &reason, MaxCardsType::MaxCardsCount type = MaxCardsType::Min) const = 0;
+//    virtual QStringList getBigKingdoms(const QString &reason, MaxCardsType::MaxCardsCount type = MaxCardsType::Min) const = 0;
 
     QVariantMap tag;
 
@@ -403,7 +395,7 @@ private:
     bool m_general1Showed, m_general2Showed;
 
     Phase m_phase;
-    WrappedCard *m_weapon, *m_armor, *m_defensiveHorse, *m_offensiveHorse, *m_treasure;
+    Card *m_weapon, *m_armor, *m_defensiveHorse, *m_offensiveHorse, *m_treasure;
     bool m_faceUp;
     bool m_chained;
     bool m_removed;
@@ -411,7 +403,7 @@ private:
     QHash<const Player *, int> m_fixedDistance;
     QString m_next;
 
-    QMap<Card::HandlingMethod, QStringList> m_cardLimitation;
+    QMap<CardFace::HandlingMethod, QStringList> m_cardLimitation;
 
     QStringList m_disableShow;
     // head and/or deputy, reason

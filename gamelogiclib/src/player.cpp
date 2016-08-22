@@ -594,7 +594,7 @@ void Player::setPhaseString(const QString &phase_str)
     setPhase(phase_map.value(phase_str, NotActive));
 }
 
-void Player::setEquip(WrappedCard *equip)
+void Player::setEquip(Card *equip)
 {
     const EquipCard *card = qobject_cast<const EquipCard *>(equip->getRealCard());
     Q_ASSERT(card != nullptr);
@@ -607,7 +607,7 @@ void Player::setEquip(WrappedCard *equip)
     }
 }
 
-void Player::removeEquip(WrappedCard *equip)
+void Player::removeEquip(Card *equip)
 {
     const EquipCard *card = qobject_cast<const EquipCard *>(Sanguosha->getEngineCard(equip->getId()));
     Q_ASSERT(card != nullptr);
@@ -647,27 +647,27 @@ bool Player::hasEquip() const
     return m_weapon != nullptr || m_armor != nullptr || m_defensiveHorse != nullptr || m_offensiveHorse != nullptr || m_treasure != nullptr;
 }
 
-WrappedCard *Player::weapon() const
+Card *Player::weapon() const
 {
     return m_weapon;
 }
 
-WrappedCard *Player::armor() const
+Card *Player::armor() const
 {
     return m_armor;
 }
 
-WrappedCard *Player::defensiveHorse() const
+Card *Player::defensiveHorse() const
 {
     return m_defensiveHorse;
 }
 
-WrappedCard *Player::offensiveHorse() const
+Card *Player::offensiveHorse() const
 {
     return m_offensiveHorse;
 }
 
-WrappedCard *Player::treasure() const
+Card *Player::treasure() const
 {
     return m_treasure;
 }
@@ -689,9 +689,9 @@ QList<const Card *> Player::equips() const
     return equips;
 }
 
-const EquipCard *Player::equip(int index) const
+const Card *Player::equip(int index) const
 {
-    WrappedCard *equip;
+    Card *equip;
     switch (index) {
         case 0: equip = m_weapon; break;
         case 1: equip = m_armor; break;
@@ -844,7 +844,7 @@ void Player::removeDelayedTrick(const Card *trick)
 bool Player::containsTrick(const QString &trick_name) const
 {
     foreach (int trick_id, m_judgingArea) {
-        WrappedCard *trick = Sanguosha->getWrappedCard(trick_id);
+        Card *trick = Sanguosha->getCard(trick_id);
         if (trick->objectName() == trick_name)
             return true;
     }

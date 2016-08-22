@@ -484,7 +484,7 @@ void ServerPlayer::removeCard(const Card *card, Place place)
         Q_ASSERT(equip != NULL);
         equip->onUninstall(this);
 
-        WrappedCard *wrapped = Sanguosha->getWrappedCard(card->getEffectiveId());
+        Card *wrapped = Sanguosha->getCard(card->getEffectiveId());
         removeEquip(wrapped);
 
         bool show_log = true;
@@ -529,7 +529,7 @@ void ServerPlayer::addCard(const Card *card, Place place)
         break;
     }
     case PlaceEquip: {
-        WrappedCard *wrapped = Sanguosha->getWrappedCard(card->getEffectiveId());
+        Card *wrapped = Sanguosha->getCard(card->getEffectiveId());
         const EquipCard *equip = qobject_cast<const EquipCard *>(wrapped->getRealCard());
         setEquip(wrapped);
         equip->onInstall(this);
@@ -1191,7 +1191,7 @@ void ServerPlayer::marshal(ServerPlayer *player) const
         foreach (const Card *card, handcards) {
             move.card_ids << card->getId();
             if (player == this) {
-                WrappedCard *wrapped = qobject_cast<WrappedCard *>(room->getCard(card->getId()));
+                Card *wrapped = qobject_cast<Card *>(room->getCard(card->getId()));
                 if (wrapped->isModified())
                     room->notifyUpdateCard(player, card->getId(), wrapped);
             }
@@ -1210,7 +1210,7 @@ void ServerPlayer::marshal(ServerPlayer *player) const
         CardsMoveStruct move;
         foreach (const Card *card, getEquips()) {
             move.card_ids << card->getId();
-            WrappedCard *wrapped = qobject_cast<WrappedCard *>(room->getCard(card->getId()));
+            Card *wrapped = qobject_cast<Card *>(room->getCard(card->getId()));
             if (wrapped->isModified())
                 room->notifyUpdateCard(player, card->getId(), wrapped);
         }
