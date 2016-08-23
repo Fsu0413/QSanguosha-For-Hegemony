@@ -19,8 +19,6 @@
     *********************************************************************/
 
 #include "card.h"
-//#include "settings.h"
-//#include "engine.h"
 #include "structs.h"
 #include "lua-wrapper.h"
 
@@ -34,9 +32,9 @@ const QSgsEnum::CardSuit Card::AllSuits[4] = {
 };
 
 Card::Card(const QString &cardFaceName, QSgsEnum::CardSuit suit, int number, int id)
-    : m_mute(false),
+    : m_mute(false), m_cardFaceName(cardFaceName),
     m_canRecast(false), m_transferable(false),
-    m_suit(suit), m_number(number), m_id(-1)
+    m_suit(suit), m_number(number), m_id(id)
 {
 
 }

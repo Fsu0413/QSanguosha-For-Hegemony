@@ -1,4 +1,6 @@
 
+CONFIG += warn_on
+
 unix {
     packagesExist(lua53) {
         CONFIG += systemlua
