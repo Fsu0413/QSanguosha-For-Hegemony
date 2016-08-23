@@ -202,7 +202,14 @@ enum class TriggerEvent
 
     NumOfEvents
 };
-
+enum class EquipLocation
+{
+    WeaponLocation,
+    ArmorLocation,
+    DefensiveHorseLocation,
+    OffensiveHorseLocation,
+    TreasureLocation
+};
 }
 
 
