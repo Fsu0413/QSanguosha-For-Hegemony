@@ -94,7 +94,7 @@ public:
 
     void setFlag(const QString &flag);
     void setFlags(const QStringList &fs);
-    bool hasFlag(const QString &flag);
+    bool hasFlag(const QString &flag) const;
     void clearFlags();
 
     bool isVirtualCard() const;
@@ -121,9 +121,6 @@ public:
     const QString &cardFaceName() const;
 
     // static functions
-    static bool CompareByNumber(const Card *a, const Card *b);
-    static bool CompareBySuit(const Card *a, const Card *b);
-    static Card *Clone(const Card *card);
     static QString Suit2String(QSgsEnum::CardSuit suit);
     static const int S_UNKNOWN_CARD_ID;
 
@@ -142,63 +139,6 @@ private:
     QString m_showSkill;
 
     QStringList m_flags;
-};
-
-//An abstract class for defining real card
-
-class BasicCard : public Card
-{
-    Q_OBJECT
-
-public:
-    BasicCard(Suit suit, int number) : Card(suit, number)
-    {
-        handling_method = Card::MethodUse;
-    }
-    virtual QString getType() const;
-    virtual CardType getTypeId() const;
-};
-
-class TrickCard : public Card
-{
-    Q_OBJECT
-
-public:
-    TrickCard(Suit suit, int number);
-    void setCancelable(bool cancelable);
-
-    virtual QString getType() const;
-    virtual CardType getTypeId() const;
-    virtual bool isCancelable(const CardEffectStruct &effect) const;
-
-private:
-    bool cancelable;
-};
-
-class EquipCard : public Card
-{
-    Q_OBJECT
-    Q_ENUMS(Location)
-
-public:
-
-
-    EquipCard(Suit suit, int number) : Card(suit, number, true)
-    {
-        //handling_method = MethodUse;
-    }
-
-    virtual QString getType() const;
-    virtual QSgsEnum::CardType getTypeId() const;
-
-    virtual bool isAvailable(const Player *player) const;
-    virtual void onUse(Room *room, const CardUseStruct &card_use) const;
-    virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
-
-    virtual void onInstall(ServerPlayer *player) const;
-    virtual void onUninstall(ServerPlayer *player) const;
-
-    virtual QSgsEnum::EquipLocation location() const = 0;
 };
 
 #if 0

@@ -34,8 +34,8 @@ class LIBQSGSCORE_EXPORT NativeServerSocket : public ServerSocket
 public:
     NativeServerSocket();
 
-    virtual bool listen();
-    virtual void daemonize();
+    bool listen() final override;
+    void daemonize() final override;
 
 private slots:
     void processNewConnection();
@@ -55,15 +55,15 @@ public:
     NativeClientSocket();
     NativeClientSocket(QTcpSocket *socket);
 
-    virtual void connectToHost();
-    virtual void connectToHost(const QHostAddress &address);
-    virtual void connectToHost(const QHostAddress &address, ushort port);
-    virtual void disconnectFromHost();
-    virtual void send(const QByteArray &message);
-    virtual bool isConnected() const;
-    virtual QString peerName() const;
-    virtual QString peerAddress() const;
-    virtual ushort peerPort() const;
+    void connectToHost() final override;
+    void connectToHost(const QHostAddress &address) final override;
+    void connectToHost(const QHostAddress &address, ushort port) final override;
+    void disconnectFromHost() final override;
+    void send(const QByteArray &message) final override;
+    bool isConnected() const final override;
+    QString peerName() const final override;
+    QString peerAddress() const final override;
+    ushort peerPort() const final override;
 
 private slots:
     void getMessage();

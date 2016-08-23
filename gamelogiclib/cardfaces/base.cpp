@@ -1,6 +1,11 @@
 #include "base.h"
 #include "skill.h"
 
+BasicCard::BasicCard(const QString &name) : CardFace(name)
+{
+    m_handlingMethod = QSgsEnum::CardHandlingMethod::Use;
+}
+
 QString BasicCard::type() const
 {
     return "basic";
@@ -38,6 +43,11 @@ bool TrickCard::isCancelable(const CardEffectStruct &effect) const
     return m_cancelable;
 }
 
+
+DelayedTrick::DelayedTrick(const QString &name, bool movable) : TrickCard(name),m_movable(movable)
+{
+    judge.negative = true;
+}
 
 void DelayedTrick::onNullified(ServerPlayer *target) const
 {
@@ -191,6 +201,11 @@ QString InstanceTrick::subtype() const
     return "ND_trick";
 }
 
+EquipCard::EquipCard(const QString &name) : CardFace(name)
+{
+    m_handlingMethod = QSgsEnum::CardHandlingMethod::Use;
+}
+
 QString EquipCard::type() const
 {
     return "equip";
@@ -318,6 +333,10 @@ QString Weapon::commonEffectName() const
 }
 
 
+Armor::Armor(const QString &name) : EquipCard(name)
+{
+}
+
 QString Armor::subtype() const
 {
     return "armor";
@@ -369,6 +388,10 @@ DefensiveHorse::DefensiveHorse(const QString &name, int correct)
 QString DefensiveHorse::subtype() const
 {
     return "defensive_horse";
+}
+
+Treasure::Treasure(const QString &name) : EquipCard(name)
+{
 }
 
 QString Treasure::subtype() const

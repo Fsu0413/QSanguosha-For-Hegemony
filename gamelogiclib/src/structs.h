@@ -22,16 +22,12 @@
 #define _STRUCTS_H
 
 #include "libqsgsgamelogicglobal.h"
+#include "enumeration.h"
 
 class Room;
 class ServerPlayer;
 class Player;
-//class TriggerSkill;
-//class Card;
-//class Slash;
-
-//#include "player.h"
-//#include "namespace.h"
+class Card;
 
 struct DamageStruct
 {

@@ -3,10 +3,13 @@
 #define CARDFACE_H__
 
 #include "libqsgsgamelogicglobal.h"
+#include "structs.h"
 
 class Player;
 class Card;
 class Room;
+class ServerPlayer;
+
 
 class CardFace
 {

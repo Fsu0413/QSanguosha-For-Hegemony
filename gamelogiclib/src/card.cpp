@@ -189,53 +189,14 @@ bool Card::match(const QString &pattern) const
     return false;
 }
 
-bool Card::CompareByNumber(const Card *a, const Card *b)
-{
-    static QSgsEnum::CardSuit new_suits[] = {QSgsEnum::CardSuit::Spade, QSgsEnum::CardSuit::Heart, QSgsEnum::CardSuit::Club,
-                                             QSgsEnum::CardSuit::Diamond, QSgsEnum::CardSuit::Black, QSgsEnum::CardSuit::Red, QSgsEnum::CardSuit::NoSuit};
-    QSgsEnum::CardSuit suit1 = new_suits[a->suit()];
-    QSgsEnum::CardSuit suit2 = new_suits[b->suit()];
-
-    if (a->m_number != b->m_number)
-        return a->m_number < b->m_number;
-    else
-        return suit1 < suit2;
-}
-
-bool Card::CompareBySuit(const Card *a, const Card *b)
-{
-    static QSgsEnum::CardSuit new_suits[] = {QSgsEnum::CardSuit::Spade, QSgsEnum::CardSuit::Heart, QSgsEnum::CardSuit::Club,
-                                             QSgsEnum::CardSuit::Diamond, QSgsEnum::CardSuit::Black, QSgsEnum::CardSuit::Red, QSgsEnum::CardSuit::NoSuit};
-    QSgsEnum::CardSuit suit1 = new_suits[a->suit()];
-    QSgsEnum::CardSuit suit2 = new_suits[b->suit()];
-
-    if (suit1 != suit2)
-        return suit1 < suit2;
-    else
-        return a->m_number < b->m_number;
-}
-
-//bool Card::isNDTrick() const
-//{
-//    return typeId() == TypeTrick && !isKindOf("DelayedTrick");
-//}
-
-//QString Card::package() const
-//{
-//    if (parent())
-//        return parent()->objectName();
-//    else
-//        return QString();
-//}
-
 QString Card::fullName(bool include_suit) const
 {
-    QString name = name();
+    QString n = name();
     if (include_suit) {
         QString suit_name = Sanguosha->translate(suitString());
-        return QString("%1%2 %3").arg(suit_name).arg(numberString()).arg(name);
+        return QString("%1%2 %3").arg(suit_name).arg(numberString()).arg(n);
     } else
-        return QString("%1 %2").arg(numberString()).arg(name);
+        return QString("%1 %2").arg(numberString()).arg(n);
 }
 
 QString Card::logName() const
@@ -244,22 +205,22 @@ QString Card::logName() const
     QString number_string;
 
     switch (suit()) {
-        case Spade:
-        case Heart:
-        case Club:
-        case Diamond: {
+        case QSgsEnum::CardSuit::Spade:
+        case QSgsEnum::CardSuit::Heart:
+        case QSgsEnum::CardSuit::Club:
+        case QSgsEnum::CardSuit::Diamond: {
             suit_char = QString("<img src='image/system/log/%1.png' height = 12/>").arg(suitString());
             break;
         }
-        case NoSuitRed: {
+        case QSgsEnum::CardSuit::Red: {
             suit_char = tr("NoSuitRed");
             break;
         }
-        case NoSuitBlack: {
+        case QSgsEnum::CardSuit::Black: {
             suit_char = tr("NoSuitBlack");
             break;
         }
-        case NoSuit: {
+        case QSgsEnum::CardSuit::NoSuit: {
             suit_char = tr("NoSuit");
             break;
         }
@@ -327,17 +288,7 @@ QString Card::description(bool yellow) const
     return tr("<font color=%1><b>[%2]</b> %3</font>").arg(yellow ? "#FFFF33" : "#FF0080").arg(name()).arg(desc);
 }
 
-QString Card::toString(bool hidden) const
-{
-    Q_UNUSED(hidden);
-    if (!isVirtualCard())
-        return QString::number(m_id);
-    else
-        return QString("%1:%2[%3:%4]=%5&%6")
-        .arg(objectName()).arg(m_skillName)
-        .arg(suitString()).arg(numberString()).arg(subcardString())
-        .arg(m_showSkill);
-}
+
 
 QString Card::effectName() const
 {
@@ -396,214 +347,7 @@ bool Card::isVirtualCard() const
 {
     return m_id < 0;
 }
-
-//@to_do(Xusine): move this function to the logic core.
-
-//const Card *Card::Parse(const QString &str)
-//{
-//    static QMap<QString, Card::Suit> suit_map;
-//    if (suit_map.isEmpty()) {
-//        suit_map.insert("spade", Card::Spade);
-//        suit_map.insert("club", Card::Club);
-//        suit_map.insert("heart", Card::Heart);
-//        suit_map.insert("diamond", Card::Diamond);
-//        suit_map.insert("no_suit_red", Card::NoSuitRed);
-//        suit_map.insert("no_suit_black", Card::NoSuitBlack);
-//        suit_map.insert("no_suit", Card::NoSuit);
-//    }
-
-//    if (str.startsWith(QChar('@'))) {
-//        // skill card
-//        QRegExp pattern1("@(\\w+)=([^:]+)&(.*)(:.+)?");
-//        QRegExp pattern2("@(\\w+)=([^:]+)(:.+)?");
-//        QRegExp ex_pattern("@(\\w*)\\[(\\w+):(.+)\\]=([^:]+)&(.*)(:.+)?");
-
-//        QStringList texts;
-//        QString card_name, card_suit, card_number;
-//        QStringList subcard_ids;
-//        QString subcard_str;
-//        QString show_skill;
-//        QString user_string;
-
-//        if (pattern1.exactMatch(str)) {
-//            texts = pattern1.capturedTexts();
-//            card_name = texts.at(1);
-//            subcard_str = texts.at(2);
-//            show_skill = texts.at(3);
-//            user_string = texts.at(4);
-//        } else if (pattern2.exactMatch(str)) {
-//            texts = pattern2.capturedTexts();
-//            card_name = texts.at(1);
-//            subcard_str = texts.at(2);
-//            user_string = texts.at(3);
-//        } else if (ex_pattern.exactMatch(str)) {
-//            texts = ex_pattern.capturedTexts();
-//            card_name = texts.at(1);
-//            card_suit = texts.at(2);
-//            card_number = texts.at(3);
-//            subcard_str = texts.at(4);
-//            show_skill = texts.at(5);
-//            user_string = texts.at(6);
-//        } else
-//            return nullptr;
-
-//        if (subcard_str != ".")
-//            subcard_ids = subcard_str.split("+");
-
-//        SkillCard *card = Sanguosha->cloneSkillCard(card_name);
-
-//        if (card == nullptr)
-//            return nullptr;
-
-//        card->addSubcards(StringList2IntList(subcard_ids));
-
-//        // skill name
-//        // @todo: This is extremely dirty and would cause endless troubles.
-//        QString skillName = card->skillName();
-//        if (skillName.isNull()) {
-//            skillName = card_name.remove("Card").toLower();
-//            card->setSkillName(skillName);
-//        }
-//        if (!card_suit.isEmpty())
-//            card->setSuit(suit_map.value(card_suit, Card::NoSuit));
-
-//        if (!card_number.isEmpty()) {
-//            int number = 0;
-//            if (card_number == "A")
-//                number = 1;
-//            else if (card_number == "J")
-//                number = 11;
-//            else if (card_number == "Q")
-//                number = 12;
-//            else if (card_number == "K")
-//                number = 13;
-//            else
-//                number = card_number.toInt();
-
-//            card->setNumber(number);
-//        }
-
-//        if (!show_skill.isEmpty())
-//            card->setShowSkill(show_skill);
-//        /*
-//                else if (!skillName.isEmpty())
-//                card->setShowSkill(skillName);
-//                */  // The deletion of this code is extremely dangerous, for all the card in server is created in this way.
-//        // I(Fs) deleted this in 2015/4/21, for it causes a bug that one cannot use the skill card as the cost.
-
-//        if (!user_string.isEmpty()) {
-//            user_string.remove(0, 1);
-//            card->setUserString(user_string);
-//        }
-//        card->deleteLater();
-//        return card;
-//    } else if (str.startsWith(QChar('$'))) {
-//        QString copy = str;
-//        copy.remove(QChar('$'));
-//        QStringList card_strs = copy.split("+");
-//        DummyCard *dummy = new DummyCard(StringList2IntList(card_strs));
-//        dummy->deleteLater();
-//        return dummy;
-//    } else if (str.startsWith(QChar('#'))) {
-//        LuaSkillCard *new_card = LuaSkillCard::Parse(str);
-//        new_card->deleteLater();
-//        return new_card;
-//    } else if (str.contains(QChar('='))) {
-//        QRegExp pattern("(\\w+):(\\w*)\\[(\\w+):(.+)\\]=(.+)&(.*)");
-//        if (!pattern.exactMatch(str))
-//            return nullptr;
-
-//        QStringList texts = pattern.capturedTexts();
-//        QString card_name = texts.at(1);
-//        QString m_skillName = texts.at(2);
-//        QString suit_string = texts.at(3);
-//        QString number_string = texts.at(4);
-//        QString subcard_str = texts.at(5);
-//        QString show_skill = texts.at(6);
-//        QStringList subcard_ids;
-//        if (subcard_str != ".")
-//            subcard_ids = subcard_str.split("+");
-
-//        Suit suit = Card::NoSuit;
-//        DummyCard *dummy = new DummyCard(StringList2IntList(subcard_ids));
-//        if (suit_string == "to_be_decided")
-//            suit = dummy->suit();
-//        else
-//            suit = suit_map.value(suit_string, Card::NoSuit);
-//        dummy->deleteLater();
-
-//        int number = 0;
-//        if (number_string == "A")
-//            number = 1;
-//        else if (number_string == "J")
-//            number = 11;
-//        else if (number_string == "Q")
-//            number = 12;
-//        else if (number_string == "K")
-//            number = 13;
-//        else
-//            number = number_string.toInt();
-
-//        Card *card = Sanguosha->cloneCard(card_name, suit, number);
-//        if (card == nullptr)
-//            return nullptr;
-
-//        card->addSubcards(StringList2IntList(subcard_ids));
-//        card->setSkillName(m_skillName);
-//        card->setShowSkill(show_skill);
-//        card->deleteLater();
-//        return card;
-//    } else {
-//        bool ok;
-//        int card_id = str.toInt(&ok);
-//        if (ok)
-//            return Sanguosha->card(card_id)->realCard();
-//        else
-//            return nullptr;
-//    }
-//}
-
-Card *Card::Clone(const Card *card)
-{
-    Card::Suit suit = card->suit();
-    int number = card->number();
-
-    QObject *card_obj = nullptr;
-    if (card->isKindOf("LuaBasicCard")) {
-        const LuaBasicCard *lcard = qobject_cast<const LuaBasicCard *>(card);
-        Q_ASSERT(lcard != nullptr);
-        card_obj = lcard->clone();
-    } else if (card->isKindOf("LuaTrickCard")) {
-        const LuaTrickCard *lcard = qobject_cast<const LuaTrickCard *>(card);
-        Q_ASSERT(lcard != nullptr);
-        card_obj = lcard->clone();
-    } else if (card->isKindOf("LuaWeapon")) {
-        const LuaWeapon *lcard = qobject_cast<const LuaWeapon *>(card);
-        Q_ASSERT(lcard != nullptr);
-        card_obj = lcard->clone();
-    } else if (card->isKindOf("LuaArmor")) {
-        const LuaArmor *lcard = qobject_cast<const LuaArmor *>(card);
-        Q_ASSERT(lcard != nullptr);
-        card_obj = lcard->clone();
-    } else if (card->isKindOf("LuaTreasure")) {
-        const LuaTreasure *lcard = qobject_cast<const LuaTreasure *>(card);
-        Q_ASSERT(lcard != nullptr);
-        card_obj = lcard->clone();
-    } else {
-        const QMetaObject *meta = card->metaObject();
-        card_obj = meta->newInstance(Q_ARG(Card::Suit, suit), Q_ARG(int, number));
-    }
-    if (card_obj) {
-        Card *new_card = qobject_cast<Card *>(card_obj);
-        new_card->setId(card->id());
-        new_card->setObjectName(card->objectName());
-        new_card->addSubcard(card->id());
-        new_card->setTransferable(card->isTransferable());
-        return new_card;
-    } else
-        return nullptr;
-}
-
+#if 0
 bool Card::targetFixed() const
 {
     return m_targetFixed;
@@ -758,6 +502,40 @@ QStringList Card::checkTargetModSkillShow(const CardUseStruct &) const
     return QStringList();
 }
 
+void Card::onNullified(ServerPlayer *) const
+{
+    return;
+}
+bool Card::isAvailable(const Player *player) const
+{
+    return !player->isCardLimited(this, m_handlingMethod)
+        || (m_canRecast && !player->isCardLimited(this, Card::MethodRecast));
+}
+
+const Card *Card::validate(CardUseStruct &) const
+{
+    return this;
+}
+
+const Card *Card::validateInResponse(ServerPlayer *) const
+{
+    return this;
+}
+bool Card::willThrow() const
+{
+    return m_willThrow;
+}
+bool Card::hasPreAction() const
+{
+    return m_hasPreact;
+}
+
+Card::HandlingMethod Card::handlingMethod() const
+{
+    return m_handlingMethod;
+}
+
+#endif
 QString Card::showSkill() const
 {
     return m_showSkill;
@@ -781,11 +559,6 @@ QStringList Card::flags() const
 bool Card::isModified() const
 {
     return false;
-}
-
-void Card::onNullified(ServerPlayer *) const
-{
-    return;
 }
 
 void Card::addSubcard(int card_id)
@@ -815,53 +588,24 @@ void Card::clearSubcards()
     m_subcards.clear();
 }
 
-bool Card::isAvailable(const Player *player) const
-{
-    return !player->isCardLimited(this, m_handlingMethod)
-        || (m_canRecast && !player->isCardLimited(this, Card::MethodRecast));
-}
-
-const Card *Card::validate(CardUseStruct &) const
-{
-    return this;
-}
-
-const Card *Card::validateInResponse(ServerPlayer *) const
-{
-    return this;
-}
-
 bool Card::isMute() const
 {
     return m_mute;
 }
 
-bool Card::willThrow() const
-{
-    return m_willThrow;
-}
 
 bool Card::canRecast() const
 {
     return m_canRecast;
 }
 
-bool Card::hasPreAction() const
-{
-    return m_hasPreact;
-}
-
-Card::HandlingMethod Card::handlingMethod() const
-{
-    return m_handlingMethod;
-}
 
 void Card::setCanRecast(bool can)
 {
     m_canRecast = can;
 }
 
-void Card::setFlags(const QString &flag) const
+void Card::setFlag(const QString &flag)
 {
     static char symbol_c = '-';
 
@@ -887,7 +631,7 @@ bool Card::hasFlag(const QString &flag) const
     return m_flags.contains(flag);
 }
 
-void Card::clearFlags() const
+void Card::clearFlags()
 {
     m_flags.clear();
 }

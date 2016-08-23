@@ -29,9 +29,9 @@ class GameRule : public TriggerSkill
 
 public:
     GameRule(QObject *parent);
-    virtual QStringList triggerable(TriggerEvent, Room *, ServerPlayer *, QVariant &, ServerPlayer * &) const;
+    virtual QStringList triggerable(QSgsEnum::TriggerEvent, Room *, ServerPlayer *, QVariant &, ServerPlayer * &) const;
     virtual int getPriority() const;
-    virtual bool effect(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data, ServerPlayer *) const;
+    virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data, ServerPlayer *) const;
     QString getWinner(ServerPlayer *victim) const;
 
 private:

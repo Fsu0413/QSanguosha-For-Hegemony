@@ -16,7 +16,11 @@ unix {
 unix: !android: !macos: QMAKE_LFLAGS += -Wl,--rpath=../lib
 
 
-!win32-msvc*: QMAKE_LFLAGS += -Wl,--no-undefined
+!win32-msvc* {
+    # we use gcc/clang on unix-like systems and mingw
+    QMAKE_CXXFLAGS += -Wc++11-compat -Wc++14-compat
+    QMAKE_LFLAGS += -Wl,--no-undefined
+}
 
 LIBS += -L$$OUT_PWD/../../inst/lib
 

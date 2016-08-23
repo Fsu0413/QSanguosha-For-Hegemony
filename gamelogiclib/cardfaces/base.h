@@ -10,12 +10,9 @@ class BasicCard : public CardFace
     Q_OBJECT
 
 public:
-    BasicCard(const QString &name) : CardFace(name)
-    {
-        m_handlingMethod = QSgsEnum::CardHandlingMethod::Use;
-    }
-    virtual QString type() const;
-    virtual QSgsEnum::CardType typeId() const;
+    BasicCard(const QString &name);
+    QString type() const;
+    QSgsEnum::CardType typeId() const;
 };
 
 class TrickCard : public CardFace
@@ -26,9 +23,9 @@ public:
     TrickCard(const QString &name);
     void setCancelable(bool cancelable);
 
-    virtual QString type() const;
-    virtual QSgsEnum::CardType typeId() const;
-    virtual bool isCancelable(const CardEffectStruct &effect) const;
+    QString type() const;
+    QSgsEnum::CardType typeId() const;
+    bool isCancelable(const CardEffectStruct &effect) const;
 
 private:
     bool m_cancelable;
@@ -41,7 +38,7 @@ public:
     InstanceTrick(const QString &name) :TrickCard(name){
 
     }
-    virtual QString subtype() const;
+    QString subtype() const;
 };
 
 class DelayedTrick : public TrickCard
@@ -49,17 +46,15 @@ class DelayedTrick : public TrickCard
     Q_OBJECT
 
 public:
-    DelayedTrick(const QString &name, bool movable = false) : TrickCard(name),m_movable(movable){
-        judge.negative = true;
-    }
+    DelayedTrick(const QString &name, bool movable = false);
 
-    virtual void onNullified(ServerPlayer *target) const;
+    void onNullified(ServerPlayer *target) const;
 
-    virtual void onUse(Room *room, const CardUseStruct &card_use) const;
-    virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
-    virtual QString subtype() const;
-    virtual void onEffect(const CardEffectStruct &effect) const;
-    virtual void takeEffect(ServerPlayer *target) const = 0;
+    void onUse(Room *room, const CardUseStruct &card_use) const;
+    void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
+    QString subtype() const;
+    void onEffect(const CardEffectStruct &effect) const;
+    void takeEffect(ServerPlayer *target) const = 0;
 
 protected:
     JudgeStruct m_judge;
@@ -74,22 +69,19 @@ class EquipCard : public CardFace
 
 public:
 
-    EquipCard(const QString &name) : CardFace(name)
-    {
-        m_handlingMethod = QSgsEnum::CardHandlingMethod::Use;
-    }
+    EquipCard(const QString &name);
 
-    virtual QString type() const;
-    virtual QSgsEnum::CardType typeId() const;
+    QString type() const;
+    QSgsEnum::CardType typeId() const;
 
-    virtual bool isAvailable(const Player *player) const;
-    virtual void onUse(Room *room, const CardUseStruct &card_use) const;
-    virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
+    bool isAvailable(const Player *player) const;
+    void onUse(Room *room, const CardUseStruct &card_use) const;
+    void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
 
-    virtual void onInstall(ServerPlayer *player) const;
-    virtual void onUninstall(ServerPlayer *player) const;
+    void onInstall(ServerPlayer *player) const;
+    void onUninstall(ServerPlayer *player) const;
 
-    virtual QSgsEnum::EquipLocation location() const = 0;
+    QSgsEnum::EquipLocation location() const = 0;
 };
 
 class Weapon : public EquipCard
@@ -100,10 +92,10 @@ public:
     Weapon(const QString &name, int range);
     int range() const;
 
-    virtual QString subtype() const;
+    QString subtype() const;
 
-    virtual QSgsEnum::EquipLocation location() const;
-    virtual QString commonEffectName() const;
+    QSgsEnum::EquipLocation location() const;
+    QString commonEffectName() const;
 
 protected:
     int m_range;
@@ -114,13 +106,11 @@ class Armor : public EquipCard
     Q_OBJECT
 
 public:
-    Armor(const QString &name) : EquipCard(name)
-    {
-    }
-    virtual QString subtype() const;
+    Armor(const QString &name);
+    QString subtype() const;
 
-    virtual QSgsEnum::EquipLocation location() const;
-    virtual QString commonEffectName() const;
+    QSgsEnum::EquipLocation location() const;
+    QString commonEffectName() const;
 };
 
 class Horse : public EquipCard
@@ -131,11 +121,11 @@ public:
     Horse(const QString &name, int correct);
     int correctNum() const;
 
-    virtual QSgsEnum::EquipLocation location() const;
-    /*virtual void onInstall(ServerPlayer *player) const;
-    virtual void onUninstall(ServerPlayer *player) const;*/
+    QSgsEnum::EquipLocation location() const;
+    /*void onInstall(ServerPlayer *player) const;
+    void onUninstall(ServerPlayer *player) const;*/
 
-    virtual QString commonEffectName() const;
+    QString commonEffectName() const;
 
 private:
     int m_correct;
@@ -147,7 +137,7 @@ class OffensiveHorse : public Horse
 
 public:
     Q_INVOKABLE OffensiveHorse(const QString &name, int correct = -1, bool is_transferable = false);
-    virtual QString subtype() const;
+    QString subtype() const;
 };
 
 class DefensiveHorse : public Horse
@@ -156,7 +146,7 @@ class DefensiveHorse : public Horse
 
 public:
     Q_INVOKABLE DefensiveHorse(const QString &name, int correct = +1);
-    virtual QString subtype() const;
+    QString subtype() const;
 };
 
 class Treasure : public EquipCard
@@ -164,14 +154,12 @@ class Treasure : public EquipCard
     Q_OBJECT
 
 public:
-    Treasure(const QString &name) : EquipCard(name)
-    {
-    }
-    virtual QString subtype() const;
+    Treasure(const QString &name);
+    QString subtype() const;
 
-    virtual QSgsEnum::EquipLocation location() const;
+    QSgsEnum::EquipLocation location() const;
 
-    virtual QString commonEffectName() const;
+    QString commonEffectName() const;
 };
 
 #endif // BASE_H

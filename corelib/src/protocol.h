@@ -249,59 +249,31 @@ namespace QSanProtocol
         }
     };
 
-//    class AbstractPacket
-//    {
-//    public:
-//        virtual bool parse(const QByteArray &) = 0;
-//        virtual QByteArray toJson() const = 0;
-//        virtual QString toString() const = 0;
-//        virtual PacketDescription getPacketDestination() const = 0;
-//        virtual PacketDescription getPacketSource() const = 0;
-//        virtual PacketDescription getPacketType() const = 0;
-//        virtual PacketDescription getPacketDescription() const = 0;
-//        virtual CommandType getCommandType() const = 0;
-//    };
-
-    class LIBQSGSCORE_EXPORT Packet/* : public AbstractPacket*/
+    class LIBQSGSCORE_EXPORT Packet
     {
     public:
         //format: [global_serial, local_serial, packet_type, command_name, command_body]
         unsigned int globalSerial;
         unsigned int localSerial;
 
-        Packet(int m_packetDescription = S_DESC_UNKNOWN, CommandType m_command = S_COMMAND_UNKNOWN);
+        Packet(int packetDescription = S_DESC_UNKNOWN, CommandType command = S_COMMAND_UNKNOWN);
         unsigned int createGlobalSerial();
         inline void setMessageBody(const QVariant &value)
         {
             m_messageBody = value;
         }
-        inline const QVariant &getMessageBody() const
+        inline const QVariant &messageBody() const
         {
             return m_messageBody;
         }
-        virtual bool parse(const QByteArray &raw);
-        virtual QByteArray toJson() const;
-        virtual QString toString() const;
-        virtual PacketDescription getPacketDestination() const
-        {
-            return static_cast<PacketDescription>(m_packetDescription & S_DEST_MASK);
-        }
-        virtual PacketDescription getPacketSource() const
-        {
-            return static_cast<PacketDescription>(m_packetDescription & S_SRC_MASK);
-        }
-        virtual PacketDescription getPacketType() const
-        {
-            return static_cast<PacketDescription>(m_packetDescription & S_TYPE_MASK);
-        }
-        virtual PacketDescription getPacketDescription() const
-        {
-            return m_packetDescription;
-        }
-        virtual CommandType getCommandType() const
-        {
-            return m_command;
-        }
+        bool parse(const QByteArray &raw);
+        QByteArray toJson() const;
+        QString toString() const;
+        PacketDescription packetDestination() const;
+        PacketDescription packetSource() const;
+        PacketDescription packetType() const;
+        PacketDescription packetDescription() const;
+        CommandType commandType() const;
 
     protected:
         static unsigned int m_globalSerialSequence;

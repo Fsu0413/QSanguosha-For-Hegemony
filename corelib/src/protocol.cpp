@@ -133,3 +133,28 @@ QString QSanProtocol::Packet::toString() const
 {
     return QString::fromUtf8(toJson());
 }
+
+PacketDescription Packet::packetDestination() const
+{
+    return static_cast<PacketDescription>(m_packetDescription & S_DEST_MASK);
+}
+
+PacketDescription Packet::packetSource() const
+{
+    return static_cast<PacketDescription>(m_packetDescription & S_SRC_MASK);
+}
+
+PacketDescription Packet::packetType() const
+{
+    return static_cast<PacketDescription>(m_packetDescription & S_TYPE_MASK);
+}
+
+PacketDescription Packet::packetDescription() const
+{
+    return m_packetDescription;
+}
+
+CommandType Packet::commandType() const
+{
+    return m_command;
+}

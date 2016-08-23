@@ -188,7 +188,7 @@ GameRule::GameRule(QObject *parent)
     Sanguosha->addSkills(list_copy);
 }
 
-QStringList GameRule::triggerable(TriggerEvent, Room *, ServerPlayer *, QVariant &, ServerPlayer * &ask_who) const
+QStringList GameRule::triggerable(QSgsEnum::TriggerEvent, Room *, ServerPlayer *, QVariant &, ServerPlayer * &ask_who) const
 {
     ask_who = NULL;
     return QStringList(objectName());
@@ -266,7 +266,7 @@ void GameRule::onPhaseProceed(ServerPlayer *player) const
     }
 }
 
-bool GameRule::effect(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data, ServerPlayer *) const
+bool GameRule::effect(QSgsEnum::TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data, ServerPlayer *) const
 {
     if (room->getTag("SkipGameRule").toBool()) {
         room->removeTag("SkipGameRule");
