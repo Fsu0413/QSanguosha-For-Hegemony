@@ -26,7 +26,9 @@ PRECOMPILED_HEADER = libqsgsgamelogicglobal.h
 
 INCLUDEPATH += \
     ../corelib/ \
-    ../corelib/include
+    ../corelib/include \
+    src/
+
 
 HEADERS += \
     libqsgsgamelogicglobal.h \
@@ -45,7 +47,8 @@ HEADERS += \
     src/scenario.h \
     src/serverplayer.h \
     src/skill.h \
-    src/structs.h
+    src/structs.h \
+    cardfaces/base.h
 
 SOURCES += \
     src/card.cpp \
@@ -63,4 +66,5 @@ SOURCES += \
     src/scenario.cpp \
     src/serverplayer.cpp \
     src/skill.cpp \
-    src/structs.cpp
+    src/structs.cpp \
+    cardfaces/base.cpp

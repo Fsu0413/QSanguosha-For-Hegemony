@@ -893,7 +893,7 @@ void Card::clearFlags() const
 {
     m_flags.clear();
 }
-
+#if 0
 // ---------   Skill card     ------------------
 
 SkillCard::SkillCard() : Card(NoSuit, 0)
@@ -1026,3 +1026,4 @@ void TransferCard::onEffect(const CardEffectStruct &effect) const
     if (draw)
         effect.from->drawCards(1, "transfer");
 }
+#endif
