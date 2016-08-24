@@ -179,6 +179,6 @@ private:
 
     QMultiMap<QString, QString> m_spConvertPairs;
 
-}
+};
 
 #endif
