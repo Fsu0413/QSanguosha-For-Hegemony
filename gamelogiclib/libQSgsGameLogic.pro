@@ -67,4 +67,5 @@ SOURCES += \
     src/serverplayer.cpp \
     src/skill.cpp \
     src/structs.cpp \
-    cardfaces/base.cpp
+    cardfaces/base.cpp \
+    src/roomrequestreceiver.cpp

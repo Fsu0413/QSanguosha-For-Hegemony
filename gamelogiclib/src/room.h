@@ -67,10 +67,6 @@ public:
     ServerPlayer *getCurrent() const;
     void setCurrent(ServerPlayer *current);
     int alivePlayerCount() const;
-    QList<ServerPlayer *> getOtherPlayers(ServerPlayer *except, bool include_dead = false) const;
-    QList<ServerPlayer *> getPlayers() const;
-    QList<ServerPlayer *> getAllPlayers(bool include_dead = false) const;
-    QList<ServerPlayer *> getAlivePlayers() const;
     void output(const QString &message);
     void outputEventStack();
     void enterDying(ServerPlayer *player, DamageStruct *reason);
