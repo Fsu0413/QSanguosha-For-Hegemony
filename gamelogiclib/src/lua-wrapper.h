@@ -39,7 +39,7 @@ public:
     void setLuaFile(const QString &filename);
 
 public slots:
-    bool parse(QSgsLuaPackage *result) const;
+    QSgsLuaPackage *parse(bool *ok = nullptr) const;
 
 private:
     LuaPackageParser();

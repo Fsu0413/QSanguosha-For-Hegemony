@@ -397,8 +397,10 @@ void LuaPackageParser::setLuaFile(const QString &filename)
     m_LuaFile = filename;
 }
 
-bool LuaPackageParser::parse(QSgsLuaPackage *result) const
+QSgsLuaPackage * LuaPackageParser::parse(bool *ok) const
 {
+    bool ok_; if (ok == nullptr) ok = &ok_;
+
     lua_State *l = Sanguosha->luaState();
 
     int error = 0;
@@ -407,7 +409,7 @@ bool LuaPackageParser::parse(QSgsLuaPackage *result) const
         const char *error_message = lua_tostring(l,-1);
         lua_pop(l,1);
         emit this->error(error_message);
-        return false;
+        return nullptr;
     }
 
     error = lua_pcall(l, 0, 1, 0);
@@ -415,7 +417,7 @@ bool LuaPackageParser::parse(QSgsLuaPackage *result) const
         const char *error_message = lua_tostring(l,-1);
         lua_pop(l,1);
         emit this->error(error_message);
-        return false;
+        return nullptr;
     }
 
     //check for name.
@@ -423,10 +425,10 @@ bool LuaPackageParser::parse(QSgsLuaPackage *result) const
     lua_pushstring(l,"name");
     lua_rawget(l,-2);
     const char *name = lua_tostring(l,-1);
-    lua_pop(l,2);
+    lua_pop(l,1);
     if (QString(name).isEmpty()) {
         emit this->error("invalid package name for Lua File:" + m_LuaFile);
-        return false;
+        return nullptr;
     }
 
     //check for version
@@ -434,17 +436,17 @@ bool LuaPackageParser::parse(QSgsLuaPackage *result) const
     lua_pushstring(l,"version");
     lua_rawget(l,-2);
     QString ver_string = QString(lua_tostring(l,-1));
-    lua_pop(l,2);
+    lua_pop(l,1);
     if (ver_string.isEmpty()) {
         emit this->error("invalid package version for Lua File:" + m_LuaFile);
-        return false;
+        return nullptr;
     } else if (ver_string.split(".").length() != 3) {
         emit this->error("invalid package version for Lua File:" + m_LuaFile + ". The version number must go with a formation like x.x.x");
-        return false;
+        return nullptr;
     } else {
         foreach (const QString &n, ver_string.split(".")){
             bool is_ok = false;
-            n.toInt(is_ok);
+            n.toInt(&is_ok);
             if (!is_ok){
                 emit this->error("invalid package version for Lua File:" + m_LuaFile + ". Eveny part of the version must be a number!");
                 return false;
@@ -457,7 +459,7 @@ bool LuaPackageParser::parse(QSgsLuaPackage *result) const
     lua_pushstring(l,"type");
     lua_rawget(l,-2);
     int ty = lua_tonumber(l,-1);
-    lua_pop(l,2);
+    lua_pop(l,1);
     QSgsEnum::PackageType t = static_cast<QSgsEnum::PackageType> ty;
     //@to_do(xusine) : check the type is valid.
 
@@ -466,7 +468,7 @@ bool LuaPackageParser::parse(QSgsLuaPackage *result) const
 
     // then, we need to evaluate the skill and card.
 
+    *ok = true;
 
-    result = pac;
-    return true;
+    return pac;
 }
