@@ -39,11 +39,9 @@ public:
 
     const QHash<QString, const General *> generals() const;
     const General *general(const QString &generalName) const;
-#if 0
     // if the package contains card faces, the package must rewrite both functions, and mark them as Q_INVOKEABLE, it could be called using the meta-object system.
-    Q_INVOKABLE virtual const QHash<QString, const CardFace *> &cardFaces() const;
-    Q_INVOKABLE virtual const CardFace *cardFace(const QString &cardFaceName) const;
-#endif
+    virtual const QHash<QString, const CardFace *> &cardFaces() const;
+    virtual const CardFace *cardFace(const QString &cardFaceName) const;
     const QList<const Card *> cards() const;
     const QHash<QString, const Skill *> skills() const;
     const Skill *skill(const QString &skillName) const;
@@ -57,9 +55,9 @@ public:
 
 protected:
     QHash<QString, const General *> m_generals;
-#if 0
+
     QHash<QString, const CardFace *> m_cardFaces;
-#endif
+
     QList<const Card *> m_cards;
     QHash<QString, const Skill *> m_skills;
     QMultiMap<QString, QString> m_relatedSkills;
@@ -68,6 +66,28 @@ protected:
 };
 
 Q_DECLARE_INTERFACE(QSgsPackage, "org.qsanguosha.Hegemony.QSgsPackage")
+
+class QSgsLuaPackage : public QSgsPackage{
+
+public:
+    explicit QSgsLuaPackage(const QString &name, QSgsEnum::PackageType type, const QString &version);
+
+    bool registerGeneral(const QString &name, const General *g);
+
+    bool registerCardFace(const QString &name, const CardFace *f);
+
+    bool registerSkill(const QString &name, const Skill *s);
+
+    bool insertRelatedSkill(const QString &main_skill_name, const QString &related);
+
+    bool createCarByFaceName(const QString &face_name, QSgsEnum::CardSuit suit, int number);
+
+    virtual const QVersionNumber &version() const;
+    virtual QSgsEnum::PackageType type() const;
+private:
+    QVersionNumber m_ver;
+    QSgsEnum::PackageType m_type;
+};
 
 
 #endif

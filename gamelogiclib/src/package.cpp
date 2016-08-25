@@ -84,3 +84,21 @@ const QString &QSgsPackage::name() const
     return m_name;
 }
 
+
+QSgsLuaPackage::QSgsLuaPackage(const QString &name, QSgsEnum::PackageType type, const QString &version)
+    :QSgsPackage(name), m_type(type)
+{
+    QStringList v = version.split(".");
+
+    m_ver = QVersionNumber(v[0].toInt(),v[1].toInt(),v[2].toInt());
+}
+
+const QVersionNumber &QSgsLuaPackage::version() const
+{
+    return m_ver;
+}
+
+QSgsEnum::PackageType QSgsLuaPackage::type() const
+{
+    return m_type;
+}

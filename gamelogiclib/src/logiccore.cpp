@@ -1,6 +1,14 @@
 
 #include "logiccore.h"
 
+GameLogicCore *GameLogicCore::instance() const
+{
+    static GameLogicCore core;
+    if (core)
+        return &core;
+    return nullptr;
+}
+
 GameLogicCore::GameLogicCore()
 {
     QStringList stringlist_sp_convert = GetConfigFromLuaState(lua, "convert_pairs").toStringList();
