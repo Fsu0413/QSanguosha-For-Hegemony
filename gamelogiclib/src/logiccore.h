@@ -15,6 +15,8 @@ class GameLogicCore: public QObject
     Q_OBJECT
     
 public:
+
+    static GameLogicCore *instance() const;
     
     void addPackage(QSgsPackage *package);
     void addBanPackage(const QString &package_name);
@@ -136,6 +138,9 @@ public:
     //TransferSkill *getTransfer() const;
 
 private:
+
+    GameLogicCore();
+
     void _loadMiniScenarios();
     void _loadModScenarios();
 

@@ -24,11 +24,32 @@
 #include "libqsgsgamelogicglobal.h"
 
 #include "skill.h"
-//#include "standard.h"
+#include "cardfaces/base.h"
 
 
-//struct lua_State;
-//typedef int LuaFunction;
+struct lua_State;
+typedef int LuaFunction;
+class QSgsLuaPackage;
+
+class LuaPackageParser : public QObject{
+    Q_OBJECT
+public:
+    static LuaPackageParser *instance() const;
+
+    void setLuaFile(const QString &filename);
+
+public slots:
+    QSgsLuaPackage *parse(bool *ok = nullptr) const;
+
+private:
+    LuaPackageParser();
+
+    QString m_LuaFile;
+
+signals:
+    void error(const QString &message);
+    void parseFinished();
+};
 
 //class LuaTriggerSkill : public TriggerSkill
 //{
