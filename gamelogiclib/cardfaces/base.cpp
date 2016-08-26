@@ -88,7 +88,7 @@ void DelayedTrick::onNullified(ServerPlayer *target) const
             }
 
             CardMoveReason reason(CardMoveReason::S_REASON_TRANSFER, target->objectName(), QString(), this->getSkillName(), QString());
-            room->moveCardTo(this, target, player, QSgsEnum::PlayerPlace::PlaceDelayedTrick, reason, true);
+            room->moveCardTo(this, target, player, QSgsEnum::PlayerPlace::Judge, reason, true);
 
             if (target == player) break;
 
@@ -133,7 +133,7 @@ void DelayedTrick::onUse(Room *room, const CardUseStruct &card_use) const
     thread->trigger(QSgsEnum::TriggerEvent::PreCardUsed, room, use.from, data);
 
     CardMoveReason reason(CardMoveReason::S_REASON_USE, use.from->objectName(), use.to.first()->objectName(), getSkillName(), QString());
-    room->moveCardTo(this, use.from, use.to.first(), QSgsEnum::PlayerPlace::PlaceDelayedTrick, reason, true);
+    room->moveCardTo(this, use.from, use.to.first(), QSgsEnum::PlayerPlace::Judge, reason, true);
 
     QString skill_name = wrapped->showSkill();
     if (!skill_name.isNull() && use.from->ownSkill(skill_name) && !use.from->hasShownSkill(skill_name))
@@ -167,7 +167,7 @@ void DelayedTrick::onEffect(const CardEffectStruct &effect) const
     Room *room = effect.to->getRoom();
 
     CardMoveReason reason(CardMoveReason::S_REASON_USE, effect.to->objectName(), getSkillName(), QString());
-    room->moveCardTo(this, NULL, QSgsEnum::PlayerPlace::PlaceTable, reason, true);
+    room->moveCardTo(this, NULL, QSgsEnum::PlayerPlace::ProceedingArea, reason, true);
 
     LogMessage log;
     log.from = effect.to;
@@ -248,11 +248,11 @@ void EquipCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &tar
         equipped_id = target->getEquip(location())->getEffectiveId();
 
     QList<CardsMoveStruct> exchangeMove;
-    CardsMoveStruct move1(getEffectiveId(), target, QSgsEnum::PlayerPlace::PlaceEquip,
+    CardsMoveStruct move1(getEffectiveId(), target, QSgsEnum::PlayerPlace::Equip,
         CardMoveReason(CardMoveReason::S_REASON_USE, target->objectName()));
     exchangeMove.push_back(move1);
     if (equipped_id != Card::S_UNKNOWN_CARD_ID) {
-        CardsMoveStruct move2(equipped_id, target, QSgsEnum::PlayerPlace::PlaceTable,
+        CardsMoveStruct move2(equipped_id, target, QSgsEnum::PlayerPlace::ProceedingArea,
             CardMoveReason(CardMoveReason::S_REASON_CHANGE_EQUIP, target->objectName()));
         exchangeMove.push_back(move2);
     }
@@ -265,7 +265,7 @@ void EquipCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &tar
     room->sendLog(log);
 
     if (equipped_id != Card::S_UNKNOWN_CARD_ID) {
-        if (room->getCardPlace(equipped_id) == QSgsEnum::PlayerPlace::PlaceTable) {
+        if (room->getCardPlace(equipped_id) == QSgsEnum::PlayerPlace::ProceedingArea) {
             CardsMoveStruct move3(equipped_id, NULL, QSgsEnum::PlayerPlace::DiscardPile,
                 CardMoveReason(CardMoveReason::S_REASON_CHANGE_EQUIP, target->objectName()));
             room->moveCardsAtomic(move3, true);

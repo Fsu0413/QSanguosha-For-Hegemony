@@ -39,21 +39,21 @@ enum class GeneralGender
 };
 
 enum class PackageType {
-    GeneralPackage,
-    CardPackage,
-    OtherPackage
+    General,
+    Card,
+    Other
 };
 
 enum class PlayerPhase
 {
-    RoundStart, Start, Judge, Draw, Play, Discard, Finish, NotActive, PhaseNone
+    RoundStart, Start, Judge, Draw, Play, Discard, Finish, NotActive, NoPhase
 };
 
 enum class PlayerPlace
 {
-    PlaceHand, PlaceEquip, PlaceDelayedTrick, PlaceJudge,
-    PlaceSpecial, DiscardPile, DrawPile, PlaceTable, PlaceUnknown,
-    PlaceWuGu, DrawPileBottom
+    Hand, Equip, Judge, JudgeCard,
+    OutOfGame, DiscardPile, DrawPile, ProceedingArea, PlaceUnknown,
+    AgContainer, DrawPileBottom
 };
 
 enum class PlayerRelation
@@ -72,9 +72,11 @@ enum class PlayersArrayType
     Formation
 };
 
-enum class GuanxingType
+enum class RearrangeCardDirection
 {
-    GuanxingUpOnly = 1, GuanxingBothSides = 0, GuanxingDownOnly = -1
+    UpOnly = 1,
+    BothSides = 0,
+    DownOnly = -1
 };
 
 enum class SkillFrequency
@@ -95,10 +97,10 @@ enum class DamageNature
 
 enum class CardUseReason
 {
-    CARD_USE_REASON_UNKNOWN = 0x00,
-    CARD_USE_REASON_PLAY = 0x01,
-    CARD_USE_REASON_RESPONSE = 0x02,
-    CARD_USE_REASON_RESPONSE_USE = 0x12
+    Unknown = 0x00,
+    Play = 0x01,
+    Response = 0x02,
+    ResponseUse = 0x12
 };
 
 enum class TriggerEvent
