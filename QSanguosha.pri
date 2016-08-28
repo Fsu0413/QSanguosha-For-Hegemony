@@ -2,23 +2,52 @@
 CONFIG += warn_on
 
 unix {
+    # Note that if Qt is compiled without pkgconfig, the bundled lua is used unconditionally
+    # This behavior can be changed by editing ${QTDIR}/mkspecs/features/qt_functions.prf
+    # There is such a function in it:
+    #        defineTest(packagesExist)
+    # Comment out the first line of this function and you'll be able to use pkg-config
+    # But............pkg-config may won't work as you expected
     packagesExist(lua53) {
         CONFIG += systemlua
         QSANGUOSHA_LUA_CFLAGS = $$system("pkg-config --cflags lua53")
         QSANGUOSHA_LUA_LIB = $$system("pkg-config --libs lua53")
+        message(Using system lua $$system("pkg-config --modversion lua53"))
     } else {
-        CONFIG += bundledlua
+        packagesExist(lua) {
+            # check the version number, if it is 5.3, use it
+            QSANGUOSHA_LUA_VERSION = $$system("pkg-config --modversion lua")
+            QSANGUOSHA_LUA_VERSION_SPLIT = $$split(QSANGUOSHA_LUA_VERSION, ".")
+            QSANGUOSHA_LUA_VERSION_MAJOR = $$member(QSANGUOSHA_LUA_VERSION_SPLIT, 0)
+            QSANGUOSHA_LUA_VERSION_MINOR = $$member(QSANGUOSHA_LUA_VERSION_SPLIT, 1)
+            message($$QSANGUOSHA_LUA_VERSION_MAJOR $$QSANGUOSHA_LUA_VERSION_MAJOR)
+            if(equals(QSANGUOSHA_LUA_VERSION_MAJOR, 5)&equals(QSANGUOSHA_LUA_VERSION_MINOR, 3)) {
+                CONFIG += systemlua
+                QSANGUOSHA_LUA_CFLAGS = $$system("pkg-config --cflags lua")
+                QSANGUOSHA_LUA_LIB = $$system("pkg-config --libs lua")
+                message(Using system lua $$system("pkg-config --modversion lua"))
+            } else {
+                CONFIG += bundledlua
+            }
+        } else {
+            CONFIG += bundledlua
+        }
     }
 } else {
     CONFIG += bundledlua
 }
 
-unix: !android: !macos: QMAKE_LFLAGS += -Wl,--rpath=../lib
+CONFIG(bundledlua) {
+    message("Using bundled lua 5.3.3")
+}
+
+unix: !android: !mac: QMAKE_LFLAGS += -Wl,--rpath=../lib
 
 !win32-msvc* {
     # we use gcc/clang on unix-like systems and mingw
     QMAKE_CXXFLAGS += -Wc++11-compat -Wc++14-compat
-    QMAKE_LFLAGS += -Wl,--no-undefined
+    mac:QMAKE_LFLAGS += -Wl,-undefined -Wl,error
+    else:QMAKE_LFLAGS += -Wl,--no-undefined
 }
 
 LIBS += -L$$OUT_PWD/../../inst/lib
@@ -62,15 +91,17 @@ system("swig -version") {
     }
 }
 
-!CONFIG(system_swig): system("$$system_path($$PWD/tools/swig/swig) -version") {
-    swigversion = $$parseSwig($$system("$$system_path($$PWD/tools/swig/swig) -version"))
-    swigVersionRight($$split(swigversion, ".")) {
-        CONFIG += local_swig
+!CONFIG(system_swig) {
+    system("$$system_path($$PWD/tools/swig/swig) -version") {
+        swigversion = $$parseSwig($$system("$$system_path($$PWD/tools/swig/swig) -version"))
+        swigVersionRight($$split(swigversion, ".")) {
+            CONFIG += local_swig
+        } else {
+            error("cannot find swig >= 3.0.6")
+        }
     } else {
         error("cannot find swig >= 3.0.6")
     }
-} else {
-    error("cannot find swig >= 3.0.6")
 }
 
 CONFIG(system_swig) {
@@ -80,7 +111,6 @@ CONFIG(system_swig) {
 } else {
     error("cannot find swig >= 3.0.6")
 }
-message($$swig.commands)
 swig.CONFIG = target_predeps
 swig.dependency_type = TYPE_C
 swig.depends = $$SWIGFILES

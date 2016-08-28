@@ -1,3 +1,4 @@
 *.pro.user*
 /swig/sanguosha_wrap.cxx
 /tools/swig
+.DS_Store

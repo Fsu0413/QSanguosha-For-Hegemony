@@ -41,16 +41,18 @@ system("swig -version") {
     message("Cannot find a SWIG installed in system. Now searching for SWIG installed to the repository directory.")
 }
 
-!CONFIG(system_swig): system("$$system_path($$PWD/tools/swig/swig) -version") {
-    swigversion = $$parseSwig($$system("$$system_path($$PWD/tools/swig/swig) -version"))
-    message("local swig version: $$swigversion")
-    swigVersionRight($$split(swigversion, ".")) {
-        CONFIG += local_swig
+!CONFIG(system_swig) {
+    system("$$system_path($$PWD/tools/swig/swig) -version") {
+        swigversion = $$parseSwig($$system("$$system_path($$PWD/tools/swig/swig) -version"))
+        message("local swig version: $$swigversion")
+        swigVersionRight($$split(swigversion, ".")) {
+            CONFIG += local_swig
+        } else {
+            error("Is too old for building QSanguosha. Please download at least version 3.0.6 to suit Lua5.3")
+        }
     } else {
-        error("Is too old for building QSanguosha. Please download at least version 3.0.6 to suit Lua5.3")
+        error("Cannot find SWIG. Please download at least version 3.0.6 to suit Lua5.3, and either installed in to environment variable PATH, or put it into $$PWD/tools/swig")
     }
-} else {
-    error("Cannot find SWIG. Please download at least version 3.0.6 to suit Lua5.3, and either installed in to environment variable PATH, or put it into $$PWD/tools/swig")
 }
 
 TEMPLATE = subdirs
