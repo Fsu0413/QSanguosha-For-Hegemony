@@ -69,3 +69,6 @@ SOURCES += \
     src/structs.cpp \
     cardfaces/base.cpp \
     src/roomrequestreceiver.cpp
+
+DESTDIR = $$OUT_PWD/../inst/lib
+DLLDESTDIR = $$OUT_PWD/../inst/bin

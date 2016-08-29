@@ -43,7 +43,7 @@ SOURCES += \
     src/util.cpp \
     src/settings.cpp
 
-DESTDIR = $$OUT_PWD/../../inst/lib
-DLLDESTDIR = $$OUT_PWD/../../inst/bin
+DESTDIR = $$OUT_PWD/../inst/lib
+DLLDESTDIR = $$OUT_PWD/../inst/bin
 
 SWIGFILES += swig/qsgscore.i

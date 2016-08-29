@@ -27,8 +27,8 @@ HEADERS += \
     src/testlink.h \
     src/libqsgsclientglobal.h
 
-DESTDIR = $$OUT_PWD/../../inst/lib
-DLLDESTDIR = $$OUT_PWD/../../inst/bin
+DESTDIR = $$OUT_PWD/../inst/lib
+DLLDESTDIR = $$OUT_PWD/../inst/bin
 
 SOURCES += \
     src/testlink.cpp

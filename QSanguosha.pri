@@ -50,7 +50,7 @@ unix: !android: !mac: QMAKE_LFLAGS += -Wl,--rpath=../lib
     else:QMAKE_LFLAGS += -Wl,--no-undefined
 }
 
-LIBS += -L$$OUT_PWD/../../inst/lib
+LIBS += -L$$OUT_PWD/../inst/lib
 
 !winrt: !ios { # !macos?
     win32: dlltarget.path = /bin/

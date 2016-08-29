@@ -87,7 +87,7 @@ SOURCES += \
     src/lzio.c
 
 
-DESTDIR = $$OUT_PWD/../../inst/lib
-DLLDESTDIR = $$OUT_PWD/../../inst/bin
+DESTDIR = $$OUT_PWD/../inst/lib
+DLLDESTDIR = $$OUT_PWD/../inst/bin
 
 }
