@@ -20,7 +20,7 @@ public:
 
 protected:
     RoomRequestReceiver();
-    virtual void resultReceived(const QVariant &result);
+    virtual void resultReceived(const QJsonDocument &result); // This function is meant to be called in the slot when the receiver received the result
 
     QJsonDocument m_result;
 
@@ -36,13 +36,11 @@ class RoomObject;
 class RoomRequestHandler final
 {
     // There should be no class inherits RoomRequestHandler
-    friend class RoomObject;
-
 public:
     RoomRequestHandler(RoomRequestReceiver *receiver);
     ~RoomRequestHandler();
 
-    QJsonDocument requestReceiver(const QJsonDocument &request);
+    QJsonDocument requestReceiver(const QJsonDocument &request, int timeout);
 
     RoomRequestReceiver *receiver() const;
 
@@ -91,36 +89,36 @@ public:
     // calls when this player is in the free time of Play Phase
     CardUseStruct &&activate(Player *player);
     // ask a player to use a card according to the pattern
-    CardUseStruct &&askForUseCard(Player *player, const QString &pattern, const QString &prompt, const QString &reason = QString(), bool addHistory = true, const QJsonDocument &data = QJsonDocument());
+    CardUseStruct &&askForUseCard(Player *player, const QString &pattern, const QString &prompt, const QString &reason = QString(), bool addHistory = true, const QJsonValue &data = QJsonValue());
     // a wrapper to askForUseCard which aims at using Slash(Strike) to a certain target
     // note that one can add more additional targets in the returned CardUseStruct
-    CardUseStruct &&askForUseSlashTo(Player *from, const QList<Player *> &to, const QString &prompt, const QString &reason = QString(), bool addHistory = true, const QJsonDocument &data = QJsonDocument());
-    CardUseStruct &&askForUseSlashTo(Player *from, Player *to, const QString &prompt, const QString &reason = QString(), bool addHistory = true, const QJsonDocument &data = QJsonDocument());
+    CardUseStruct &&askForUseSlashTo(Player *from, const QList<Player *> &to, const QString &prompt, const QString &reason = QString(), bool addHistory = true, const QJsonValue &data = QJsonValue());
+    CardUseStruct &&askForUseSlashTo(Player *from, Player *to, const QString &prompt, const QString &reason = QString(), bool addHistory = true, const QJsonValue &data = QJsonValue());
     // ask a player to take out a card according to the pattern
-    Card *askForResponseCard(Player *player, const QString &pattern, const QString &prompt, const QString &reason = QString(), bool toTable = false, const QJsonDocument &data = QJsonDocument());
+    Card *askForResponseCard(Player *player, const QString &pattern, const QString &prompt, const QString &reason = QString(), bool toTable = false, const QJsonValue &data = QJsonValue());
     // ask a player to choose a card in an AG container
-    Card *askForAg(Player *player, const QList<Card *> cards, const QString &reason = QString(), bool forced = false, const QJsonDocument &data = QJsonDocument());
+    Card *askForAg(Player *player, const QList<Card *> cards, const QString &reason = QString(), bool forced = false, const QJsonValue &data = QJsonValue());
     struct CardDistributeStruct
     {
         Card *card;
         Player *player;
     };
     // ask a player to distribute cards. Note that fromPlace can either be PlaceHand/PlaceEquip or PlaceTable/PlaceWugu, in the condition of PlaceTable/PlaceWugu you should call fillAg first and call clearAg afterwards
-    QList<CardDistributeStruct> &&askForDistribute(Player *player, const QList<Card *> cards, QSgsEnum::PlayerPlace fromPlace, bool forced = false, const QJsonDocument &data = QJsonDocument());
+    QList<CardDistributeStruct> &&askForDistribute(Player *player, const QList<Card *> cards, QSgsEnum::PlayerPlace fromPlace, bool forced = false, const QJsonValue &data = QJsonValue());
     // ask a player to discard. Note this pattern needs to be discussed, probably it will be a QStringList
-    Card *askForDiscard(Player *player, const QString &pattern, const QString &prompt, const QString &reason = QString(), bool forced = false, const QJsonDocument &data = QJsonDocument());
+    Card *askForDiscard(Player *player, const QString &pattern, const QString &prompt, const QString &reason = QString(), bool forced = false, const QJsonValue &data = QJsonValue());
     // ask a player to discard multi cards
-    QList<Card *> &&askForDiscard(Player *player, int minNum, int maxNum, const QString &prompt, const QString &reason = QString(), bool forced = false, const QJsonDocument &data = QJsonDocument());
+    QList<Card *> &&askForDiscard(Player *player, int minNum, int maxNum, const QString &prompt, const QString &reason = QString(), bool forced = false, const QJsonValue &data = QJsonValue());
     // ask a player to select some cards to do something
-    QList<Card *> &&askForSelectCard(Player *player, int minNum, int maxNum, const QString &prompt, QSgsEnum::CardHandlingMethod handlingMethod = QSgsEnum::CardHandlingMethod::NoMethod, const QString &expandPile = QString(), bool forced = false, const QJsonDocument &data = QJsonDocument());
+    QList<Card *> &&askForSelectCard(Player *player, int minNum, int maxNum, const QString &prompt, QSgsEnum::CardHandlingMethod handlingMethod = QSgsEnum::CardHandlingMethod::NoMethod, const QString &expandPile = QString(), bool forced = false, const QJsonValue &data = QJsonValue());
     // ask a player to make a choice
-    const QString &askForChoice(Player *player, const QStringList &choices, const QString &reason = QString(), const QJsonDocument &data = QJsonDocument());
+    const QString &askForChoice(Player *player, const QStringList &choices, const QString &reason = QString(), const QJsonValue &data = QJsonValue());
     // advanced use of askForChoice
-    const QString &askForChoice(Player *player, const QJsonDocument &choicesDocument, const QString &reason = QString(), const QJsonDocument &data = QJsonDocument());
+    const QString &askForChoice(Player *player, const QJsonDocument &choicesDocument, const QString &reason = QString(), const QJsonValue &data = QJsonValue());
     // ask players to use Nullification, a targetNo of -1 stands for Nullification to Nullification
     CardUseStruct &&askForNullification(const CardUseStruct &use, int targetNo = 0);
     // ask a player to choose a card of others
-    Card *askForChooseCard(Player *from, Player *to, const QString &reason = QString(), QString &&flags = QStringLiteral("hej"), bool handcardVisible = false, QSgsEnum::CardHandlingMethod handlingMethod = QSgsEnum::CardHandlingMethod::NoMethod, const QList<Card *> &disabled = QList<Card *>(), const QJsonDocument &data = QJsonDocument());
+    Card *askForChooseCard(Player *from, Player *to, const QString &reason = QString(), QString &&flags = QStringLiteral("hej"), bool handcardVisible = false, QSgsEnum::CardHandlingMethod handlingMethod = QSgsEnum::CardHandlingMethod::NoMethod, const QList<Card *> &disabled = QList<Card *>(), const QJsonValue &data = QJsonValue());
     struct RearrangeCardStruct
     {
         QList<Card *> up;
@@ -131,7 +129,7 @@ public:
     // ask a player to select trigger order of a set of skills
     void askForTriggerOrder(...); // TBD
     // ask a player to confirm something. askForConfirm(a, b, c, d) == askForSkillInvoke(a, c, b, d)
-    bool askForConfirm(Player *player, const QString &prompt, const QString &reason, const QJsonDocument &data = QJsonDocument());
+    bool askForConfirm(Player *player, const QString &prompt, const QString &reason, const QJsonValue &data = QJsonValue());
     // ask a player to pindian to an other player, note that the obsolete "Card1" parameter is removed
     QList<Card *> &&askForPindian(Player *from, Player *to, const QString &reason);
 

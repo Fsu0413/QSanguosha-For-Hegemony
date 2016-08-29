@@ -14,10 +14,10 @@ struct QSgsCoreSettingsPrivate
 
 // keys
 namespace {
-    QString serverPortKey = QStringLiteral("ServerPort");
-    QString hostAddressKey = QStringLiteral("HostAddress");
-    QString serverNameKey = QStringLiteral("ServerName");
-    QString detectorPortKey = QStringLiteral("DetectorPort");
+    const QString serverPortKey = QStringLiteral("ServerPort");
+    const QString hostAddressKey = QStringLiteral("HostAddress");
+    const QString serverNameKey = QStringLiteral("ServerName");
+    const QString detectorPortKey = QStringLiteral("DetectorPort");
 }
 
 QSgsCoreSettings *QSgsCoreSettings::instance()

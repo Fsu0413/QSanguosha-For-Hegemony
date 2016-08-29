@@ -20,9 +20,9 @@ QVariant RoomRequestReceiver::waitForResult(int timeout)
     return m_result;
 }
 
-void RoomRequestReceiver::resultReceived(const QVariant &result)
+void RoomRequestReceiver::resultReceived(const QJsonDocument &result)
 {
-    if (!result.isValid())
+    if (result.isEmpty() || result.isNull())
         return;
 
     QMutexLocker l(&m_mutex);

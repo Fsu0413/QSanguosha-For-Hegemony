@@ -10,11 +10,11 @@ RoomRequestHandler::~RoomRequestHandler()
 
 }
 
-QJsonDocument RoomRequestHandler::requestReceiver(const QJsonDocument &request)
+QJsonDocument RoomRequestHandler::requestReceiver(const QJsonDocument &request, int timeout)
 {
     // emit a signal to RoomRequestReceiver, and wait for its callback
     m_receiver->doRequest(request);
-    return m_receiver->waitForResult(0); // timeout????
+    return m_receiver->waitForResult(timeout); // timeout????
 }
 
 RoomRequestReceiver *RoomRequestHandler::receiver() const
@@ -133,57 +133,57 @@ CardUseStruct &&RoomObject::activate(Player *player)
 
 }
 
-CardUseStruct &&RoomObject::askForUseCard(Player *player, const QString &pattern, const QString &prompt, const QString &reason, bool addHistory, const QJsonDocument &data)
+CardUseStruct &&RoomObject::askForUseCard(Player *player, const QString &pattern, const QString &prompt, const QString &reason, bool addHistory, const QJsonValue &data)
 {
 
 }
 
-CardUseStruct &&RoomObject::askForUseSlashTo(Player *from, const QList<Player *> &to, const QString &prompt, const QString &reason, bool addHistory, const QJsonDocument &data)
+CardUseStruct &&RoomObject::askForUseSlashTo(Player *from, const QList<Player *> &to, const QString &prompt, const QString &reason, bool addHistory, const QJsonValue &data)
 {
 
 }
 
-CardUseStruct &&RoomObject::askForUseSlashTo(Player *from, Player *to, const QString &prompt, const QString &reason, bool addHistory, const QJsonDocument &data)
+CardUseStruct &&RoomObject::askForUseSlashTo(Player *from, Player *to, const QString &prompt, const QString &reason, bool addHistory, const QJsonValue &data)
 {
 
 }
 
-Card *RoomObject::askForResponseCard(Player *player, const QString &pattern, const QString &prompt, const QString &reason, bool toTable, const QJsonDocument &data)
+Card *RoomObject::askForResponseCard(Player *player, const QString &pattern, const QString &prompt, const QString &reason, bool toTable, const QJsonValue &data)
 {
 
 }
 
-Card *RoomObject::askForAg(Player *player, const QList<Card *> cards, const QString &reason, bool forced, const QJsonDocument &data)
+Card *RoomObject::askForAg(Player *player, const QList<Card *> cards, const QString &reason, bool forced, const QJsonValue &data)
 {
 
 }
 
-QList<RoomObject::CardDistributeStruct> &&RoomObject::askForDistribute(Player *player, const QList<Card *> cards, QSgsEnum::PlayerPlace fromPlace, bool forced, const QJsonDocument &data)
+QList<RoomObject::CardDistributeStruct> &&RoomObject::askForDistribute(Player *player, const QList<Card *> cards, QSgsEnum::PlayerPlace fromPlace, bool forced, const QJsonValue &data)
 {
 
 }
 
-Card *RoomObject::askForDiscard(Player *player, const QString &pattern, const QString &prompt, const QString &reason, bool forced, const QJsonDocument &data)
+Card *RoomObject::askForDiscard(Player *player, const QString &pattern, const QString &prompt, const QString &reason, bool forced, const QJsonValue &data)
 {
 
 }
 
-QList<Card *> &&RoomObject::askForDiscard(Player *player, int minNum, int maxNum, const QString &prompt, const QString &reason, bool forced, const QJsonDocument &data)
+QList<Card *> &&RoomObject::askForDiscard(Player *player, int minNum, int maxNum, const QString &prompt, const QString &reason, bool forced, const QJsonValue &data)
 {
 
 }
 
-QList<Card *> &&RoomObject::askForSelectCard(Player *player, int minNum, int maxNum, const QString &prompt, QSgsEnum::CardHandlingMethod handlingMethod, const QString &expandPile, bool forced, const QJsonDocument &data)
+QList<Card *> &&RoomObject::askForSelectCard(Player *player, int minNum, int maxNum, const QString &prompt, QSgsEnum::CardHandlingMethod handlingMethod, const QString &expandPile, bool forced, const QJsonValue &data)
 {
 
 }
 
-const QString &RoomObject::askForChoice(Player *player, const QStringList &choices, const QString &reason, const QJsonDocument &data)
+const QString &RoomObject::askForChoice(Player *player, const QStringList &choices, const QString &reason, const QJsonValue &data)
 {
 
 }
 
-const QString &RoomObject::askForChoice(Player *player, const QJsonDocument &choicesDocument, const QString &reason, const QJsonDocument &data)
+const QString &RoomObject::askForChoice(Player *player, const QJsonDocument &choicesDocument, const QString &reason, const QJsonValue &data)
 {
 
 }
@@ -203,7 +203,7 @@ void RoomObject::askForTriggerOrder(...)
 
 }
 
-bool RoomObject::askForConfirm(Player *player, const QString &prompt, const QString &reason, const QJsonDocument &data)
+bool RoomObject::askForConfirm(Player *player, const QString &prompt, const QString &reason, const QJsonValue &data)
 {
 
 }
