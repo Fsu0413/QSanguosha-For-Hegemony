@@ -86,8 +86,11 @@ public:
     RoomRequestHandler *requestHandler() const;
     void setRequestHandler(RoomRequestHandler *handler);
     // Interactive Methods: Note these functions does not do the actual operations, it is caller's responsibility to do the things
-    // calls when this player is in the free time of Play Phase
-    CardUseStruct &&activate(Player *player);
+    // calls when this player is in the free time of Play Phase, note that in this phase this player can use a card, or invoke a skill
+    // for return value: true means one of the 2 pointer contains value, else means both of them are nullptr
+    // cardUse and skillInvoke must be nullptr when entering this function
+    // you should manually delete the structs when you don't use it
+    bool activate(Player *player, CardUseStruct *&cardUse, SkillInvokeStruct *&skillInvoke);
     // ask a player to use a card according to the pattern
     CardUseStruct &&askForUseCard(Player *player, const QString &pattern, const QString &prompt, const QString &reason = QString(), bool addHistory = true, const QJsonValue &data = QJsonValue());
     // a wrapper to askForUseCard which aims at using Slash(Strike) to a certain target

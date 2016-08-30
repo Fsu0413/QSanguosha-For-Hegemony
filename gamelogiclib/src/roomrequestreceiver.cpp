@@ -9,7 +9,7 @@ RoomRequestReceiver::~RoomRequestReceiver()
 {
 }
 
-QVariant RoomRequestReceiver::waitForResult(int timeout)
+const QJsonDocument &RoomRequestReceiver::waitForResult(int timeout)
 {
     QMutexLocker l(&m_mutex);
     bool ok = true;

@@ -104,6 +104,12 @@ struct CardUseStruct
     QSgsEnum::CardUseReason m_reason;
 };
 
+struct SkillInvokeStruct
+{
+    // Skill, player, skillowner, target, card
+
+};
+
 class CardMoveReason
 {
 public:

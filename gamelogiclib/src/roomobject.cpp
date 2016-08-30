@@ -125,12 +125,19 @@ const RoomObject::CardPlaceStruct &RoomObject::cardPlace(Card *card) const
 RoomRequestHandler *RoomObject::requestHandler() const
 {
     Q_D(const RoomObject);
-
+    return d->handler;
 }
 
-CardUseStruct &&RoomObject::activate(Player *player)
+void RoomObject::setRequestHandler(RoomRequestHandler *handler)
 {
+    Q_D(RoomObject);
+    d->handler = handler;
+}
 
+bool RoomObject::activate(Player *player, CardUseStruct *&cardUse, SkillInvokeStruct *&skillInvoke)
+{
+    cardUse = nullptr;
+    skillInvoke = nullptr;
 }
 
 CardUseStruct &&RoomObject::askForUseCard(Player *player, const QString &pattern, const QString &prompt, const QString &reason, bool addHistory, const QJsonValue &data)
