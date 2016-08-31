@@ -140,17 +140,17 @@ bool RoomObject::activate(Player *player, CardUseStruct *&cardUse, SkillInvokeSt
     skillInvoke = nullptr;
 }
 
-CardUseStruct &&RoomObject::askForUseCard(Player *player, const QString &pattern, const QString &prompt, const QString &reason, bool addHistory, const QJsonValue &data)
+CardUseStruct RoomObject::askForUseCard(Player *player, const QString &pattern, const QString &prompt, const QString &reason, bool addHistory, const QJsonValue &data)
 {
 
 }
 
-CardUseStruct &&RoomObject::askForUseSlashTo(Player *from, const QList<Player *> &to, const QString &prompt, const QString &reason, bool addHistory, const QJsonValue &data)
+CardUseStruct RoomObject::askForUseSlashTo(Player *from, const QList<Player *> &to, const QString &prompt, const QString &reason, bool addHistory, const QJsonValue &data)
 {
 
 }
 
-CardUseStruct &&RoomObject::askForUseSlashTo(Player *from, Player *to, const QString &prompt, const QString &reason, bool addHistory, const QJsonValue &data)
+CardUseStruct RoomObject::askForUseSlashTo(Player *from, Player *to, const QString &prompt, const QString &reason, bool addHistory, const QJsonValue &data)
 {
 
 }
@@ -165,7 +165,7 @@ Card *RoomObject::askForAg(Player *player, const QList<Card *> cards, const QStr
 
 }
 
-QList<RoomObject::CardDistributeStruct> &&RoomObject::askForDistribute(Player *player, const QList<Card *> cards, QSgsEnum::PlayerPlace fromPlace, bool forced, const QJsonValue &data)
+QList<RoomObject::CardDistributeStruct> RoomObject::askForDistribute(Player *player, const QList<Card *> cards, QSgsEnum::PlayerPlace fromPlace, bool forced, const QJsonValue &data)
 {
 
 }
@@ -175,32 +175,32 @@ Card *RoomObject::askForDiscard(Player *player, const QString &pattern, const QS
 
 }
 
-QList<Card *> &&RoomObject::askForDiscard(Player *player, int minNum, int maxNum, const QString &prompt, const QString &reason, bool forced, const QJsonValue &data)
+QList<Card *> RoomObject::askForDiscard(Player *player, int minNum, int maxNum, const QString &prompt, const QString &reason, bool forced, const QJsonValue &data)
 {
 
 }
 
-QList<Card *> &&RoomObject::askForSelectCard(Player *player, int minNum, int maxNum, const QString &prompt, QSgsEnum::CardHandlingMethod handlingMethod, const QString &expandPile, bool forced, const QJsonValue &data)
+QList<Card *> RoomObject::askForSelectCard(Player *player, int minNum, int maxNum, const QString &prompt, QSgsEnum::CardHandlingMethod handlingMethod, const QString &expandPile, bool forced, const QJsonValue &data)
 {
 
 }
 
-const QString &RoomObject::askForChoice(Player *player, const QStringList &choices, const QString &reason, const QJsonValue &data)
+QString RoomObject::askForChoice(Player *player, const QStringList &choices, const QString &reason, const QJsonValue &data)
 {
 
 }
 
-const QString &RoomObject::askForChoice(Player *player, const QJsonDocument &choicesDocument, const QString &reason, const QJsonValue &data)
+QString RoomObject::askForChoice(Player *player, const QJsonDocument &choicesDocument, const QString &reason, const QJsonValue &data)
 {
 
 }
 
-CardUseStruct &&RoomObject::askForNullification(const CardUseStruct &use, int targetNo)
+CardUseStruct RoomObject::askForNullification(const CardUseStruct &use, int targetNo)
 {
 
 }
 
-RoomObject::RearrangeCardStruct &&RoomObject::askForRearrangeCard(Player *from, const QList<Card *> cards, QSgsEnum::RearrangeCardDirection direction)
+RoomObject::RearrangeCardStruct RoomObject::askForRearrangeCard(Player *from, const QList<Card *> cards, QSgsEnum::RearrangeCardDirection direction)
 {
 
 }
@@ -215,7 +215,7 @@ bool RoomObject::askForConfirm(Player *player, const QString &prompt, const QStr
 
 }
 
-QList<Card *> &&RoomObject::askForPindian(Player *from, Player *to, const QString &reason)
+QList<Card *> RoomObject::askForPindian(Player *from, Player *to, const QString &reason)
 {
 
 }
