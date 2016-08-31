@@ -95,11 +95,14 @@ public:
     CardUseStruct &&askForUseCard(Player *player, const QString &pattern, const QString &prompt, const QString &reason = QString(), bool addHistory = true, const QJsonValue &data = QJsonValue());
     // a wrapper to askForUseCard which aims at using Slash(Strike) to a certain target
     // note that one can add more additional targets in the returned CardUseStruct
+    // This function will rename to askForUseStrikeTo if we decided to use offical translations in card/general names, etc.
     CardUseStruct &&askForUseSlashTo(Player *from, const QList<Player *> &to, const QString &prompt, const QString &reason = QString(), bool addHistory = true, const QJsonValue &data = QJsonValue());
     CardUseStruct &&askForUseSlashTo(Player *from, Player *to, const QString &prompt, const QString &reason = QString(), bool addHistory = true, const QJsonValue &data = QJsonValue());
     // ask a player to take out a card according to the pattern
     Card *askForResponseCard(Player *player, const QString &pattern, const QString &prompt, const QString &reason = QString(), bool toTable = false, const QJsonValue &data = QJsonValue());
     // ask a player to choose a card in an AG container
+    // There should be a better name for this function.....askForSelectCard has already replaced askForExchange, so....
+    // If we still use the meaning of "Wugufengdeng", this function will rename to askForBh
     Card *askForAg(Player *player, const QList<Card *> cards, const QString &reason = QString(), bool forced = false, const QJsonValue &data = QJsonValue());
     struct CardDistributeStruct
     {
@@ -119,6 +122,7 @@ public:
     // advanced use of askForChoice
     const QString &askForChoice(Player *player, const QJsonDocument &choicesDocument, const QString &reason = QString(), const QJsonValue &data = QJsonValue());
     // ask players to use Nullification, a targetNo of -1 stands for Nullification to Nullification
+    // This function will rename to askForWard if we decided to use offical translations in card/general names, etc.
     CardUseStruct &&askForNullification(const CardUseStruct &use, int targetNo = 0);
     // ask a player to choose a card of others
     Card *askForChooseCard(Player *from, Player *to, const QString &reason = QString(), QString &&flags = QStringLiteral("hej"), bool handcardVisible = false, QSgsEnum::CardHandlingMethod handlingMethod = QSgsEnum::CardHandlingMethod::NoMethod, const QList<Card *> &disabled = QList<Card *>(), const QJsonValue &data = QJsonValue());
@@ -127,9 +131,9 @@ public:
         QList<Card *> up;
         QList<Card *> bottom;
     };
-    // ask a player to rearrange a set of cards
+    // ask a player to rearrange a set of cards, just like guanxing
     RearrangeCardStruct &&askForRearrangeCard(Player *from, const QList<Card *> cards, QSgsEnum::RearrangeCardDirection direction);
-    // ask a player to select trigger order of a set of skills
+    // ask a player to select the order of triggering from a set of skills
     void askForTriggerOrder(...); // TBD
     // ask a player to confirm something. askForConfirm(a, b, c, d) == askForSkillInvoke(a, c, b, d)
     bool askForConfirm(Player *player, const QString &prompt, const QString &reason, const QJsonValue &data = QJsonValue());
