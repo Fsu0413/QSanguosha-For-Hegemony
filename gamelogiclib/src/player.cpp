@@ -19,8 +19,7 @@
     *********************************************************************/
 
 #include "player.h"
-#include "engine.h"
-#include "room.h"
+#include "src/engine.h"
 //#include "client.h"
 //#include "standard-basics.h"
 //#include "settings.h"
@@ -28,11 +27,11 @@
 Player::Player(QObject *parent)
     : QObject(parent), m_general(nullptr), m_general2(nullptr),
     m_headSkinId(0), m_deputySkinId(0), m_owner(false),
-    m_gender(General::Sexless), m_hp(-1), m_maxHp(-1),
+    m_gender(QSgsEnum::GeneralGender::Sexless), m_hp(-1), m_maxHp(-1),
     m_roleShown(false), m_state("online"), m_seat(0), m_alive(true),
     m_actualGeneral1(nullptr), m_actualGeneral2(nullptr),
     m_general1Showed(false), m_general2Showed(false),
-    m_phase(NotActive),
+    m_phase(QSgsEnum::PlayerPhase::NotActive),
     m_weapon(nullptr), m_armor(nullptr), m_defensiveHorse(nullptr), m_offensiveHorse(nullptr), m_treasure(nullptr),
     m_faceUp(true), m_chained(false), m_removed(false), m_scenarioRoleShown(false)
 {
@@ -73,8 +72,8 @@ void Player::setShownRole(bool shown)
 
 void Player::setHp(int hp)
 {
-    if (this->m_hp != mhp) {
-        this->m_hp = mhp;
+    if (this->m_hp != hp) {
+        this->m_hp = hp;
         emit hp_changed();
     }
 }
@@ -124,17 +123,17 @@ void Player::setGender(QSgsEnum::GeneralGender gender)
 
 bool Player::isMale() const
 {
-    return m_gender == General::Male;
+    return m_gender == QSgsEnum::GeneralGender::Male;
 }
 
 bool Player::isFemale() const
 {
-    return m_gender == General::Female;
+    return m_gender == QSgsEnum::GeneralGender::Female;
 }
 
 bool Player::isNeuter() const
 {
-    return m_gender == General::Neuter;
+    return m_gender == QSgsEnum::GeneralGender::Neuter;
 }
 
 int Player::seat() const

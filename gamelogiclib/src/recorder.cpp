@@ -21,6 +21,7 @@
 #include "recorder.h"
 //#include "client.h"
 //#include "protocol.h"
+#include "src/protocol.h"
 
 
 //#include <QMessageBox>
@@ -72,10 +73,7 @@ Replayer::Replayer(QObject *parent, const QString &filename)
     filename(filename), speed(1.0), playing(true)
 {
     QIODevice *device = NULL;
-    if (filename.endsWith(".png")) {
-        QByteArray *data = new QByteArray(PNG2TXT(filename));
-        device = new QBuffer(data);
-    } else if (filename.endsWith(".qsgs")) {
+    if (filename.endsWith(".qsgs")) {
         QFile *file = new QFile(filename);
         if (file->open(QFile::ReadOnly)) {
             char header;
@@ -119,7 +117,7 @@ Replayer::Replayer(QObject *parent, const QString &filename)
     foreach (const Pair &pair, pairs) {
         Packet packet;
         if (packet.parse(pair.cmd)) {
-            if (packet.getCommandType() == S_COMMAND_START_IN_X_SECONDS) {
+            if (packet.commandType() == S_COMMAND_START_IN_X_SECONDS) {
                 time_offset = pair.elapsed;
                 break;
             }

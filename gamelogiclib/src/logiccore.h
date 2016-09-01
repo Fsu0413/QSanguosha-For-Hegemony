@@ -16,7 +16,7 @@ class GameLogicCore: public QObject
     
 public:
 
-    static GameLogicCore *instance() const;
+    static GameLogicCore *instance();
     
     void addPackage(QSgsPackage *package);
     void addBanPackage(const QString &package_name);

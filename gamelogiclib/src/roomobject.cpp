@@ -138,71 +138,72 @@ bool RoomObject::activate(Player *player, CardUseStruct *&cardUse, SkillInvokeSt
 {
     cardUse = nullptr;
     skillInvoke = nullptr;
+    return false;
 }
 
 CardUseStruct RoomObject::askForUseCard(Player *player, const QString &pattern, const QString &prompt, const QString &reason, bool addHistory, const QJsonValue &data)
 {
-
+    return CardUseStruct();
 }
 
 CardUseStruct RoomObject::askForUseSlashTo(Player *from, const QList<Player *> &to, const QString &prompt, const QString &reason, bool addHistory, const QJsonValue &data)
 {
-
+    return CardUseStruct();
 }
 
 CardUseStruct RoomObject::askForUseSlashTo(Player *from, Player *to, const QString &prompt, const QString &reason, bool addHistory, const QJsonValue &data)
 {
-
+    return CardUseStruct();
 }
 
 Card *RoomObject::askForResponseCard(Player *player, const QString &pattern, const QString &prompt, const QString &reason, bool toTable, const QJsonValue &data)
 {
-
+    return nullptr;
 }
 
 Card *RoomObject::askForAg(Player *player, const QList<Card *> cards, const QString &reason, bool forced, const QJsonValue &data)
 {
-
+    return nullptr;
 }
 
 QList<RoomObject::CardDistributeStruct> RoomObject::askForDistribute(Player *player, const QList<Card *> cards, QSgsEnum::PlayerPlace fromPlace, bool forced, const QJsonValue &data)
 {
-
+    return QList<RoomObject::CardDistributeStruct>();
 }
 
 Card *RoomObject::askForDiscard(Player *player, const QString &pattern, const QString &prompt, const QString &reason, bool forced, const QJsonValue &data)
 {
-
+    return nullptr;
 }
 
 QList<Card *> RoomObject::askForDiscard(Player *player, int minNum, int maxNum, const QString &prompt, const QString &reason, bool forced, const QJsonValue &data)
 {
-
+    return QList<Card *>();
 }
 
 QList<Card *> RoomObject::askForSelectCard(Player *player, int minNum, int maxNum, const QString &prompt, QSgsEnum::CardHandlingMethod handlingMethod, const QString &expandPile, bool forced, const QJsonValue &data)
 {
-
+    return QList<Card *>();
 }
 
 QString RoomObject::askForChoice(Player *player, const QStringList &choices, const QString &reason, const QJsonValue &data)
 {
-
+    return QString();
 }
 
 QString RoomObject::askForChoice(Player *player, const QJsonDocument &choicesDocument, const QString &reason, const QJsonValue &data)
 {
-
+    return QString();
 }
 
 CardUseStruct RoomObject::askForNullification(const CardUseStruct &use, int targetNo)
 {
-
+    return CardUseStruct();
 }
 
 RoomObject::RearrangeCardStruct RoomObject::askForRearrangeCard(Player *from, const QList<Card *> cards, QSgsEnum::RearrangeCardDirection direction)
 {
-
+    return RearrangeCardStruct();
 }
 
 void RoomObject::askForTriggerOrder(...)
@@ -212,10 +213,10 @@ void RoomObject::askForTriggerOrder(...)
 
 bool RoomObject::askForConfirm(Player *player, const QString &prompt, const QString &reason, const QJsonValue &data)
 {
-
+    return false;
 }
 
 QList<Card *> RoomObject::askForPindian(Player *from, Player *to, const QString &reason)
 {
-
+    return QList<Card *>();
 }

@@ -54,7 +54,7 @@ public:
     void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
     QString subtype() const;
     void onEffect(const CardEffectStruct &effect) const;
-    void takeEffect(ServerPlayer *target) const = 0;
+    virtual void takeEffect(ServerPlayer *target) const = 0;
 
 protected:
     JudgeStruct m_judge;
@@ -81,7 +81,7 @@ public:
     void onInstall(ServerPlayer *player) const;
     void onUninstall(ServerPlayer *player) const;
 
-    QSgsEnum::EquipLocation location() const = 0;
+    virtual QSgsEnum::EquipLocation location() const = 0;
 };
 
 class Weapon : public EquipCard

@@ -31,25 +31,7 @@ struct lua_State;
 typedef int LuaFunction;
 class QSgsLuaPackage;
 
-class LuaPackageParser : public QObject{
-    Q_OBJECT
-public:
-    static LuaPackageParser *instance() const;
-
-    void setLuaFile(const QString &filename);
-
-public slots:
-    QSgsLuaPackage *parse(bool *ok = nullptr) const;
-
-private:
-    LuaPackageParser();
-
-    QString m_LuaFile;
-
-signals:
-    void error(const QString &message);
-    void parseFinished();
-};
+QSgsLuaPackage *parseLuaPackage(const QString &fileName, bool *ok = nullptr);
 
 //class LuaTriggerSkill : public TriggerSkill
 //{

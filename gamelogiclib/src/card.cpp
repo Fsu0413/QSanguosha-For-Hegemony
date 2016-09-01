@@ -267,7 +267,7 @@ QString Card::description(bool yellow) const
     }
 
     for (int i = 0; i < 6; i++) {
-        QSgsEnum::CardSuit suit = (Card::Suit)i;
+        QSgsEnum::CardSuit suit = (QSgsEnum::CardSuit)i;
         QString str = Card::Suit2String(suit);
         QString to_replace = Sanguosha->translate(str);
         bool red = isRed();

@@ -51,7 +51,7 @@ public:
 protected:
     QString m_lord;
     QStringList m_loyalists, m_rebels, m_renegades;
-    //ScenarioRule *m_rule;
+    ScenarioRule *m_rule;
     bool m_randomSeat;
 };
 

@@ -29,8 +29,8 @@
 
 General::General(QSgsPackage *package, const QString &name, const QString &kingdom,
     int double_max_hp, bool male, bool hidden, bool never_shown)
-    : QObject(package), m_kingdom(kingdom),
-    m_doubleMaxHp(double_max_hp), m_gender(male ? Male : Female),
+    : QObject(), m_kingdom(kingdom),
+    m_doubleMaxHp(double_max_hp), m_gender(male ? QSgsEnum::GeneralGender::Male : QSgsEnum::GeneralGender::Female),
     m_hidden(hidden), m_neverShown(never_shown),
     m_headMaxHpAdjustedValue(0), m_deputyMaxHpAdjustedValue(0)
     //skin_count(-1)
@@ -59,17 +59,17 @@ QString General::kingdom() const
 
 bool General::isMale() const
 {
-    return m_gender == Male;
+    return m_gender == QSgsEnum::GeneralGender::Male;
 }
 
 bool General::isFemale() const
 {
-    return m_gender == Female;
+    return m_gender == QSgsEnum::GeneralGender::Female;
 }
 
 bool General::isNeuter() const
 {
-    return m_gender == Neuter;
+    return m_gender == QSgsEnum::GeneralGender::Neuter;
 }
 
 void General::setGender(QSgsEnum::GeneralGender gender)
@@ -299,20 +299,20 @@ void General::setKingdom(const QString &value)
     m_kingdom = value;
 }
 
-void General::tryLoadingSkinTranslation(const int skinId) const
-{
-    if (translated_skins.contains(skinId))
-        return;
+//void General::tryLoadingSkinTranslation(const int skinId) const
+//{
+//    if (translated_skins.contains(skinId))
+//        return;
 
-    const QString file = QString("hero-skin/%1/%2/%3.lua").arg(objectName()).arg(skinId).arg(Config.value("Language", "zh_CN").toString());
+//    const QString file = QString("hero-skin/%1/%2/%3.lua").arg(objectName()).arg(skinId).arg(Config.value("Language", "zh_CN").toString());
 
-    if (QFile::exists(file)) {
-        Sanguosha->setProperty("CurrentSkinId", skinId);
-        DoLuaScript(Sanguosha->luaState(), file.toLatin1().constData());
-    }
+//    if (QFile::exists(file)) {
+//        Sanguosha->setProperty("CurrentSkinId", skinId);
+//        DoLuaScript(Sanguosha->luaState(), file.toLatin1().constData());
+//    }
 
-    translated_skins << skinId;
-}
+//    translated_skins << skinId;
+//}
 
 void General::addCompanion(const QString &name)
 {

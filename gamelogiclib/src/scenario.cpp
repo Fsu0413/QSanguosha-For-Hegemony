@@ -19,10 +19,9 @@
     *********************************************************************/
 
 #include "scenario.h"
-#include "engine.h"
 
 Scenario::Scenario(const QString &name)
-    : Package(name, Package::SpecialPack), m_rule(nullptr), m_randomSeat(true)
+    : QSgsPackage(name, QSgsEnum::PackageType::Other), m_rule(nullptr), m_randomSeat(true)
 {
 }
 

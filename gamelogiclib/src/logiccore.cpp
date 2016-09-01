@@ -1,12 +1,10 @@
 
 #include "logiccore.h"
 
-GameLogicCore *GameLogicCore::instance() const
+GameLogicCore *GameLogicCore::instance()
 {
     static GameLogicCore core;
-    if (core)
-        return &core;
-    return nullptr;
+    return &core;
 }
 
 GameLogicCore::GameLogicCore()

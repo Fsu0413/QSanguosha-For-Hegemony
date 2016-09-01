@@ -44,7 +44,7 @@ const General *QSgsPackage::general(const QString &generalName) const
     return m_generals.value(generalName,nullptr);
 }
 
-const QHash<QString, const CardFace *> QSgsPackage::cardFaces() const
+const QHash<QString, const CardFace *> &QSgsPackage::cardFaces() const
 {
     return m_cardFaces;
 }

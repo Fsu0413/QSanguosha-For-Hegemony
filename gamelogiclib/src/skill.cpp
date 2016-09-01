@@ -20,9 +20,7 @@
 
 #include "skill.h"
 #include "player.h"
-#include "room.h"
 #include "scenario.h"
-#include "serverplayer.h"
 
 #include <QFile>
 

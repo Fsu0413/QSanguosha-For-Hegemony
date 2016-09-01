@@ -48,7 +48,7 @@ struct DamageStruct
 //    QString transfer_reason;
 //    bool prevented;
 
-//    QString getReason() const;
+    QString getReason() const;
 };
 
 struct CardEffectStruct
@@ -511,8 +511,8 @@ struct PlayerNumStruct
 struct LogMessage
 {
     LogMessage();
-//    QString toString() const;
-//    QVariant toVariant() const;
+    QString toString() const;
+    QVariant toVariant() const;
 
 //    QString type;
 //    ServerPlayer *from;

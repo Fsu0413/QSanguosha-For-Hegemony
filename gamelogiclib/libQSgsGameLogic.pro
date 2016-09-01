@@ -34,18 +34,14 @@ HEADERS += \
     libqsgsgamelogicglobal.h \
     src/card.h \
     src/cardface.h \
-    src/gamerule.h \
     src/general.h \
     src/logiccore.h \
     src/lua-wrapper.h \
     src/package.h \
     src/player.h \
     src/recorder.h \
-    src/room.h \
     src/roomobject.h \
-    src/roomthread.h \
     src/scenario.h \
-    src/serverplayer.h \
     src/skill.h \
     src/structs.h \
     cardfaces/base.h
@@ -53,18 +49,14 @@ HEADERS += \
 SOURCES += \
     src/card.cpp \
     src/cardface.cpp \
-    src/gamerule.cpp \
     src/general.cpp \
     src/logiccore.cpp \
     src/lua-wrapper.cpp \
     src/package.cpp \
     src/player.cpp \
     src/recorder.cpp \
-    src/room.cpp \
     src/roomobject.cpp \
-    src/roomthread.cpp \
     src/scenario.cpp \
-    src/serverplayer.cpp \
     src/skill.cpp \
     src/structs.cpp \
     cardfaces/base.cpp \
