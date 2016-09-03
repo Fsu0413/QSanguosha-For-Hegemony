@@ -71,6 +71,7 @@ public:
     void addVirtualCard(Card *card);
 
     const QList<Card *> &cards() const;
+    Card *card(int id) const;
     const QList<Player *> &players() const;
 
     const QString &currentCardUsePattern() const;
@@ -81,7 +82,7 @@ public:
 
     const QList<Card *> &discardPile() const;
 
-    const CardPlaceStruct &cardPlace(Card *card) const; // using the const functions of the QHash to get the place of a card
+    const CardPlaceStruct &cardPlace(const Card *card) const; // using the const functions of the QHash to get the place of a card
 
     // set the handler of the following interactive methods
     RoomRequestHandler *requestHandler() const;

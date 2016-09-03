@@ -23,22 +23,24 @@
 
 #include "libqsgsgamelogicglobal.h"
 
-class Player;
-class Card;
+class CardPrivate;
+class CardFace;
+class RoomObject;
 
-class Card : public QObject
+// Make Card a final class, we subclass a class called CardFace to make card functional
+class Card final: public QObject
 {
     Q_OBJECT
 
 public:
-
-
     static const QSgsEnum::CardSuit AllSuits[4];
 
-    // constructor
-    explicit Card(const QString &cardFaceName, QSgsEnum::CardSuit suit = QSgsEnum::CardSuit::Tbd, int number = -1, int id = -1);
+    // note that if this card is created in QSgsLogicCore, the roomObject variable should be nullptr
+    // virtual cards should always have their corresponding roomObject
+    Card(RoomObject *roomObject, const CardFace *cardFace, QSgsEnum::CardSuit suit = QSgsEnum::CardSuit::Tbd, int number = -1, bool canRecast = false, bool transferable = false, int id = -1);
+    // This dtor is not virtual!!!!
+    ~Card();
 
-    // property getters/setters
     int id() const;
     void setId(int id);
     int effectiveId() const;
@@ -56,17 +58,17 @@ public:
     void setNumber(int number);
     QString numberString() const;
 
-    QString fullName(bool include_suit = false) const;
+    QString fullName(bool includeSuit = false) const;
     QString logName() const;
     QString name() const;
     QString description(bool inToolTip = true) const;
 
-    QString skillName(bool removePrefix = true) const;
+    const QString &skillName() const;
     void setSkillName(const QString &skill_name);
     QString effectName() const;
     QString commonEffectName() const;
 
-    bool isMute() const;
+    bool mute() const;
 
     bool canRecast() const;
     void setCanRecast(bool can);
@@ -83,22 +85,19 @@ public:
     bool isEquipped() const;
     bool match(const QString &pattern) const;
 
-    void addSubcard(int card_id);
-    void addSubcard(const Card *card);
-    QList<int> subcards() const;
+    void addSubcard(int cardId);
+    void addSubcard(Card *card);
+    const QList<Card *> &subcards() const;
     void clearSubcards();
     QString subcardString() const;
-    void addSubcards(const QList<const Card *> &cards);
-    void addSubcards(const QList<int> &subcards_list);
+    void addSubcards(const QList<Card *> &cards);
+    void addSubcards(const QList<int> &subcardsList);
     int subcardsLength() const;
 
-    QString showSkill() const;
-    void setShowSkill(const QString &skill_name);
+    const QString &showSkill() const;
+    void setShowSkill(const QString &skillName);
 
-    bool isKindOf(const char *cardType) const;
-    QStringList flags() const;
-
-    bool isModified() const;
+    const QStringList &flags() const;
 
     const QString &cardFaceName() const;
 
@@ -108,19 +107,8 @@ public:
 
 
 private:
-    QString m_cardFaceName;
-    QList<int> m_subcards;
-    bool m_mute;
-    bool m_canRecast;
-    bool m_transferable;
-    QSgsEnum::CardSuit m_suit;
-    int m_number;
-    int m_id;
-    QString m_skillName;
-
-    QString m_showSkill;
-
-    QStringList m_flags;
+    Q_DECLARE_PRIVATE(Card)
+    CardPrivate *d_ptr;
 };
 
 #if 0

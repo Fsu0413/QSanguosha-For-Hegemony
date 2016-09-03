@@ -50,6 +50,8 @@ public:
     virtual QStringList checkTargetModSkillShow(const CardUseStruct & /* use */) const;
 
     virtual void onNullified(ServerPlayer * /* target */) const;
+    bool isKindOf(const char *cardType) const; // for YanXiao and LuaCard? Should we make Yanxiao as "move cards out of game"?
+
 
 protected:
     explicit CardFace(const QString &name);

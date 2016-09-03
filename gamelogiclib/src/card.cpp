@@ -21,6 +21,25 @@
 #include "card.h"
 #include "structs.h"
 #include "lua-wrapper.h"
+#include "roomobject.h"
+
+
+class CardPrivate
+{
+public:
+    RoomObject *roomObject;
+    const CardFace *cardFace;
+    QList<Card *> subcards;
+    bool mute;
+    bool canRecast;
+    bool transferable;
+    QSgsEnum::CardSuit suit;
+    int number;
+    int id;
+    QString skillName;
+    QString showSkill;
+    QStringList flags;
+};
 
 const int Card::S_UNKNOWN_CARD_ID = -1;
 
@@ -31,12 +50,25 @@ const QSgsEnum::CardSuit Card::AllSuits[4] = {
     QSgsEnum::CardSuit::Diamond
 };
 
-Card::Card(const QString &cardFaceName, QSgsEnum::CardSuit suit, int number, int id)
-    : m_mute(false), m_cardFaceName(cardFaceName),
-    m_canRecast(false), m_transferable(false),
-    m_suit(suit), m_number(number), m_id(id)
+Card::Card(RoomObject *roomObject, const CardFace *cardFace, QSgsEnum::CardSuit suit, int number, bool canRecast, bool transferable, int id)
+    : QObject(roomObject), d_ptr(new CardPrivate)
 {
+    Q_D(Card);
+    d->roomObject = roomObject;
+    d->cardFace = cardFace;
+    d->suit = suit;
+    d->number = number;
+    d->canRecast = canRecast;
+    d->transferable = transferable;
+    d->id = id;
 
+    d->mute = false;
+}
+
+Card::~Card()
+{
+    Q_D(Card);
+    delete d;
 }
 
 QString Card::suitString() const
@@ -47,13 +79,13 @@ QString Card::suitString() const
 QString Card::Suit2String(QSgsEnum::CardSuit suit)
 {
     switch (suit) {
-        case QSgsEnum::CardSuit::Spade: return "spade";
-        case QSgsEnum::CardSuit::Heart: return "heart";
-        case QSgsEnum::CardSuit::Club: return "club";
-        case QSgsEnum::CardSuit::Diamond: return "diamond";
-        case QSgsEnum::CardSuit::Black: return "no_suit_black";
-        case QSgsEnum::CardSuit::Red: return "no_suit_red";
-        default: return "no_suit";
+        case QSgsEnum::CardSuit::Spade: return QStringLiteral("spade");
+        case QSgsEnum::CardSuit::Heart: return QStringLiteral("heart");
+        case QSgsEnum::CardSuit::Club: return QStringLiteral("club");
+        case QSgsEnum::CardSuit::Diamond: return QStringLiteral("diamond");
+        case QSgsEnum::CardSuit::Black: return QStringLiteral("no_suit_black");
+        case QSgsEnum::CardSuit::Red: return QStringLiteral("no_suit_red");
+        default: return QStringLiteral("no_suit");
     }
 }
 
@@ -69,44 +101,54 @@ bool Card::isBlack() const
 
 int Card::id() const
 {
-    return m_id;
+    Q_D(const Card);
+    return d->id;
 }
 
 void Card::setId(int id)
 {
-    this->m_id = id;
+    Q_D(Card);
+    d->id = id;
 }
 
 int Card::effectiveId() const
 {
+    Q_D(const Card);
     if (isVirtualCard()) {
-        if (m_subcards.isEmpty())
+        if (d->subcards.isEmpty())
             return -1;
         else
-            return m_subcards.first();
+            return d->subcards.first()->id();
     } else
-        return m_id;
+        return d->id;
 }
 
 int Card::number() const
 {
-    if (m_number > 0) return m_number;
+    Q_D(const Card);
+    // note: distinguish "No number" and "Number TBD"
+    if (d->number >= 0)
+        return d->number;
+
     if (isVirtualCard()) {
+        // Virtual cards must be created in a certain RoomObject
+        Q_ASSERT(d->roomObject != nullptr);
         if (subcardsLength() == 0)
             return 0;
         else {
             int num = 0;
-            foreach (int id, m_subcards)
-                num += Sanguosha->card(id)->number();
+            foreach (Card *c, d->subcards)
+                num += c->number();
             return num;
         }
     } else
-        return m_number;
+        return d->number;
 }
 
 void Card::setNumber(int number)
 {
-    this->m_number = number;
+    Q_D(Card);
+    d->number = number;
 }
 
 QString Card::numberString() const
@@ -117,26 +159,30 @@ QString Card::numberString() const
             n = 0;
     }
     if (n == 10)
-        return "10";
+        return QStringLiteral("10");
     else {
-        static const char *number_string = "-A23456789-JQK";
-        return QString(number_string[n]);
+        static const char *numberString = "-A23456789-JQK";
+        return QString(numberString[n]);
     }
 }
 
 QSgsEnum::CardSuit Card::suit() const
 {
-    if (m_suit != QSgsEnum::CardSuit::NoSuit && m_suit != QSgsEnum::CardSuit::Tbd)
-        return m_suit;
+    Q_D(const Card);
+    // I don't know what problem this copuling in V2 and Hegemony solves, so we remove it for know.
+    if (d->suit != QSgsEnum::CardSuit::Tbd)
+        return d->suit;
     if (isVirtualCard()) {
+        // Virtual cards must be created in a certain RoomObject
+        Q_ASSERT(d->roomObject != nullptr);
         if (subcardsLength() == 0)
             return QSgsEnum::CardSuit::NoSuit;
         else if (subcardsLength() == 1)
-            return Sanguosha->card(m_subcards.first())->suit();
+            return d->subcards.first()->suit();
         else {
             QSgsEnum::CardSuit color = QSgsEnum::CardSuit::NoSuit;
-            foreach (int id, m_subcards) {
-                QSgsEnum::CardSuit color2 = Sanguosha->card(id)->color();
+            foreach (Card *c, d->subcards) {
+                QSgsEnum::CardSuit color2 = c->color();
                 if (color == QSgsEnum::CardSuit::NoSuit)
                     color = color2;
                 else if (color != color2)
@@ -145,12 +191,13 @@ QSgsEnum::CardSuit Card::suit() const
             return (color == QSgsEnum::CardSuit::Red) ? QSgsEnum::CardSuit::Red : QSgsEnum::CardSuit::Black;
         }
     } else
-        return m_suit;
+        return d->suit;
 }
 
 void Card::setSuit(QSgsEnum::CardSuit suit)
 {
-    this->m_suit = suit;
+    Q_D(Card);
+    d->suit = suit;
 }
 
 bool Card::sameColorWith(const Card *other) const
@@ -176,176 +223,198 @@ QSgsEnum::CardSuit Card::color() const
 
 bool Card::isEquipped() const
 {
-    return Self->hasEquip(this);
+    // ClientPlayer? NO!!!
+    //return Self->hasEquip(this);
+    Q_D(const Card);
+    RoomObject::CardPlaceStruct str = d->roomObject->cardPlace(this);
+    return str.place == QSgsEnum::CardPlace::Equip;
 }
 
 bool Card::match(const QString &pattern) const
 {
     QStringList patterns = pattern.split("+");
     foreach (const QString &ptn, patterns) {
-        if (objectName() == ptn || type() == ptn /*|| subtype() == ptn*/)
+        if (objectName() == ptn /*|| type() == ptn || subtype() == ptn*/)
             return true;
     }
     return false;
 }
 
-QString Card::fullName(bool include_suit) const
+QString Card::fullName(bool includeSuit) const
 {
     QString n = name();
-    if (include_suit) {
-        QString suit_name = Sanguosha->translate(suitString());
-        return QString("%1%2 %3").arg(suit_name).arg(numberString()).arg(n);
+    if (includeSuit) {
+        QString suitName = suitString();
+        return QStringLiteral("%1%2 %3").arg(suitName).arg(numberString()).arg(n);
     } else
-        return QString("%1 %2").arg(numberString()).arg(n);
+        return QStringLiteral("%1 %2").arg(numberString()).arg(n);
 }
 
 QString Card::logName() const
 {
-    QString suit_char;
-    QString number_string;
+    QString suitChar;
+    QString numberStr;
 
     switch (suit()) {
         case QSgsEnum::CardSuit::Spade:
         case QSgsEnum::CardSuit::Heart:
         case QSgsEnum::CardSuit::Club:
         case QSgsEnum::CardSuit::Diamond: {
-            suit_char = QString("<img src='image/system/log/%1.png' height = 12/>").arg(suitString());
+            suitChar = QStringLiteral("<img src='image/system/log/%1.png' height = 12/>").arg(suitString());
             break;
         }
         case QSgsEnum::CardSuit::Red: {
-            suit_char = tr("NoSuitRed");
+            suitChar = tr("NoSuitRed");
             break;
         }
         case QSgsEnum::CardSuit::Black: {
-            suit_char = tr("NoSuitBlack");
+            suitChar = tr("NoSuitBlack");
             break;
         }
         case QSgsEnum::CardSuit::NoSuit: {
-            suit_char = tr("NoSuit");
+            suitChar = tr("NoSuit");
             break;
         }
         default:
             break;
     }
+    Q_D(const Card);
+    if (d->number > 0 && d->number <= 13)
+        numberStr = numberString();
 
-    if (m_number > 0 && m_number <= 13)
-        number_string = numberString();
-
-    return QString("%1[%2%3]").arg(name()).arg(suit_char).arg(number_string);
+    return QStringLiteral("%1[%2%3]").arg(name()).arg(suitChar).arg(numberStr);
 }
 
 QString Card::name() const
 {
-    return Sanguosha->translate(objectName());
+    // @Todo_Fs: translation
+    // return Sanguosha->translate(objectName());
+    return objectName();
 }
 
-QString Card::skillName(bool removePrefix) const
+const QString &Card::skillName() const
 {
-    if (m_skillName.startsWith("_") && removePrefix)
-        return m_skillName.mid(1);
-    else
-        return m_skillName;
+    Q_D(const Card);
+    return d->skillName;
 }
 
 void Card::setSkillName(const QString &name)
 {
-    this->m_skillName = name;
+    Q_D(Card);
+    d->skillName = name;
 }
 
 QString Card::description(bool yellow) const
 {
-    QString desc = Sanguosha->translate(":" + objectName());
-    if (desc == ":" + objectName())
-        return desc;
-    foreach (const QString &skill_type, Sanguosha->skillColorMap().keys()) {
-        QString to_replace = Sanguosha->translate(skill_type);
-        if (to_replace == skill_type) continue;
-        QString color_str = Sanguosha->skillColor(skill_type).name();
-        if (desc.contains(to_replace))
-            desc.replace(to_replace, QString("<font color=%1><b>%2</b></font>").arg(color_str)
-            .arg(to_replace));
-    }
+    return QString();
+//    QString desc = Sanguosha->translate(":" + objectName());
+//    if (desc == ":" + objectName())
+//        return desc;
+//    foreach (const QString &skill_type, Sanguosha->skillColorMap().keys()) {
+//        QString to_replace = Sanguosha->translate(skill_type);
+//        if (to_replace == skill_type) continue;
+//        QString color_str = Sanguosha->skillColor(skill_type).name();
+//        if (desc.contains(to_replace))
+//            desc.replace(to_replace, QString("<font color=%1><b>%2</b></font>").arg(color_str)
+//            .arg(to_replace));
+//    }
 
-    for (int i = 0; i < 6; i++) {
-        QSgsEnum::CardSuit suit = (QSgsEnum::CardSuit)i;
-        QString str = Card::Suit2String(suit);
-        QString to_replace = Sanguosha->translate(str);
-        bool red = isRed();
-        if (to_replace == str) continue;
-        if (desc.contains(to_replace)) {
-            if (red)
-                desc.replace(to_replace, QString("<font color=#FF0000>%1</font>").arg(Sanguosha->translate(str + "_char")));
-            else
-                desc.replace(to_replace, QString("<font color=#000000><span style=background-color:white>%1</span></font>").arg(Sanguosha->translate(str + "_char")));
-        }
-    }
+//    for (int i = 0; i < 6; i++) {
+//        QSgsEnum::CardSuit suit = (QSgsEnum::CardSuit)i;
+//        QString str = Card::Suit2String(suit);
+//        QString to_replace = Sanguosha->translate(str);
+//        bool red = isRed();
+//        if (to_replace == str) continue;
+//        if (desc.contains(to_replace)) {
+//            if (red)
+//                desc.replace(to_replace, QString("<font color=#FF0000>%1</font>").arg(Sanguosha->translate(str + "_char")));
+//            else
+//                desc.replace(to_replace, QString("<font color=#000000><span style=background-color:white>%1</span></font>").arg(Sanguosha->translate(str + "_char")));
+//        }
+//    }
 
-    desc.replace("\n", "<br/>");
-    if (isTransferable()) {
-        desc += "<br/><br/>";
-        desc += tr("This card is transferable.");
-    }
-    return tr("<font color=%1><b>[%2]</b> %3</font>").arg(yellow ? "#FFFF33" : "#FF0080").arg(name()).arg(desc);
+//    desc.replace("\n", "<br/>");
+//    if (isTransferable()) {
+//        desc += "<br/><br/>";
+//        desc += tr("This card is transferable.");
+//    }
+//    return tr("<font color=%1><b>[%2]</b> %3</font>").arg(yellow ? "#FFFF33" : "#FF0080").arg(name()).arg(desc);
 }
 
 
 
 QString Card::effectName() const
 {
-    QString name = objectName();
-    for (int i = 0; i < name.length(); i++) {
-        QChar ch = name[i];
-        if (ch.isUpper()) {
-            name[i] = ch.toLower();
-            if (i != 0)
-                name.insert(i, "_");
-            break;
-        }
-    }
-    return name;
+    return QString();
+//    QString name = objectName();
+//    for (int i = 0; i < name.length(); i++) {
+//        QChar ch = name[i];
+//        if (ch.isUpper()) {
+//            name[i] = ch.toLower();
+//            if (i != 0)
+//                name.insert(i, "_");
+//            break;
+//        }
+//    }
+//    return name;
 }
 
 bool Card::isTransferable() const
 {
-    return m_transferable;
+    Q_D(const Card);
+    return d->transferable;
 }
 
 void Card::setTransferable(bool transferbale)
 {
-    this->m_transferable = transferbale;
+    Q_D(Card);
+    d->transferable = transferbale;
 }
 
 QString Card::subcardString() const
 {
-    if (m_subcards.isEmpty())
-        return ".";
+    Q_D(const Card);
+    if (d->subcards.isEmpty())
+        return QStringLiteral(".");
 
     QStringList str;
-    foreach (int subcard, m_subcards)
-        str << QString::number(subcard);
+    foreach (Card *subcard, d->subcards)
+        str << QString::number(subcard->id());
 
     return str.join("+");
 }
 
-void Card::addSubcards(const QList<const Card *> &cards)
+void Card::addSubcards(const QList<Card *> &cards)
 {
-    foreach (const Card *card, cards)
-        m_subcards.append(card->id());
+    Q_D(Card);
+    d->subcards << cards;
 }
 
-void Card::addSubcards(const QList<int> &subcards_list)
+void Card::addSubcards(const QList<int> &subcardsList)
 {
-    m_subcards.append(subcards_list);
+    Q_D(Card);
+    Q_ASSERT(d->roomObject != nullptr);
+
+    foreach (int i, subcardsList) {
+        Card *c = d->roomObject->card(i);
+        if (c == nullptr)
+            continue;
+        Q_ASSERT(c->id() == i);
+        d->subcards << c;
+    }
 }
 
 int Card::subcardsLength() const
 {
-    return m_subcards.length();
+    Q_D(const Card);
+    return d->subcards.length();
 }
 
 bool Card::isVirtualCard() const
 {
-    return m_id < 0;
+    // note that a virtual card must be attached to a certain roomObject
+    Q_D(const Card);
+    return d->roomObject != nullptr && d->id < 0;
 }
 #if 0
 bool Card::targetFixed() const
@@ -536,104 +605,113 @@ Card::HandlingMethod Card::handlingMethod() const
 }
 
 #endif
-QString Card::showSkill() const
+
+const QString &Card::showSkill() const
 {
-    return m_showSkill;
+    Q_D(const Card);
+    return d->showSkill;
 }
 
-void Card::setShowSkill(const QString &skill_name)
+void Card::setShowSkill(const QString &skillName)
 {
-    m_showSkill = skill_name;
+    Q_D(Card);
+    d->showSkill = skillName;
 }
 
-bool Card::isKindOf(const char *cardType) const
+const QStringList &Card::flags() const
 {
-    Q_ASSERT(cardType); return inherits(cardType);
+    Q_D(const Card);
+    return d->flags;
 }
 
-QStringList Card::flags() const
+void Card::addSubcard(int cardId)
 {
-    return m_flags;
-}
-
-bool Card::isModified() const
-{
-    return false;
-}
-
-void Card::addSubcard(int card_id)
-{
-    if (card_id < 0)
+    if (cardId < 0)
         qWarning("%s", qPrintable(tr("Subcard must not be virtual card!")));
-    else
-        m_subcards << card_id;
+    else {
+        Q_D(Card);
+        Q_ASSERT(d->roomObject != nullptr);
+        Card *c = d->roomObject->card(cardId);
+        if (c == nullptr)
+            return;
+        d->subcards << c;
+    }
 }
 
-void Card::addSubcard(const Card *card)
+void Card::addSubcard(Card *card)
 {
-    //addSubcard(card->getEffectiveId());
     if (!card->isVirtualCard())
         addSubcard(card->id());
     else
         addSubcards(card->subcards());
 }
 
-QList<int> Card::subcards() const
+const QList<Card *> &Card::subcards() const
 {
-    return m_subcards;
+    Q_D(const Card);
+    return d->subcards;
 }
 
 void Card::clearSubcards()
 {
-    m_subcards.clear();
+    Q_D(Card);
+    d->subcards.clear();
 }
 
-bool Card::isMute() const
+bool Card::mute() const
 {
-    return m_mute;
+    Q_D(const Card);
+    return d->mute;
 }
-
 
 bool Card::canRecast() const
 {
-    return m_canRecast;
+    Q_D(const Card);
+    return d->canRecast;
 }
-
 
 void Card::setCanRecast(bool can)
 {
-    m_canRecast = can;
+    Q_D(Card);
+    d->canRecast = can;
 }
 
 void Card::setFlag(const QString &flag)
 {
     static char symbol_c = '-';
 
+    Q_D(Card);
     if (flag.isEmpty())
         return;
-    else if (flag == ".")
-        m_flags.clear();
+    else if (flag == QStringLiteral("."))
+        d->flags.clear();
     else if (flag.startsWith(symbol_c)) {
         QString copy = flag;
-        copy.remove(symbol_c);
-        m_flags.removeOne(copy);
-    } else if (!m_flags.contains(flag))
-        m_flags << flag;
+        copy.remove(0, 1); // only remove the first "-", but not all "-"s
+        d->flags.removeOne(copy);
+    } else if (!d->flags.contains(flag))
+        d->flags << flag;
 }
 
 void Card::setFlags(const QStringList &fs)
 {
-    m_flags = fs;
+    // Grasp the grass!!
+    // m_flags = fs;
+
+    foreach (const QString &s, fs)
+        setFlag(s);
 }
 
 bool Card::hasFlag(const QString &flag) const
 {
-    return m_flags.contains(flag);
+    Q_D(const Card);
+    return d->flags.contains(flag);
 }
 
 void Card::clearFlags()
 {
-    m_flags.clear();
+    Q_D(Card);
+    d->flags.clear();
 }
 #if 0
 // ---------   Skill card     ------------------

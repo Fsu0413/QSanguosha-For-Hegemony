@@ -37,7 +37,7 @@ public:
     QList<Card *> discardPile;
     QList<Card *> proceedingArea;
 
-    QHash<Card *, RoomObject::CardPlaceStruct> cardPlaces;
+    QHash<const Card *, RoomObject::CardPlaceStruct> cardPlaces;
 
     RoomRequestHandler *handler;
 };
@@ -80,6 +80,12 @@ const QList<Card *> &RoomObject::cards() const
     return d->availableCards;
 }
 
+Card *RoomObject::card(int id) const
+{
+    Q_D(const RoomObject);
+    return d->availableCards.value(id, nullptr);
+}
+
 const QList<Player *> &RoomObject::players() const
 {
     Q_D(const RoomObject);
@@ -116,7 +122,7 @@ const QList<Card *> &RoomObject::discardPile() const
     return d->discardPile;
 }
 
-const RoomObject::CardPlaceStruct &RoomObject::cardPlace(Card *card) const
+const RoomObject::CardPlaceStruct &RoomObject::cardPlace(const Card *card) const
 {
     Q_D(const RoomObject);
     return d->cardPlaces.value(card, CardPlaceStruct{nullptr, QSgsEnum::CardPlace::PlaceUnknown});
