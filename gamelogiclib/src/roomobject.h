@@ -6,6 +6,7 @@
 
 class Player;
 class Card;
+class ProhibitSkill;
 
 class RoomRequestReceiver
 {
@@ -62,7 +63,7 @@ public:
     struct CardPlaceStruct
     {
         Player *player;
-        QSgsEnum::PlayerPlace place;
+        QSgsEnum::CardPlace place;
     };
 
     void addRealCard(Card *card);
@@ -110,7 +111,7 @@ public:
         Player *player;
     };
     // ask a player to distribute cards. Note that fromPlace can either be PlaceHand/PlaceEquip or PlaceTable/PlaceWugu, in the condition of PlaceTable/PlaceWugu you should call fillAg first and call clearAg afterwards
-    QList<CardDistributeStruct> askForDistribute(Player *player, const QList<Card *> cards, QSgsEnum::PlayerPlace fromPlace, bool forced = false, const QJsonValue &data = QJsonValue());
+    QList<CardDistributeStruct> askForDistribute(Player *player, const QList<Card *> cards, QSgsEnum::CardPlace fromPlace, bool forced = false, const QJsonValue &data = QJsonValue());
     // ask a player to discard. Note this pattern needs to be discussed, probably it will be a QStringList
     Card *askForDiscard(Player *player, const QString &pattern, const QString &prompt, const QString &reason = QString(), bool forced = false, const QJsonValue &data = QJsonValue());
     // ask a player to discard multi cards
@@ -140,6 +141,13 @@ public:
     // ask a player to pindian to an other player, note that the obsolete "Card1" parameter is removed
     QList<Card *> askForPindian(Player *from, Player *to, const QString &reason);
 
+
+    // functions to get the correction between players
+    const ProhibitSkill *isProhibited(const Player *from, const Player *to, const Card *card) const;
+    int correctDistance(const Player *from, const Player *to) const;
+    int correctMaxCards(const Player *target, bool fixed = false) const;
+    int correctCardTarget(const QSgsEnum::ModType type, const Player *from, const Card *card) const;
+    int correctAttackRange(const Player *target, bool include_weapon = true, bool fixed = false) const;
 
 protected:
     Q_DECLARE_PRIVATE(RoomObject)

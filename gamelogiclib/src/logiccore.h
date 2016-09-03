@@ -8,6 +8,14 @@ class QSgsPackage;
 class Skill;
 class General;
 class Scenario;
+class TriggerSkill;
+class ViewAsSkill;
+class DistanceSkill;
+class MaxCardsSkill;
+class TargetModSkill;
+class AttackRangeSkill;
+class ExpPattern;
+class ProhibitSkill;
 
 
 class GameLogicCore: public QObject
@@ -54,7 +62,6 @@ public:
     const General *general(const QString &name) const;
     int generalCount(bool include_banned = false) const;
     const Skill *skill(const QString &skill_name) const;
-    const Skill *skill(const EquipCard *card) const;
     QStringList skillNames() const;
     const TriggerSkill *triggerSkill(const QString &skill_name) const;
     const ViewAsSkill *viewAsSkill(const QString &skill_name) const;
@@ -120,23 +127,7 @@ public:
     QStringList generalNames() const;
     QList<const General *> generalList() const;
 
-//    void playSystemAudioEffect(const QString &name) const;
-//    void playAudioEffect(const QString &filename) const;
-//    void playSkillAudioEffect(const QString &skill_name, int index) const;
-
-    const ProhibitSkill *isProhibited(const Player *from, const Player *to, const Card *card, const QList<const Player *> &others = QList<const Player *>()) const;
-    int correctDistance(const Player *from, const Player *to) const;
-    int correctMaxCards(const ServerPlayer *target, bool fixed = false, MaxCardsType::MaxCardsCount type = MaxCardsType::Max) const;
-    int correctCardTarget(const TargetModSkill::ModType type, const Player *from, const Card *card) const;
-    int correctAttackRange(const Player *target, bool include_weapon = true, bool fixed = false) const;
-
-//    QString getCurrentCardUsePattern();
-//    CardUseStruct::CardUseReason getCurrentCardUseReason();
-
     bool isGeneralHidden(const QString &general_name) const;
-
-    //TransferSkill *getTransfer() const;
-
 private:
 
     GameLogicCore();
@@ -148,12 +139,10 @@ private:
     QList<const General *> m_generalList;
     QHash<QString, const General *> m_generalHash;
     QHash<QString, const QMetaObject *> m_metaobjects;
-    //QHash<QString, QString> m_className2objectName;
     QHash<QString, const Skill *> m_skills;
     QMap<QString, QString> m_modes;
     QMultiMap<QString, QString> m_relatedSkills;
-    mutable QMap<QString, const CardPattern *> m_patterns;
-    mutable QList<ExpPattern *> m_enginePatterns;
+    QList<ExpPattern *> m_enginePatterns;
 
     // special skills
     QList<const ProhibitSkill *> m_prohibitSkills;
@@ -170,17 +159,6 @@ private:
     QHash<QString, Scenario *> m_scenarios;
     QHash<QString, Scenario *> m_miniScenes;
     Scenario *m_customScene;
-
-//    QHash<QString, QString> luaBasicCard_className2objectName;
-//    QHash<QString, const LuaBasicCard *> m_luaBasicCards;
-//    QHash<QString, QString> luaTrickCard_className2objectName;
-//    QHash<QString, const LuaTrickCard *> m_luaTrickCards;
-//    QHash<QString, QString> luaWeapon_className2objectName;
-//    QHash<QString, const LuaWeapon*> m_luaWeapons;
-//    QHash<QString, QString> luaArmor_className2objectName;
-//    QHash<QString, const LuaArmor *> m_luaArmors;
-//    QHash<QString, QString> luaTreasure_className2objectName;
-//    QHash<QString, const LuaTreasure *> m_luaTreasures;
 
     QMultiMap<QString, QString> m_spConvertPairs;
 

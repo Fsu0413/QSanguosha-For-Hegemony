@@ -255,17 +255,17 @@ class BattleArraySkill : public TriggerSkill
 
 public:
 
-    BattleArraySkill(const QString &name, const QSgsEnum::PlayersArrayType type);
+    BattleArraySkill(const QString &name, const QSgsEnum::ArrayType type);
     virtual bool triggerable(const ServerPlayer *player) const;
 
     virtual void summonFriends(ServerPlayer *player) const;
 
-    inline QSgsEnum::PlayersArrayType getArrayType() const
+    inline QSgsEnum::ArrayType getArrayType() const
     {
         return m_arrayType;
     }
 private:
-    QSgsEnum::PlayersArrayType m_arrayType;
+    QSgsEnum::ArrayType m_arrayType;
 };
 
 class ArraySummonSkill : public ZeroCardViewAsSkill
@@ -314,16 +314,8 @@ public:
 class TargetModSkill : public Skill
 {
     Q_OBJECT
-        Q_ENUMS(ModType)
 
 public:
-    enum ModType
-    {
-        Residue,
-        DistanceLimit,
-        ExtraTarget
-    };
-
     TargetModSkill(const QString &name);
     virtual QString pattern() const;
 

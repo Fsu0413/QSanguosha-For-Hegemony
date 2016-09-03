@@ -262,7 +262,7 @@ bool ViewAsSkill::isEnabledAtResponse(const Player *, const QString &pattern) co
     return false;
 }
 
-bool ViewAsSkill::isEnabledAtnullptrification(const ServerPlayer *) const
+bool ViewAsSkill::isEnabledAtNullification(const ServerPlayer *) const
 {
     return false;
 }
@@ -510,7 +510,7 @@ bool GameStartSkill::effect(TriggerEvent, Room *, ServerPlayer *player, QVariant
     return false;
 }
 
-BattleArraySkill::BattleArraySkill(const QString &name, const QSgsEnum::PlayersArrayType type)
+BattleArraySkill::BattleArraySkill(const QString &name, const QSgsEnum::ArrayType type)
     : TriggerSkill(name), m_arrayType(type)
 {
     if (!inherits("LuaBattleArraySkill")) //extremely dirty hack!!!

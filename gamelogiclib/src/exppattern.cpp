@@ -19,7 +19,6 @@
     *********************************************************************/
 
 #include "exppattern.h"
-#include "engine.h"
 
 ExpPattern::ExpPattern(const QString &exp)
 {
@@ -32,6 +31,11 @@ bool ExpPattern::match(const Player *player, const Card *card) const
         if (this->matchOne(player, card, one_exp)) return true;
 
     return false;
+}
+
+const QString &ExpPattern::getPatternString() const
+{
+    return exp;
 }
 
 // '|' means 'and', '#' means 'or'.
@@ -61,7 +65,7 @@ bool ExpPattern::matchOne(const Player *player, const Card *card, QString exp) c
                 }
                 if (card->isKindOf(name.toLocal8Bit().data())
                     || ("%" + card->objectName() == name)
-                    || (card->getEffectiveId() == name.toInt(&isInt) && isInt))
+                    || (card->effectiveId() == name.toInt(&isInt) && isInt))
                     checkpoint = positive;
                 else
                     checkpoint = !positive;
@@ -85,7 +89,7 @@ bool ExpPattern::matchOne(const Player *player, const Card *card, QString exp) c
             positive = false;
             suit = suit.mid(1);
         }
-        if (card->getSuitString() == suit
+        if (card->suitString() == suit
             || (card->isBlack() && suit == "black")
             || (card->isRed() && suit == "red"))
             checkpoint = positive;
@@ -98,7 +102,7 @@ bool ExpPattern::matchOne(const Player *player, const Card *card, QString exp) c
 
     checkpoint = false;
     QStringList card_numbers = factors.at(2).split(',');
-    int cdn = card->getNumber();
+    int cdn = card->number();
 
     foreach (const QString &number, card_numbers) {
         if (number == ".") {
@@ -139,9 +143,9 @@ bool ExpPattern::matchOne(const Player *player, const Card *card, QString exp) c
     if (!checkpoint) {
         QList<int> ids;
         if (card->isVirtualCard())
-            ids = card->getSubcards();
+            ids = card->subcards();
         else
-            ids << card->getEffectiveId();
+            ids << card->effectiveId();
         if (!ids.isEmpty()) {
             foreach (int id, ids) {
                 checkpoint = false;
@@ -150,9 +154,9 @@ bool ExpPattern::matchOne(const Player *player, const Card *card, QString exp) c
                     QString p = _p;
                     if (p == "equipped" && player->hasEquip(card)) {
                         checkpoint = true;
-                    } else if (p == "hand" && card->getEffectiveId() >= 0) {
-                        foreach (const Card *c, player->getHandcards()) {
-                            if (c->getEffectiveId() == id) {
+                    } else if (p == "hand" && card->effectiveId() >= 0) {
+                        foreach (const Card *c, player->handcards()) {
+                            if (c->effectiveId() == id) {
                                 checkpoint = true;
                                 break;
                             }
@@ -163,12 +167,12 @@ bool ExpPattern::matchOne(const Player *player, const Card *card, QString exp) c
                         if (p.startsWith("%")) {
                             p = p.mid(1);
                             foreach (const Player *pl, player->getAliveSiblings()) {
-                                if (!pl->getPile(p).isEmpty() && pl->getPile(p).contains(id)) {
+                                if (!pl->pile(p).isEmpty() && pl->pile(p).contains(id)) {
                                     checkpoint = true;
                                     break;
                                 }
                             }
-                        } else if (!player->getPile(p).isEmpty() && player->getPile(p).contains(id)) {
+                        } else if (!player->pile(p).isEmpty() && player->pile(p).contains(id)) {
                             checkpoint = true;
                         }
                     }

@@ -26,24 +26,6 @@
 class Player;
 class Card;
 
-class CardPattern
-{
-public:
-    virtual bool match(const Player *player, const Card *card) const = 0;
-    virtual bool willThrow() const
-    {
-        return true;
-    }
-    virtual QString patternString() const
-    {
-        return QString();
-    }
-
-    virtual ~CardPattern()
-    {
-    }
-};
-
 class Card : public QObject
 {
     Q_OBJECT

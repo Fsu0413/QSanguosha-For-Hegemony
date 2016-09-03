@@ -119,7 +119,7 @@ const QList<Card *> &RoomObject::discardPile() const
 const RoomObject::CardPlaceStruct &RoomObject::cardPlace(Card *card) const
 {
     Q_D(const RoomObject);
-    return d->cardPlaces.value(card, CardPlaceStruct{nullptr, QSgsEnum::PlayerPlace::PlaceUnknown});
+    return d->cardPlaces.value(card, CardPlaceStruct{nullptr, QSgsEnum::CardPlace::PlaceUnknown});
 }
 
 RoomRequestHandler *RoomObject::requestHandler() const
@@ -166,7 +166,7 @@ Card *RoomObject::askForAg(Player *player, const QList<Card *> cards, const QStr
     return nullptr;
 }
 
-QList<RoomObject::CardDistributeStruct> RoomObject::askForDistribute(Player *player, const QList<Card *> cards, QSgsEnum::PlayerPlace fromPlace, bool forced, const QJsonValue &data)
+QList<RoomObject::CardDistributeStruct> RoomObject::askForDistribute(Player *player, const QList<Card *> cards, QSgsEnum::CardPlace fromPlace, bool forced, const QJsonValue &data)
 {
     return QList<RoomObject::CardDistributeStruct>();
 }
@@ -219,4 +219,9 @@ bool RoomObject::askForConfirm(Player *player, const QString &prompt, const QStr
 QList<Card *> RoomObject::askForPindian(Player *from, Player *to, const QString &reason)
 {
     return QList<Card *>();
+}
+
+const ProhibitSkill *RoomObject::isProhibited(const Player *from, const Player *to, const Card *card) const
+{
+    return nullptr;
 }

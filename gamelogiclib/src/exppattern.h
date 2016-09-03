@@ -25,15 +25,13 @@
 #include "card.h"
 #include "player.h"
 
-class ExpPattern : public CardPattern
+class ExpPattern
 {
 public:
     ExpPattern(const QString &exp);
-    virtual bool match(const Player *player, const Card *card) const;
-    virtual QString getPatternString() const
-    {
-        return exp;
-    }
+    bool match(const Player *player, const Card *card) const;
+    const QString &getPatternString() const;
+
 private:
     QString exp;
     bool matchOne(const Player *player, const Card *card, QString exp) const;

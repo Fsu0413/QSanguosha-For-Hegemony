@@ -44,6 +44,7 @@ HEADERS += \
     src/scenario.h \
     src/skill.h \
     src/structs.h \
+    src/exppattern.h \
     cardfaces/base.h
 
 SOURCES += \
@@ -59,6 +60,7 @@ SOURCES += \
     src/scenario.cpp \
     src/skill.cpp \
     src/structs.cpp \
+    src/exppattern.cpp \
     cardfaces/base.cpp \
     src/roomrequestreceiver.cpp
 

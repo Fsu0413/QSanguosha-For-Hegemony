@@ -170,8 +170,8 @@ public:
     bool containsTrick(const QString &trick_name) const;
 
     virtual int handcardNum() const = 0;
-    virtual void removeCard(const Card *card, QSgsEnum::PlayerPlace place) = 0;
-    virtual void addCard(const Card *card, QSgsEnum::PlayerPlace place) = 0;
+    virtual void removeCard(const Card *card, QSgsEnum::CardPlace place) = 0;
+    virtual void addCard(const Card *card, QSgsEnum::CardPlace place) = 0;
     virtual QList<const Card *> handcards() const = 0;
 
     Card *weapon() const;
