@@ -222,7 +222,7 @@ namespace QSanProtocol
 
     extern const int S_ALL_ALIVE_PLAYERS;
 
-    class Countdown
+    class LIBQSGSCORE_EXPORT Countdown
     {
     public:
         enum CountdownType
