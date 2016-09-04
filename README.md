@@ -75,19 +75,19 @@ HOW TO BUILD
 
 ### Windows
 
-1. Download Qt from http://download.qt.io/official_releases/qt/ , make sure the downloaded version is 5.6.0 or later. Then install it.   
+1.Download Qt from http://download.qt.io/official_releases/qt/ , make sure the downloaded version is 5.6.0 or later. Then install it.   
 ```
 Note the directory MUST NOT HAVE ANY NON-ASCII CHARACTER if you use QtCreator: e.g. "E:\太阳神三国杀编译\Qt5.7.0" is UNUSABLE because of the Non-ASCII characters in the folder name.  
 Note that we only support VS2015 and MinGW versions of Qt for windows, other versions are not supported.
 ```
 
-2. (VS2015 version only) Download VS2015 from http://go.microsoft.com/fwlink/?LinkID=626924&clcid=0x804   
+2.(VS2015 version only) Download VS2015 from http://go.microsoft.com/fwlink/?LinkID=626924&clcid=0x804   
 Install it. While installing, select "Microsoft Visual C++" and "Microsoft Foundation Class" since it is not installed by default and our project depends on it.  
 ```
 Note YOU MUST NOT CHANGE THE INSTALL DIRECTORY OF VS2015 if you use QtCreator.
 ```
 
-2. (MinGW version only) Manually set the environment variable.
+2.(MinGW version only) Manually set the environment variable.
 ```
 1. Open your Qt install dir, enter "Tools", find a folder named "mingwxxx_32" and enter it, enter "bin", copy the full path of this directory.  
 2. Right click "This PC" on the desktop, and click "Properties".  
@@ -100,13 +100,13 @@ Note YOU MUST NOT CHANGE THE INSTALL DIRECTORY OF VS2015 if you use QtCreator.
 8. Enter a command prompt, type "gcc --version" to check if the environment variable is successfully set or not.
 ```
 
-3. Download SWIG from https://sourceforge.net/projects/swig/files/swigwin/ , make sure the downloaded version is 3.0.6 or later.  
+3.Download SWIG from https://sourceforge.net/projects/swig/files/swigwin/ , make sure the downloaded version is 3.0.6 or later.  
 extract it, and put the directory in environment variable PATH (it is just like phase 2 for MinGW, but using "swig -version" for step 8)
 
-4. (Qt Creator) Open QSanguosha.pro using QtCreator, set a kit and press the hammer button in the bottom-left cornor.  
-4. (Command Prompt) TBD
+4.(Qt Creator) Open QSanguosha.pro using QtCreator, set a kit and press the hammer button in the bottom-left cornor.  
+4.(Command Prompt) TBD
 
-5. Install. TBD
+5.Install. TBD
 
 ### Linux / [(Free)(Net)(Open)]BSD
 
