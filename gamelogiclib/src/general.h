@@ -35,6 +35,7 @@ class General final
 {
 public:
     General(QSgsPackage *package, const QString &name, bool lord, int doubleMaxHpHead, int doubleMaxHpDeputy, const QString &kingdom, QSgsEnum::GeneralGender gender);
+    ~General();
 
     QSgsPackage *package() const;
     const QString &name() const;

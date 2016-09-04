@@ -24,7 +24,7 @@
 
 
 QSgsPackage::QSgsPackage(const QString &name, QSgsEnum::PackageType type)
-    : m_name(name)
+    : m_name(name), m_type(type)
 {
 
 }

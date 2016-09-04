@@ -49,6 +49,12 @@ General::General(QSgsPackage *package, const QString &name, bool lord, int doubl
     d->gender = gender;
 }
 
+General::~General()
+{
+    Q_D(General);
+    delete d;
+}
+
 QSgsPackage *General::package() const
 {
     Q_D(const General);
