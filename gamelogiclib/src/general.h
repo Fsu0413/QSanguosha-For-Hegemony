@@ -29,77 +29,41 @@ class TriggerSkill;
 class QSgsPackage;
 class QSize;
 
-class General : public QObject
-{
-    Q_OBJECT
-    Q_ENUMS(Gender)
-    Q_PROPERTY(QString m_kingdom READ kingdom CONSTANT)
-    Q_PROPERTY(int maxhp READ doubleMaxHp CONSTANT)
-    Q_PROPERTY(bool male READ isMale STORED false CONSTANT)
-    Q_PROPERTY(bool female READ isFemale STORED false CONSTANT)
-    Q_PROPERTY(QSgsEnum::GeneralGender m_gender READ gender CONSTANT)
-    Q_PROPERTY(bool m_lord READ isLord CONSTANT)
-    Q_PROPERTY(bool m_hidden READ isHidden CONSTANT)
+class GeneralPrivate;
 
+class General final
+{
 public:
-    explicit General(QSgsPackage *package, const QString &name, const QString &m_kingdom,
-        int m_doubleMaxHp = 4, bool male = true, bool m_hidden = false, bool m_neverShown = false);
-    // property getters/setters
-    int doubleMaxHp() const;
-    QString kingdom() const;
+    General(QSgsPackage *package, const QString &name, bool lord, int doubleMaxHpHead, int doubleMaxHpDeputy, const QString &kingdom, QSgsEnum::GeneralGender gender);
+
+    QSgsPackage *package() const;
+    const QString &name() const;
+
+    bool isLord() const;
     bool isMale() const;
     bool isFemale() const;
-    bool isNeuter() const;
-    bool isLord() const;
-    bool isHidden() const;
-    bool isTotallyHidden() const;
 
-    int maxHpHead() const;
-    int maxHpDeputy() const;
+    int doubleMaxHpHead() const;
+    int doubleMaxHpDeputy() const;
 
     QSgsEnum::GeneralGender gender() const;
-    void setGender(QSgsEnum::GeneralGender m_gender);
 
-    void addSkill(Skill *skill);
-    void addSkill(const QString &skill_name);
-    bool hasSkill(const QString &skill_name) const;
-    QList<const Skill *> getSkillList(bool relate_to_place = false, bool head_only = true) const;
-    QList<const Skill *> getVisibleSkillList(bool relate_to_place = false, bool head_only = true) const;
-    QSet<const Skill *> getVisibleSkills(bool relate_to_place = false, bool head_only = true) const;
-    QSet<const TriggerSkill *> getTriggerSkills() const;
+    // Skills are no longer managed by General, but by QSgsPackage instead.
+    void addSkill(const Skill *skill);
+    void addSkill(const QString &skillName);
 
-    void addRelateSkill(const QString &skill_name);
-    QStringList relatedSkillNames() const;
+    bool hasSkill(const QString &skillName) const;
 
-    QString package() const;
-    QString companions() const;
-    QString skillDescription(bool include_name = false, bool inToolTip = true) const;
+    const QStringList &skills() const;
 
-    inline QSet<QString> extraSkillSet() const
-    {
-        return m_extraSet;
-    }
+    void addCompanion(const QString &generalName);
+    void addCompanion(const General *general);
 
-    void addCompanion(const QString &name);
-    bool isCompanionWith(const QString &name) const;
-
-    void setHeadMaxHpAdjustedValue(int adjusted_value = -1);
-    void setDeputyMaxHpAdjustedValue(int adjusted_value = -1);
+    const QStringList &companions() const;
 
 private:
-    QString m_kingdom;
-    int m_doubleMaxHp;
-    QSgsEnum::GeneralGender m_gender;
-    bool m_lord;
-    QSet<QString> m_skillSet;
-    QSet<QString> m_extraSet;
-    QStringList m_skillnameList;
-    QStringList m_relatedSkills;
-    bool m_hidden;
-    bool m_neverShown;
-    QStringList m_companions;
-    int m_headMaxHpAdjustedValue;
-    int m_deputyMaxHpAdjustedValue;
+    Q_DECLARE_PRIVATE(General)
+    GeneralPrivate *d_ptr;
 };
 
 Q_DECLARE_METATYPE(const General *)
