@@ -24,13 +24,14 @@ QSgsEngine *Sanguosha = nullptr;
 
 QSgsEngine::QSgsEngine()
 {
+    connect(qApp, &QCoreApplication::aboutToQuit, this, &QSgsEngine::deleteLater);
+    connect(this, &QSgsEngine::destroyed, [](){ Sanguosha = nullptr; });
+
     Sanguosha = this;
 
     m_lua = CreateLuaState();
-    DoLuaScript(m_lua, "lua/config.lua");
-
-    connect(qApp, &QCoreApplication::aboutToQuit, this, &QSgsEngine::deleteLater);
-
+    if (!DoLuaScript(m_lua, "lua/config.lua"))
+        qApp->exit(1);
 }
 
 lua_State *QSgsEngine::luaState() const
@@ -52,7 +53,7 @@ QString QSgsEngine::translate(const QString &toTranslate) const
 {
     QStringList list = toTranslate.split("\\");
     QString res;
-    foreach(const QString &str, list)
+    foreach (const QString &str, list)
         res.append(m_translations.value(str, str));
     return res;
 }

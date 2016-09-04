@@ -85,14 +85,16 @@ lua_State *CreateLuaState()
     return L;
 }
 
-void DoLuaScript(lua_State *L, const char *script)
+bool DoLuaScript(lua_State *L, const char *script)
 {
     int error = luaL_dofile(L, script);
     if (error) {
         const char *error_msg = lua_tostring(L, -1);
         qDebug() << error_msg;
-        exit(1);
+        return false;
     }
+
+    return true;
 }
 
 QStringList IntList2StringList(const QList<int> &intlist)

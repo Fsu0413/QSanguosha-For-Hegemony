@@ -1,5 +1,5 @@
 
-CONFIG += warn_on
+CONFIG += warn_on c++11
 
 unix {
     # Note that if Qt is compiled without pkgconfig, the bundled lua is used unconditionally

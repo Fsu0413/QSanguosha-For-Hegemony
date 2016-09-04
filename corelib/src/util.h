@@ -38,7 +38,7 @@ void qShuffle(QList<T> &list)
 // @todo: to be discovered that this grammar is correct or not
 LIBQSGSCORE_EXPORT lua_State * CreateLuaState();
 
-void LIBQSGSCORE_EXPORT DoLuaScript(lua_State *L, const char *script);
+bool LIBQSGSCORE_EXPORT DoLuaScript(lua_State *L, const char *script);
 
 QVariant LIBQSGSCORE_EXPORT GetValueFromLuaState(lua_State *L, const char *table_name, const char *key);
 
