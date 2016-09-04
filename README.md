@@ -84,7 +84,7 @@ HOW TO BUILD
 Install it. While installing, select "Microsoft Visual C++" and "Microsoft Foundation Class" since it is not installed by default and our project depends on it.  
     * Note YOU MUST NOT CHANGE THE INSTALL DIRECTORY OF VS2015 if you use QtCreator.  
 
-(MinGW version only) Manually set the environment variable.
+3. (MinGW version only) Manually set the environment variable.
     * Open your Qt install dir, enter "Tools", find a folder named "mingwxxx_32" and enter it, enter "bin", copy the full path of this directory.  
     * Right click "This PC" on the desktop, and click "Properties".  
     * Click "Advanced system settings" in the left column.  
@@ -96,13 +96,13 @@ Install it. While installing, select "Microsoft Visual C++" and "Microsoft Found
     * Enter a command prompt, type "gcc --version" to check if the environment variable is successfully set or not.
 
 
-3. Download SWIG from https://sourceforge.net/projects/swig/files/swigwin/ , make sure the downloaded version is 3.0.6 or later.  
-extract it, and put the directory in environment variable PATH (it is just like phase 2 for MinGW, but using "swig -version" for step 8)
+4. Download SWIG from https://sourceforge.net/projects/swig/files/swigwin/ , make sure the downloaded version is 3.0.6 or later.  
+extract it, and put the directory in environment variable PATH (it is just like phase 3 for MinGW, but using "swig -version" for step 8)
 
-4. (Qt Creator) Open QSanguosha.pro using QtCreator, set a kit and press the hammer button in the bottom-left cornor.  
+5. (Qt Creator) Open QSanguosha.pro using QtCreator, set a kit and press the hammer button in the bottom-left cornor.  
 (Command Prompt) TBD
 
-5. Install. TBD
+6. Install. TBD
 
 ### Linux / [(Free)(Net)(Open)]BSD
 
