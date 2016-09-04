@@ -83,6 +83,7 @@ HOW TO BUILD
 2. (VS2015 version only) Download VS2015 from http://go.microsoft.com/fwlink/?LinkID=626924&clcid=0x804   
 Install it. While installing, select "Microsoft Visual C++" and "Microsoft Foundation Class" since it is not installed by default and our project depends on it.  
     * Note YOU MUST NOT CHANGE THE INSTALL DIRECTORY OF VS2015 if you use QtCreator.  
+
 (MinGW version only) Manually set the environment variable.
     * Open your Qt install dir, enter "Tools", find a folder named "mingwxxx_32" and enter it, enter "bin", copy the full path of this directory.  
     * Right click "This PC" on the desktop, and click "Properties".  
