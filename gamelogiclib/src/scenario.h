@@ -31,8 +31,6 @@ class ScenarioRule;
 
 class Scenario : public QSgsPackage
 {
-    Q_OBJECT
-
 public:
     explicit Scenario(const QString &name);
     ScenarioRule *rule() const;

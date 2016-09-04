@@ -66,3 +66,5 @@ SOURCES += \
 
 DESTDIR = $$OUT_PWD/../inst/lib
 DLLDESTDIR = $$OUT_PWD/../inst/bin
+
+LIBS += -lQSgsCore

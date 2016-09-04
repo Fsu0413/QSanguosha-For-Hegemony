@@ -223,17 +223,20 @@ bool JudgeStruct::isGood() const
 {
 //    Q_ASSERT(_m_result != TRIAL_RESULT_UNKNOWN);
 //    return _m_result == TRIAL_RESULT_GOOD;
+    return false;
 }
 
 bool JudgeStruct::isBad() const
 {
  //   return !isGood();
+    return false;
 }
 
 bool JudgeStruct::isGood(const Card *card) const
 {
 //    Q_ASSERT(card);
 //    return (good == ExpPattern(pattern).match(who, card));
+    return false;
 }
 
 PhaseChangeStruct::PhaseChangeStruct()

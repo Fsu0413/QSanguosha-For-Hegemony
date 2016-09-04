@@ -37,11 +37,7 @@ public:
     QSgsEngine();
     ~QSgsEngine();
 
-    void addTranslationEntry(const char *key, const char *value);
-    QString translate(const QString &toTranslate) const;
-    QString translate(const QString &toTranslate, const QString &defaultValue) const;
     lua_State *luaState() const;
-
 
     QVersionNumber versionNumber() const;
     QString version() const;
@@ -50,7 +46,6 @@ public:
 
 private:
     lua_State *m_lua;
-    QHash<QString, QString> m_translations;
 
 };
 
@@ -59,7 +54,7 @@ static inline QVariant GetConfigFromLuaState(lua_State *L, const char *key)
     return GetValueFromLuaState(L, "config", key);
 }
 
-extern QSgsEngine *Sanguosha;
+extern LIBQSGSCORE_EXPORT QSgsEngine *Sanguosha;
 
 #endif
 

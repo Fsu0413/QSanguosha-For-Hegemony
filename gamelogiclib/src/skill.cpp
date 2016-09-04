@@ -215,10 +215,10 @@ QString Skill::limitMark() const
 
 bool Skill::canPreshow() const
 {
-    if (inherits("TriggerSkill")) {
-        const TriggerSkill *triskill = qobject_cast<const TriggerSkill *>(this);
-        return triskill->viewAsSkill() == nullptr;
-    }
+//    if (inherits("TriggerSkill")) {
+//        const TriggerSkill *triskill = qobject_cast<const TriggerSkill *>(this);
+//        return triskill->viewAsSkill() == nullptr;
+//    }
 
     return false;
 }

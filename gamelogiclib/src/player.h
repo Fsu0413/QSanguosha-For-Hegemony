@@ -29,42 +29,6 @@ class Player : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString screenname READ screenName WRITE setScreenName)
-    Q_PROPERTY(int m_hp READ hp WRITE setHp)
-    Q_PROPERTY(int maxhp READ maxHp WRITE setMaxHp)
-    Q_PROPERTY(QString m_kingdom READ kingdom WRITE setKingdom)
-    Q_PROPERTY(bool wounded READ isWounded STORED false)
-    Q_PROPERTY(QString m_role READ role WRITE setRole)
-    Q_PROPERTY(QString m_general READ generalName WRITE setGeneralName)
-    Q_PROPERTY(QString m_general2 READ general2Name WRITE setGeneral2Name)
-    Q_PROPERTY(QString m_state READ state WRITE setState)
-    Q_PROPERTY(int handcard_num READ handcardNum)
-    Q_PROPERTY(int m_seat READ seat WRITE setSeat)
-    Q_PROPERTY(QString m_phase READ phaseString WRITE setPhaseString)
-    Q_PROPERTY(bool faceup READ faceUp WRITE setFaceUp)
-    Q_PROPERTY(bool m_alive READ isAlive WRITE setAlive)
-    Q_PROPERTY(QString m_flags READ flags WRITE setFlags)
-    Q_PROPERTY(bool m_chained READ isChained WRITE setChained)
-    Q_PROPERTY(bool m_removed READ isRemoved WRITE setRemoved)
-    Q_PROPERTY(bool m_owner READ isOwner WRITE setOwner)
-    Q_PROPERTY(bool m_roleShown READ hasShownRole WRITE setShownRole)
-
-    Q_PROPERTY(bool kongcheng READ isKongcheng)
-    Q_PROPERTY(bool nude READ isNude)
-    Q_PROPERTY(bool all_nude READ isAllNude)
-
-    Q_PROPERTY(QString m_actualGeneral1 READ actualGeneral1Name WRITE setActualGeneral1Name)
-    Q_PROPERTY(QString m_actualGeneral2 READ actualGeneral2Name WRITE setActualGeneral2Name)
-    Q_PROPERTY(bool m_general1Showed READ hasShownGeneral1 WRITE setGeneral1Showed)
-    Q_PROPERTY(bool m_general2Showed READ hasShownGeneral2 WRITE setGeneral2Showed)
-
-    Q_PROPERTY(QString m_next READ nextName WRITE setNext)
-
-    Q_PROPERTY(bool m_scenarioRoleShown READ scenarioRoleShown WRITE setScenarioRoleShown)
-
-    Q_PROPERTY(int head_skin_id READ getHeadSkinId WRITE setHeadSkinId)
-    Q_PROPERTY(int deputy_skin_id READ getDeputySkinId WRITE setDeputySkinId)
-
 public:
 
     explicit Player(QObject *parent);

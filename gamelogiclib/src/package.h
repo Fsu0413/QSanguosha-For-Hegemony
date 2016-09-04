@@ -31,7 +31,6 @@ class Skill;
 
 class QSgsPackage
 {
-
 public:
     explicit QSgsPackage(const QString &name, QSgsEnum::PackageType type = QSgsEnum::PackageType::General);
     virtual ~QSgsPackage();

@@ -23,6 +23,7 @@
 QSgsEngine *Sanguosha = nullptr;
 
 QSgsEngine::QSgsEngine()
+    : QObject(), m_lua(nullptr)
 {
     connect(qApp, &QCoreApplication::aboutToQuit, this, &QSgsEngine::deleteLater);
     connect(this, &QSgsEngine::destroyed, [](){ Sanguosha = nullptr; });
@@ -39,28 +40,9 @@ lua_State *QSgsEngine::luaState() const
     return m_lua;
 }
 
-void QSgsEngine::addTranslationEntry(const char *key, const char *value)
-{
-    m_translations.insert(key, QString::fromUtf8(value));
-}
-
 QSgsEngine::~QSgsEngine()
 {
     lua_close(m_lua);
-}
-
-QString QSgsEngine::translate(const QString &toTranslate) const
-{
-    QStringList list = toTranslate.split("\\");
-    QString res;
-    foreach (const QString &str, list)
-        res.append(m_translations.value(str, str));
-    return res;
-}
-
-QString QSgsEngine::translate(const QString &toTranslate, const QString &defaultValue) const
-{
-    return m_translations.value(toTranslate, defaultValue);
 }
 
 QVersionNumber QSgsEngine::versionNumber() const
