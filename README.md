@@ -42,14 +42,14 @@ See the CC BY-NC-ND 4.0 file for more details.
 Introduction (By Moligaloo)
 ----------
 
-Sanguosha is both a popular board game and online game,
-this project try to clone the Sanguosha online version.
-The whole project is written in C++,
-using Qt's graphics view framework as the game engine.
-I've tried many other open source game engines,
-such as SDL, HGE, Clanlib and others,
-but many of them lack some important features.
-Although Qt is an application framework instead of a game engine,
+Sanguosha is both a popular board game and online game,  
+this project try to clone the Sanguosha online version.  
+The whole project is written in C++,  
+using Qt's graphics view framework as the game engine.  
+I've tried many other open source game engines,  
+such as SDL, HGE, Clanlib and others,  
+but many of them lack some important features.  
+Although Qt is an application framework instead of a game engine,  
 its graphics view framework is suitable for my game developing.
 
 Features
