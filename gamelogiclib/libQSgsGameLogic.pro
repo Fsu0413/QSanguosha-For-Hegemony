@@ -44,7 +44,8 @@ HEADERS += \
     src/scenario.h \
     src/skill.h \
     src/structs.h \
-    src/exppattern.h \
+    src/exppattern.h \ \
+    src/enumeration.h
     cardfaces/base.h
 
 SOURCES += \

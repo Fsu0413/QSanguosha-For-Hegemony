@@ -16,6 +16,7 @@ class TargetModSkill;
 class AttackRangeSkill;
 class ExpPattern;
 class ProhibitSkill;
+class Player;
 
 
 class GameLogicCore: public QObject
@@ -49,7 +50,6 @@ public:
     QString roles(const QString &mode) const;
     QStringList roleList(const QString &mode) const;
 
-    const CardPattern *pattern(const QString &name) const;
     bool matchExpPattern(const QString &pattern, const Player *player, const Card *card) const;
     QList<const Skill *> relatedSkills(const QString &skill_name) const;
     const Skill *mainSkill(const QString &skill_name) const;

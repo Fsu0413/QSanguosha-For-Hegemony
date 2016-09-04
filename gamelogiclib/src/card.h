@@ -22,6 +22,7 @@
 #define _CARD_H
 
 #include "libqsgsgamelogicglobal.h"
+#include "enumeration.h"
 
 class CardPrivate;
 class CardFace;

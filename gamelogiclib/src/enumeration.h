@@ -1,6 +1,8 @@
 #ifndef ENUMERATION_H
 #define ENUMERATION_H
 
+// NO INCLUDES HERE!!!!
+
 namespace QSgsEnum
 {
 

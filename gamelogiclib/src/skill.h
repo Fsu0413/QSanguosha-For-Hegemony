@@ -22,6 +22,7 @@
 #define _SKILL_H
 
 #include "libqsgsgamelogicglobal.h"
+#include "enumeration.h"
 #include "player.h"
 
 class Card;

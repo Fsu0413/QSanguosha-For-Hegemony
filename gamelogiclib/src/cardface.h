@@ -3,6 +3,7 @@
 #define CARDFACE_H__
 
 #include "libqsgsgamelogicglobal.h"
+#include "enumeration.h"
 #include "structs.h"
 
 class Player;

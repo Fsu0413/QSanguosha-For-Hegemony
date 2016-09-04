@@ -22,14 +22,31 @@
 #define _LUA_WRAPPER_H
 
 #include "libqsgsgamelogicglobal.h"
-
-#include "skill.h"
+#include "package.h"
 #include "cardfaces/base.h"
 
 
 struct lua_State;
 typedef int LuaFunction;
-class QSgsLuaPackage;
+
+
+
+class QSgsLuaPackage : public QSgsPackage
+{
+public:
+    explicit QSgsLuaPackage(const QString &name, QSgsEnum::PackageType type, const QString &version);
+
+    bool registerGeneral(const QString &name, const General *g);
+    bool registerCardFace(const QString &name, const CardFace *f);
+    bool registerSkill(const QString &name, const Skill *s);
+    bool insertRelatedSkill(const QString &main_skill_name, const QString &related);
+    bool createCardByFaceName(const QString &face_name, QSgsEnum::CardSuit suit, int number);
+
+    const QVersionNumber &version() const override;
+
+private:
+    QVersionNumber m_ver;
+};
 
 QSgsLuaPackage *parseLuaPackage(const QString &fileName, bool *ok = nullptr);
 

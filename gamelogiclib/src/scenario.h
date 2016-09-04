@@ -21,12 +21,13 @@
 #ifndef _SCENARIO_H
 #define _SCENARIO_H
 
+
+#include "libqsgscoreglobal.h"
 #include "package.h"
+#include "enumeration.h"
 
 class Room;
 class ScenarioRule;
-
-#include "libqsgscoreglobal.h"
 
 class Scenario : public QSgsPackage
 {

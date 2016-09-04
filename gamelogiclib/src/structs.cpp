@@ -70,7 +70,7 @@ QVariant CardsMoveStruct::toVariant() const
     return QVariant();
 }
 
-bool CardMoveReason::tryParse(const QVariant &arg)
+bool CardMovement::tryParse(const QVariant &arg)
 {
 //    JsonArray args = arg.value<JsonArray>();
 //    if (args.size() != 5 || !args[0].canConvert<int>() || !JsonUtils::isStringArray(args, 1, 4))
@@ -86,7 +86,7 @@ bool CardMoveReason::tryParse(const QVariant &arg)
     return false;
 }
 
-QVariant CardMoveReason::toVariant() const
+QVariant CardMovement::toVariant() const
 {
 //    JsonArray result;
 //    result << m_reason;

@@ -21,6 +21,24 @@
 #include "lua-wrapper.h"
 #include "src/engine.h"
 #include "package.h"
+
+
+
+
+QSgsLuaPackage::QSgsLuaPackage(const QString &name, QSgsEnum::PackageType type, const QString &version)
+    :QSgsPackage(name, type)
+{
+    QStringList v = version.split(".");
+
+    m_ver = QVersionNumber(v[0].toInt(),v[1].toInt(),v[2].toInt());
+}
+
+const QVersionNumber &QSgsLuaPackage::version() const
+{
+    return m_ver;
+}
+
+
 //#include "util.h"
 
 //LuaTriggerSkill::LuaTriggerSkill(const char *name, Frequency frequency, const char *limit_mark)

@@ -2,6 +2,7 @@
 #define ROOMOBJECT_H
 
 #include "libqsgsgamelogicglobal.h"
+#include "enumeration.h"
 #include "structs.h"
 
 class Player;
