@@ -75,38 +75,33 @@ HOW TO BUILD
 
 ### Windows
 
-1.Download Qt from http://download.qt.io/official_releases/qt/ , make sure the downloaded version is 5.6.0 or later. Then install it.   
-```
-Note the directory MUST NOT HAVE ANY NON-ASCII CHARACTER if you use QtCreator: e.g. "E:\太阳神三国杀编译\Qt5.7.0" is UNUSABLE because of the Non-ASCII characters in the folder name.  
-Note that we only support VS2015 and MinGW versions of Qt for windows, other versions are not supported.
-```
+1. Download Qt from http://download.qt.io/official_releases/qt/ , make sure the downloaded version is 5.6.0 or later. Then install it.   
+    * Note the directory MUST NOT HAVE ANY NON-ASCII CHARACTER if you use QtCreator: e.g. "E:\太阳神三国杀编译\Qt5.7.0" is UNUSABLE because of the Non-ASCII characters in the folder name.  
+    * Note that we only support VS2015 and MinGW versions of Qt for windows, other versions are not supported.
 
-2.(VS2015 version only) Download VS2015 from http://go.microsoft.com/fwlink/?LinkID=626924&clcid=0x804   
+
+2. (VS2015 version only) Download VS2015 from http://go.microsoft.com/fwlink/?LinkID=626924&clcid=0x804   
 Install it. While installing, select "Microsoft Visual C++" and "Microsoft Foundation Class" since it is not installed by default and our project depends on it.  
-```
-Note YOU MUST NOT CHANGE THE INSTALL DIRECTORY OF VS2015 if you use QtCreator.
-```
+    * Note YOU MUST NOT CHANGE THE INSTALL DIRECTORY OF VS2015 if you use QtCreator.  
+(MinGW version only) Manually set the environment variable.
+    * Open your Qt install dir, enter "Tools", find a folder named "mingwxxx_32" and enter it, enter "bin", copy the full path of this directory.  
+    * Right click "This PC" on the desktop, and click "Properties".  
+    * Click "Advanced system settings" in the left column.  
+    * Enter "Advanced" tab, click "Environment Variables..."  
+    * Find a variable which name is "PATH"(case insensible) in "System variables", double click it.  
+    * (Win 7/8.1) You'll see a dialog with 2 text input area, paste the copied path in the front of the pathes in the second input area, and add a semicolon ";" after it.    
+(Win 10) You'll see a list with a lot of pathes, click "New" and paste the copied path, and use "Move Up" to make it become the first of the list.  
+    * Press "OK" in all dialogs and logout, login again.  
+    * Enter a command prompt, type "gcc --version" to check if the environment variable is successfully set or not.
 
-2.(MinGW version only) Manually set the environment variable.
-```
-1. Open your Qt install dir, enter "Tools", find a folder named "mingwxxx_32" and enter it, enter "bin", copy the full path of this directory.  
-2. Right click "This PC" on the desktop, and click "Properties".  
-3. Click "Advanced system settings" in the left column.  
-4. Enter "Advanced" tab, click "Environment Variables..."  
-5. Find a variable which name is "PATH"(case insensible) in "System variables", double click it.  
-6. (Win 7/8.1) You'll see a dialog with 2 text input area, paste the copied path in the front of the pathes in the second input area, and add a semicolon ";" after it.  
-6. (Win 10) You'll see a list with a lot of pathes, click "New" and paste the copied path, and use "Move Up" to make it become the first of the list.  
-7. Press "OK" in all dialogs and logout, login again.  
-8. Enter a command prompt, type "gcc --version" to check if the environment variable is successfully set or not.
-```
 
-3.Download SWIG from https://sourceforge.net/projects/swig/files/swigwin/ , make sure the downloaded version is 3.0.6 or later.  
+3. Download SWIG from https://sourceforge.net/projects/swig/files/swigwin/ , make sure the downloaded version is 3.0.6 or later.  
 extract it, and put the directory in environment variable PATH (it is just like phase 2 for MinGW, but using "swig -version" for step 8)
 
-4.(Qt Creator) Open QSanguosha.pro using QtCreator, set a kit and press the hammer button in the bottom-left cornor.  
-4.(Command Prompt) TBD
+4. (Qt Creator) Open QSanguosha.pro using QtCreator, set a kit and press the hammer button in the bottom-left cornor.  
+(Command Prompt) TBD
 
-5.Install. TBD
+5. Install. TBD
 
 ### Linux / [(Free)(Net)(Open)]BSD
 
