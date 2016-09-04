@@ -24,6 +24,7 @@ protected:
     RoomRequestReceiver();
     virtual void resultReceived(const QJsonDocument &result); // This function is meant to be called in the slot when the receiver received the result
 
+    // should we use D-pointer to handle this? Seems it is not worthy.
     QJsonDocument m_result;
 
     QWaitCondition m_cond;
@@ -32,8 +33,6 @@ protected:
 private:
     Q_DISABLE_COPY(RoomRequestReceiver)
 };
-
-class RoomObject;
 
 class RoomRequestHandler final
 {
@@ -151,7 +150,8 @@ public:
     int correctCardTarget(const QSgsEnum::ModType type, const Player *from, const Card *card) const;
     int correctAttackRange(const Player *target, bool include_weapon = true, bool fixed = false) const;
 
-protected:
+    // if this class is meant to be a virtual class, make sure this section is protected
+private:
     Q_DECLARE_PRIVATE(RoomObject)
     RoomObjectPrivate *d_ptr;
 };

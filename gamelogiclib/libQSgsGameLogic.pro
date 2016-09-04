@@ -62,8 +62,7 @@ SOURCES += \
     src/skill.cpp \
     src/structs.cpp \
     src/exppattern.cpp \
-    cardfaces/base.cpp \
-    src/roomrequestreceiver.cpp
+    cardfaces/base.cpp
 
 DESTDIR = $$OUT_PWD/../inst/lib
 DLLDESTDIR = $$OUT_PWD/../inst/bin
