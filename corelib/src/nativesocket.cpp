@@ -21,11 +21,6 @@
 #include "nativesocket.h"
 #include "settings.h"
 
-#include <QTcpSocket>
-#include <QRegExp>
-#include <QStringList>
-#include <QUdpSocket>
-
 NativeServerSocket::NativeServerSocket()
 {
     server = new QTcpServer(this);

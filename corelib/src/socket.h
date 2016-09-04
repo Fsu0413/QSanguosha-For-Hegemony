@@ -23,6 +23,9 @@
 
 #include "libqsgscoreglobal.h"
 
+// @todo: These classes don't have any meaningful effect. Should it be removed later?
+// Another question, why do these classes appear in the QSanguosha-v2? For legacy API compatibility with V1?
+
 class ClientSocket;
 
 class LIBQSGSCORE_EXPORT ServerSocket : public QObject

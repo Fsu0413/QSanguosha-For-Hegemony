@@ -21,9 +21,8 @@
 #ifndef _NATIVESOCKET_H
 #define _NATIVESOCKET_H
 
-#include "socket.h"
-
 #include "libqsgscoreglobal.h"
+#include "socket.h"
 
 class QUdpSocket;
 
@@ -42,6 +41,7 @@ private slots:
     void processNewDatagram();
 
 private:
+    // @todo: use D-pointer to handle this
     QTcpServer *server;
     QUdpSocket *daemon;
 };
@@ -70,6 +70,7 @@ private slots:
     void raiseError(QAbstractSocket::SocketError socket_error);
 
 private:
+    // @todo: use D-pointer to handle this
     QTcpSocket *const socket;
 
     void init();

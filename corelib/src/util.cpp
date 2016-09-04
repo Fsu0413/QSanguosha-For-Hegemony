@@ -19,14 +19,6 @@
     *********************************************************************/
 
 #include "util.h"
-#include "lua.hpp"
-
-#include <iostream>
-using std::cerr;
-using std::endl;
-
-#include <QVariant>
-#include <QStringList>
 
 extern "C" {
     int luaopen_sgs(lua_State *);
@@ -98,7 +90,7 @@ void DoLuaScript(lua_State *L, const char *script)
     int error = luaL_dofile(L, script);
     if (error) {
         const char *error_msg = lua_tostring(L, -1);
-        cerr << error_msg << endl << endl;
+        qDebug() << error_msg;
         exit(1);
     }
 }

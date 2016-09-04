@@ -276,6 +276,7 @@ namespace QSanProtocol
         CommandType commandType() const;
 
     protected:
+        // @todo: use D-pointer to handle this
         static unsigned int m_globalSerialSequence;
         CommandType m_command;
         PacketDescription m_packetDescription;

@@ -20,13 +20,6 @@
 
 #include "engine.h"
 
-#include <lua.hpp>
-#include <QFile>
-#include <QTextStream>
-#include <QStringList>
-#include <QDir>
-#include <QFile>
-
 QSgsEngine *Sanguosha = nullptr;
 
 QSgsEngine::QSgsEngine()

@@ -22,13 +22,6 @@
 #define _UTIL_H
 
 #include "libqsgscoreglobal.h"
-#include "lua.hpp"
-
-class QVariant;
-
-#include <QList>
-#include <QStringList>
-#include <QVariant>
 
 template<typename T>
 void qShuffle(QList<T> &list)
@@ -42,7 +35,7 @@ void qShuffle(QList<T> &list)
 
 // lua interpreter related
 
-// to be discovered that this grammar is correct or not
+// @todo: to be discovered that this grammar is correct or not
 LIBQSGSCORE_EXPORT lua_State * CreateLuaState();
 
 void LIBQSGSCORE_EXPORT DoLuaScript(lua_State *L, const char *script);

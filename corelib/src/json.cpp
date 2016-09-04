@@ -20,11 +20,6 @@
 
 #include "json.h"
 
-#include <QStringList>
-#include <QFile>
-#include <QRect>
-#include <QJsonDocument>
-
 JsonDocument::JsonDocument()
     :valid(false)
 {

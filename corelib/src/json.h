@@ -71,6 +71,7 @@ public:
     }
 
 protected:
+    // @todo: use D-pointer to handle this
     QVariant value;
     bool valid;
     QString error;
