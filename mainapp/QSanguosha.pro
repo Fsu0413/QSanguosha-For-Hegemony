@@ -5,6 +5,16 @@ TEMPLATE = app
 TARGET = QSanguosha
 CONFIG += app_bundle windows
 
+win32 {
+    QMAKE_TARGET_COMPANY = "Mogara"
+    QMAKE_TARGET_DESCRIPTION = "QSanguosha Hegemony-V2 Main Client"
+    RC_ICONS = $$_PRO_FILE_PWD_/../resource/icon/sgs.ico
+}
+osx {
+    ICON = $$_PRO_FILE_PWD_/../resource/icon/sgs.icns
+}
+VERSION = 0.1.0.0
+
 QT += network widgets
 
 SOURCES += \

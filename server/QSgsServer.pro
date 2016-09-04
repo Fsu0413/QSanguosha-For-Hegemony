@@ -11,8 +11,18 @@ TARGET = QSgsServer
 CONFIG -= app_bundle
 CONFIG += console
 
-QT += network
+win32 {
+    QMAKE_TARGET_COMPANY = "Mogara"
+    QMAKE_TARGET_DESCRIPTION = "QSanguosha Hegemony-V2 Server"
+    RC_ICONS = $$_PRO_FILE_PWD_/../resource/icon/sgs.ico
+}
+osx {
+    ICON = $$_PRO_FILE_PWD_/../resource/icon/sgs.icns
+}
+VERSION = 0.1.0.0
 
+QT -= gui widgets
+QT += network
 
 HEADERS += \
     testlink.h
