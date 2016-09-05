@@ -20,6 +20,297 @@
 
 #include "player.h"
 #include "src/engine.h"
+
+class PlayerPrivate
+{
+public:
+    QMap<QString, int> marks;
+    QMap<QString, QList<int> > piles;
+    QMap<QString, QStringList> pileOpen;
+    QSet<QString> headAcquiredSkills;
+    QSet<QString> deputyAcquiredSkills;
+    QMap<QString, bool> headSkills;
+    QMap<QString, bool> deputySkills;
+    QSet<QString> flags;
+    QHash<QString, int> history;
+
+    const General *general;
+    const General *general2;
+
+    QString screenName;
+    bool owner;
+    QSgsEnum::GeneralGender gender;
+    int hp, maxHp;
+    QString kingdom;
+    QString role;
+    bool roleShown;
+    QString state;
+    int seat;
+    bool alive;
+
+    const General *actualGeneral1;
+    const General *actualGeneral2;
+
+    bool general1Showed;
+    bool general2Showed;
+
+    QSgsEnum::PlayerPhase phase;
+    Card *weapon;
+    Card *armor;
+    Card *defensiveHorse;
+    Card *offensiveHorse;
+    Card *treasure;
+    bool faceUp;
+    bool chained;
+    bool removed;
+    QList<int> judgingArea;
+    QHash<const Player *, int> fixedDistance;
+    QString next;
+
+    QMap<QSgsEnum::CardHandlingMethod, QStringList> cardLimitation;
+
+    QStringList disableShow;
+    // head and/or deputy, reason
+    // example: "hd,Blade"
+
+    bool scenarioRoleShown;
+};
+
+bool (Player::*Player::isSuperposed)() const = &Player::faceUp;
+void (Player::*Player::setSuperposed)(bool superposed) = &Player::setFaceUp;
+
+Player::Player(QObject *parent)
+{
+
+}
+
+int Player::hp() const
+{
+    return 0;
+}
+
+void Player::setHp(int hp)
+{
+
+}
+
+int Player::maxHp() const
+{
+    return 0;
+}
+
+void Player::setMaxHp(int maxHp)
+{
+
+}
+
+int Player::lostHp() const
+{
+    return 0;
+}
+
+bool Player::isWounded() const
+{
+    return false;
+}
+
+QSgsEnum::GeneralGender Player::gender() const
+{
+    return QSgsEnum::GeneralGender::Sexless;
+}
+
+void Player::setGender(QSgsEnum::GeneralGender gender)
+{
+
+}
+
+bool Player::isMale() const
+{
+    return false;
+}
+
+bool Player::isFemale() const
+{
+    return false;
+}
+
+bool Player::isNeuter() const
+{
+    return false;
+}
+
+void Player::setDisableShow(const QString &flags, const QString &reason)
+{
+
+}
+
+void Player::removeDisableShow(const QString &reason)
+{
+
+}
+
+const QStringList &Player::disableShow(bool head) const
+{
+    return QStringList();
+}
+
+const QString &Player::kingdom() const
+{
+    return QString();
+}
+
+void Player::setKingdom(const QString &kingdom)
+{
+
+}
+
+void Player::setGeneral(const General *general)
+{
+
+}
+
+void Player::setGeneralName(const QString &general_name)
+{
+
+}
+
+const QString &Player::generalName() const
+{
+    return QString();
+}
+
+const QString &Player::general2Name() const
+{
+    return QString();
+}
+
+const General *Player::general2() const
+{
+    return nullptr;
+}
+
+void Player::setState(const QString &state)
+{
+
+}
+
+const QString &Player::state() const
+{
+    return QString();
+}
+
+int Player::seat() const
+{
+    return 0;
+}
+
+void Player::setSeat(int seat)
+{
+
+}
+
+bool Player::isAdjacentTo(const Player *another) const
+{
+    return false;
+}
+
+QString Player::phaseString() const
+{
+    return QString();
+}
+
+void Player::setPhaseString(const QString &phase_str)
+{
+
+}
+
+QSgsEnum::PlayerPhase Player::phase() const
+{
+    return QSgsEnum::PlayerPhase::NoPhase;
+}
+
+void Player::setPhase(QSgsEnum::PlayerPhase phase)
+{
+
+}
+
+int Player::attackRange(bool include_weapon) const
+{
+    return 0;
+}
+
+bool Player::inMyAttackRange(const Player *other) const
+{
+    return false;
+}
+
+bool Player::isAlive() const
+{
+    return false;
+}
+
+bool Player::isDead() const
+{
+    return false;
+}
+
+void Player::setAlive(bool alive)
+{
+
+}
+
+QString Player::flags() const
+{
+    return QString();
+}
+
+QStringList Player::flagList() const
+{
+    return QStringList();
+}
+
+void Player::setFlag(const QString &flag)
+{
+
+}
+
+bool Player::hasFlag(const QString &flag) const
+{
+    return false;
+}
+
+void Player::clearFlags()
+{
+
+}
+
+bool Player::faceUp() const
+{
+    return false;
+}
+
+void Player::setFaceUp(bool faceUp)
+{
+
+}
+
+void Player::setFixedDistance(const Player *player, int distance)
+{
+
+}
+
+int Player::originalRightDistanceTo(const Player *other) const
+{
+    return 0;
+}
+
+int Player::distanceTo(const Player *other, int distance_fix) const
+{
+    return 0;
+}
+
+
+
 //#include "client.h"
 //#include "standard-basics.h"
 //#include "settings.h"

@@ -23,10 +23,12 @@
 
 #include "libqsgsgamelogicglobal.h"
 #include "enumeration.h"
+#include "structs.h"
 #include "player.h"
 
 class Card;
 class ServerPlayer;
+class Room;
 
 class Skill : public QObject
 {

@@ -50,8 +50,8 @@ public:
     virtual const QVersionNumber &version() const = 0;
     QSgsEnum::PackageType type() const;
 	
-private:
-    Q_DECLARE_PRIVATE(QSgsPackage);
+protected:
+    Q_DECLARE_PRIVATE(QSgsPackage)
     QSgsPackagePrivate *d_ptr;
 };
 

@@ -24,6 +24,7 @@
 
 class QSgsPackagePrivate
 {
+public:
     QHash<QString, const General *> generals;
 
     QHash<QString, const CardFace *> cardFaces;
@@ -34,7 +35,7 @@ class QSgsPackagePrivate
 
     QString name;
     QSgsEnum::PackageType type;
-}
+};
 
 QSgsPackage::QSgsPackage(const QString &name, QSgsEnum::PackageType type)
     : d_ptr(new QSgsPackagePrivate)
