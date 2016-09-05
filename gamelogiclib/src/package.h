@@ -28,6 +28,7 @@ class Card;
 class CardFace;
 class General;
 class Skill;
+class QSgsPackagePrivate;
 
 class QSgsPackage
 {
@@ -48,18 +49,10 @@ public:
 
     virtual const QVersionNumber &version() const = 0;
     QSgsEnum::PackageType type() const;
-
-protected:
-    QHash<QString, const General *> m_generals;
-
-    QHash<QString, const CardFace *> m_cardFaces;
-
-    QList<const Card *> m_cards;
-    QHash<QString, const Skill *> m_skills;
-    QMultiMap<QString, QString> m_relatedSkills;
-
-    QString m_name;
-    QSgsEnum::PackageType m_type;
+	
+private:
+    Q_DECLARE_PRIVATE(QSgsPackage);
+    QSgsPackagePrivate *d_ptr;
 };
 
 Q_DECLARE_INTERFACE(QSgsPackage, "org.qsanguosha.Hegemony.QSgsPackage")

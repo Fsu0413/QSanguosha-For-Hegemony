@@ -22,69 +22,97 @@
 #include "skill.h"
 #include "card.h"
 
+class QSgsPackagePrivate
+{
+    QHash<QString, const General *> generals;
+
+    QHash<QString, const CardFace *> cardFaces;
+
+    QList<const Card *> cards;
+    QHash<QString, const Skill *> skills;
+    QMultiMap<QString, QString> relatedSkills;
+
+    QString name;
+    QSgsEnum::PackageType type;
+}
 
 QSgsPackage::QSgsPackage(const QString &name, QSgsEnum::PackageType type)
-    : m_name(name), m_type(type)
+    : d_ptr(new QSgsPackagePrivate)
 {
-
+    Q_D(QSgsPackage);
+    d->name = name;
+    d->type = type;
 }
 
 QSgsPackage::~QSgsPackage()
 {
+    Q_D(QSgsPackage);
+    delete d;
 
 }
 
 const QHash<QString, const General *> QSgsPackage::generals() const
 {
-    return m_generals;
+    Q_D(const QSgsPackage);
+    return d->generals;
 }
 
 const General *QSgsPackage::general(const QString &generalName) const
 {
-    return m_generals.value(generalName,nullptr);
+    Q_D(const QSgsPackage);
+    return d->generals.value(generalName,nullptr);
 }
 
 const QHash<QString, const CardFace *> &QSgsPackage::cardFaces() const
 {
-    return m_cardFaces;
+    Q_D(const QSgsPackage);
+    return d->cardFaces;
 }
 
 const CardFace *QSgsPackage::cardFace(const QString &cardFaceName) const
 {
-    return m_cardFaces.value(cardFaceName,nullptr);
+    Q_D(const QSgsPackage);
+    return d->cardFaces.value(cardFaceName,nullptr);
 }
 
 const QList<const Card *> QSgsPackage::cards() const
 {
-    return m_cards;
+    Q_D(const QSgsPackage);
+    return d->cards;
 }
 
 const QHash<QString, const Skill *> QSgsPackage::skills() const
 {
-    return m_skills;
+    Q_D(const QSgsPackage);
+    return d->skills;
 }
 
 const Skill *QSgsPackage::skill(const QString &skillName) const
 {
-    return m_skills.value(skillName,nullptr);
+    Q_D(const QSgsPackage);
+    return d->skills.value(skillName,nullptr);
 }
 
 const QMultiMap<QString, QString> QSgsPackage::relatedSkills() const
 {
-    return m_relatedSkills;
+    Q_D(const QSgsPackage);
+    return d->relatedSkills;
 }
 
 const QStringList QSgsPackage::relatedSkills(const QString &mainSkill) const
 {
-    return m_relatedSkills.values(mainSkill);
+    Q_D(const QSgsPackage);
+    return d->relatedSkills.values(mainSkill);
 }
 
 const QString &QSgsPackage::name() const
 {
-    return m_name;
+    Q_D(const QSgsPackage);
+    return d->name;
 }
 
 QSgsEnum::PackageType QSgsPackage::type() const
 {
-    return m_type;
+    Q_D(const QSgsPackage);
+    return d->type;
 }
