@@ -461,7 +461,7 @@ QSgsLuaPackage *parseLuaPackage(const QString &fileName, bool *ok)
             n.toInt(&is_ok);
             if (!is_ok){
                 //emit this->error("invalid package version for Lua File:" + m_LuaFile + ". Eveny part of the version must be a number!");
-                return false;
+                return nullptr;
             }
         }
     }

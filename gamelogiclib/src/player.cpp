@@ -98,7 +98,7 @@ void Player::setHp(int hp)
 
 int Player::maxHp() const
 {
-    Q_D(Player);
+    Q_D(const Player);
     return d->maxHp;
 }
 
@@ -346,7 +346,7 @@ bool Player::isLord() const
 
 }
 
-void Player::acquireSkill(const QString &skill_name, bool head = true)
+void Player::acquireSkill(const QString &skill_name, bool head)
 {
 
 }
@@ -361,7 +361,7 @@ void Player::detachAllSkills()
 
 }
 
-void Player::addSkill(const QString &skill_name, bool head_skill = true)
+void Player::addSkill(const QString &skill_name, bool head_skill)
 {
 
 }
@@ -371,17 +371,17 @@ void Player::loseSkill(const QString &skill_name)
 
 }
 
-bool Player::hasSkill(const QString &skill_name, bool include_lose = false) const
+bool Player::hasSkill(const QString &skill_name, bool include_lose) const
 {
 
 }
 
-bool Player::hasSkill(const Skill *skill, bool include_lose = false) const
+bool Player::hasSkill(const Skill *skill, bool include_lose) const
 {
 
 }
 
-bool Player::hasSkills(const QString &skill_name, bool include_lose = false) const
+bool Player::hasSkills(const QString &skill_name, bool include_lose) const
 {
 
 }
@@ -391,7 +391,7 @@ bool Player::hasInnateSkill(const QString &skill_name) const
 
 }
 
-bool Player::hasLordSkill(const QString &skill_name, bool include_lose = false) const
+bool Player::hasLordSkill(const QString &skill_name, bool include_lose) const
 {
 
 }
@@ -532,12 +532,12 @@ bool Player::canDiscard(const Player *to, int card_id) const
 
 }
 
-void Player::addMark(const QString &mark, int add_num = 1)
+void Player::addMark(const QString &mark, int add_num)
 {
 
 }
 
-void Player::removeMark(const QString &mark, int remove_num = 1)
+void Player::removeMark(const QString &mark, int remove_num)
 {
 
 }
@@ -564,7 +564,7 @@ bool Player::isChained() const
     return d->chained;
 }
 
-bool Player::canBeChainedBy(const Player *source = NULL) const
+bool Player::canBeChainedBy(const Player *source) const
 {
 
 }
@@ -581,17 +581,17 @@ bool Player::isRemoved() const
     return d->removed;
 }
 
-bool Player::isDuanchang(const bool head = true) const
+bool Player::isDuanchang(const bool head) const
 {
 
 }
 
-bool Player::canSlash(const Player *other, const Card *slash, bool distance_limit = true, int rangefix = 0) const
+bool Player::canSlash(const Player *other, const Card *slash, bool distance_limit, int rangefix) const
 {
 
 }
 
-bool Player::canSlash(const Player *other, bool distance_limit = true, int rangefix = 0) const
+bool Player::canSlash(const Player *other, bool distance_limit, int rangefix) const
 {
 
 }
@@ -621,7 +621,7 @@ QList<int> Player::handPile() const
 
 }
 
-QStringList Player::handPileList(bool view_as_skill = true) const
+QStringList Player::handPileList(bool view_as_skill) const
 {
 
 }
@@ -636,12 +636,12 @@ void Player::setPileOpen(const QString &pile_name, const QString &player)
 
 }
 
-void Player::addHistory(const QString &name, int times = 1)
+void Player::addHistory(const QString &name, int times)
 {
 
 }
 
-void Player::clearHistory(const QString &name = QString())
+void Player::clearHistory(const QString &name)
 {
 
 }
@@ -671,32 +671,32 @@ QSet<const TriggerSkill *> Player::triggerSkills() const
 
 }
 
-QSet<const Skill *> Player::skills(bool include_equip = false, bool visible_only = true) const
+QSet<const Skill *> Player::skills(bool include_equip, bool visible_only) const
 {
 
 }
 
-QList<const Skill *> Player::skillList(bool include_equip = false, bool visible_only = true) const
+QList<const Skill *> Player::skillList(bool include_equip, bool visible_only) const
 {
 
 }
 
-QList<const Skill *> Player::headSkillList(bool visible_only = true) const
+QList<const Skill *> Player::headSkillList(bool visible_only) const
 {
 
 }
 
-QList<const Skill *> Player::deputySkillList(bool visible_only = true) const
+QList<const Skill *> Player::deputySkillList(bool visible_only) const
 {
 
 }
 
-QSet<const Skill *> Player::visibleSkills(bool include_equip = false) const
+QSet<const Skill *> Player::visibleSkills(bool include_equip) const
 {
 
 }
 
-QList<const Skill *> Player::visibleSkillList(bool include_equip = false) const
+QList<const Skill *> Player::visibleSkillList(bool include_equip) const
 {
 
 }
@@ -716,17 +716,17 @@ bool Player::isProhibited(const Player *to, const Card *card) const
 
 }
 
-bool Player::canSlashWithoutCrossbow(const Card *slash = NULL) const
+bool Player::canSlashWithoutCrossbow(const Card *slash) const
 {
 
 }
 
-bool Player::isLastHandCard(const Card *card, bool contain = false) const
+bool Player::isLastHandCard(const Card *card, bool contain) const
 {
 
 }
 
-void Player::setCardLimitation(const QString &limit_list, const QString &pattern, bool single_turn = false)
+void Player::setCardLimitation(const QString &limit_list, const QString &pattern, bool single_turn)
 {
 
 }
@@ -736,12 +736,12 @@ void Player::removeCardLimitation(const QString &limit_list, const QString &patt
 
 }
 
-void Player::clearCardLimitation(bool single_turn = false)
+void Player::clearCardLimitation(bool single_turn)
 {
 
 }
 
-bool Player::isCardLimited(const Card *card, QSgsEnum::CardHandlingMethod method, bool isHandcard = false) const
+bool Player::isCardLimited(const Card *card, QSgsEnum::CardHandlingMethod method, bool isHandcard) const
 {
 
 }
@@ -756,7 +756,7 @@ void Player::removeQinggangTag(const Card *card)
 
 }
 
-const Player *Player::getLord(bool include_death = false) const
+const Player *Player::getLord(bool include_death) const
 {
 
 }
@@ -890,12 +890,12 @@ bool Player::hasShownAllGenerals() const
 
 }
 
-void Player::setSkillPreshowed(const QString &skill, bool preshowed = true)
+void Player::setSkillPreshowed(const QString &skill, bool preshowed)
 {
 
 }
 
-void Player::setSkillsPreshowed(const QString &falgs = "hd", bool preshowed = true)
+void Player::setSkillsPreshowed(const QString &falgs, bool preshowed)
 {
 
 }
@@ -945,7 +945,7 @@ void Player::setNext(const QString &next)
 
 }
 
-Player *Player::next(bool ignoreRemoved = true) const
+Player *Player::next(bool ignoreRemoved) const
 {
 
 }
@@ -955,17 +955,17 @@ QString Player::nextName() const
 
 }
 
-Player *Player::last(bool ignoreRemoved = true) const
+Player *Player::last(bool ignoreRemoved) const
 {
 
 }
 
-Player *Player::nextAlive(int n = 1, bool ignoreRemoved = true) const
+Player *Player::nextAlive(int n, bool ignoreRemoved) const
 {
 
 }
 
-Player *Player::lastAlive(int n = 1, bool ignoreRemoved = true) const
+Player *Player::lastAlive(int n, bool ignoreRemoved) const
 {
 
 }
