@@ -179,6 +179,11 @@ const QString &Player::generalName() const
     return QString();
 }
 
+void Player::setGeneral2Name(const QString &general_name)
+{
+
+}
+
 const QString &Player::general2Name() const
 {
     return QString();
@@ -309,8 +314,625 @@ int Player::distanceTo(const Player *other, int distance_fix) const
     return 0;
 }
 
+bool Player::isLord() const
+{
 
+}
 
+void Player::acquireSkill(const QString &skill_name, bool head = true)
+{
+
+}
+
+void Player::detachSkill(const QString &skill_name)
+{
+
+}
+
+void Player::detachAllSkills()
+{
+
+}
+
+void Player::addSkill(const QString &skill_name, bool head_skill = true)
+{
+
+}
+
+void Player::loseSkill(const QString &skill_name)
+{
+
+}
+
+bool Player::hasSkill(const QString &skill_name, bool include_lose = false) const
+{
+
+}
+
+bool Player::hasSkill(const Skill *skill, bool include_lose = false) const
+{
+
+}
+
+bool Player::hasSkills(const QString &skill_name, bool include_lose = false) const
+{
+
+}
+
+bool Player::hasInnateSkill(const QString &skill_name) const
+{
+
+}
+
+bool Player::hasLordSkill(const QString &skill_name, bool include_lose = false) const
+{
+
+}
+
+bool Player::hasEquip(const Card *card) const
+{
+
+}
+
+bool Player::hasEquip() const
+{
+
+}
+
+QList<const Card *> Player::judgingArea() const
+{
+
+}
+
+QList<int> Player::judgingAreaID() const
+{
+
+}
+
+void Player::addDelayedTrick(const Card *trick)
+{
+
+}
+
+void Player::removeDelayedTrick(const Card *trick)
+{
+
+}
+
+bool Player::containsTrick(const QString &trick_name) const
+{
+
+}
+
+int Player::handcardNum() const
+{
+
+}
+
+void Player::removeCard(const Card *card, QSgsEnum::CardPlace place)
+{
+
+}
+
+void Player::addCard(const Card *card, QSgsEnum::CardPlace place)
+{
+
+}
+
+QList<const Card *> Player::handcards() const
+{
+
+}
+
+Card *Player::weapon() const
+{
+
+}
+
+Card *Player::armor() const
+{
+
+}
+
+Card *Player::defensiveHorse() const
+{
+
+}
+
+Card *Player::offensiveHorse() const
+{
+
+}
+
+Card *Player::treasure() const
+{
+
+}
+
+QList<const Card *> Player::equips() const
+{
+
+}
+
+const Card *Player::equip(int index) const
+{
+
+}
+
+bool Player::hasWeapon(const QString &weapon_name) const
+{
+
+}
+
+bool Player::hasArmor(const QString &armor_name) const
+{
+
+}
+
+bool Player::hasTreasure(const QString &treasure_name) const
+{
+
+}
+
+bool Player::isKongcheng() const
+{
+
+}
+
+bool Player::isNude() const
+{
+
+}
+
+bool Player::isAllNude() const
+{
+
+}
+
+bool Player::canDiscard(const Player *to, const QString &flags) const
+{
+
+}
+
+bool Player::canDiscard(const Player *to, int card_id) const
+{
+
+}
+
+void Player::addMark(const QString &mark, int add_num = 1)
+{
+
+}
+
+void Player::removeMark(const QString &mark, int remove_num = 1)
+{
+
+}
+
+void Player::setMark(const QString &mark, int value)
+{
+
+}
+
+int Player::mark(const QString &mark) const
+{
+
+}
+
+void Player::setChained(bool chained)
+{
+
+}
+
+bool Player::isChained() const
+{
+
+}
+
+bool Player::canBeChainedBy(const Player *source = NULL) const
+{
+
+}
+
+void Player::setRemoved(bool removed)
+{
+
+}
+
+bool Player::isRemoved() const
+{
+
+}
+
+bool Player::isDuanchang(const bool head = true) const
+{
+
+}
+
+bool Player::canSlash(const Player *other, const Card *slash, bool distance_limit = true, int rangefix = 0) const
+{
+
+}
+
+bool Player::canSlash(const Player *other, bool distance_limit = true, int rangefix = 0) const
+{
+
+}
+
+int Player::getCardCount(bool include_equip) const
+{
+
+}
+
+QList<int> Player::pile(const QString &pile_name) const
+{
+
+}
+
+QStringList Player::pileNames() const
+{
+
+}
+
+QString Player::pileName(int card_id) const
+{
+
+}
+
+QList<int> Player::handPile() const
+{
+
+}
+
+QStringList Player::handPileList(bool view_as_skill = true) const
+{
+
+}
+
+bool Player::pileOpen(const QString &pile_name, const QString &player) const
+{
+
+}
+
+void Player::setPileOpen(const QString &pile_name, const QString &player)
+{
+
+}
+
+void Player::addHistory(const QString &name, int times = 1)
+{
+
+}
+
+void Player::clearHistory(const QString &name = QString())
+{
+
+}
+
+bool Player::hasUsed(const QString &card_class) const
+{
+
+}
+
+int Player::usedTimes(const QString &card_class) const
+{
+
+}
+
+int Player::slashCount() const
+{
+
+}
+
+bool Player::hasEquipSkill(const QString &skill_name) const
+{
+
+}
+
+QSet<const TriggerSkill *> Player::triggerSkills() const
+{
+
+}
+
+QSet<const Skill *> Player::skills(bool include_equip = false, bool visible_only = true) const
+{
+
+}
+
+QList<const Skill *> Player::skillList(bool include_equip = false, bool visible_only = true) const
+{
+
+}
+
+QList<const Skill *> Player::headSkillList(bool visible_only = true) const
+{
+
+}
+
+QList<const Skill *> Player::deputySkillList(bool visible_only = true) const
+{
+
+}
+
+QSet<const Skill *> Player::visibleSkills(bool include_equip = false) const
+{
+
+}
+
+QList<const Skill *> Player::visibleSkillList(bool include_equip = false) const
+{
+
+}
+
+QSet<QString> Player::acquiredSkills() const
+{
+
+}
+
+QStringList Player::acquiredSkills(const QString &flags) const
+{
+
+}
+
+bool Player::isProhibited(const Player *to, const Card *card) const
+{
+
+}
+
+bool Player::canSlashWithoutCrossbow(const Card *slash = NULL) const
+{
+
+}
+
+bool Player::isLastHandCard(const Card *card, bool contain = false) const
+{
+
+}
+
+void Player::setCardLimitation(const QString &limit_list, const QString &pattern, bool single_turn = false)
+{
+
+}
+
+void Player::removeCardLimitation(const QString &limit_list, const QString &pattern)
+{
+
+}
+
+void Player::clearCardLimitation(bool single_turn = false)
+{
+
+}
+
+bool Player::isCardLimited(const Card *card, QSgsEnum::CardHandlingMethod method, bool isHandcard = false) const
+{
+
+}
+
+void Player::addQinggangTag(const Card *card)
+{
+
+}
+
+void Player::removeQinggangTag(const Card *card)
+{
+
+}
+
+const Player *Player::getLord(bool include_death = false) const
+{
+
+}
+
+void Player::copyFrom(Player *p)
+{
+
+}
+
+QList<const Player *> Player::getSiblings() const
+{
+
+}
+
+QList<const Player *> Player::getAliveSiblings() const
+{
+
+}
+
+bool Player::hasShownSkill(const Skill *skill) const
+{
+
+}
+
+bool Player::hasShownSkill(const QString &skill_name) const
+{
+
+}
+
+bool Player::hasShownSkills(const QString &skill_names) const
+{
+
+}
+
+void Player::preshowSkill(const QString &skill_name)
+{
+
+}
+
+bool Player::inHeadSkills(const QString &skill_name) const
+{
+
+}
+
+bool Player::inHeadSkills(const Skill *skill) const
+{
+
+}
+
+bool Player::inDeputySkills(const QString &skill_name) const
+{
+
+}
+
+bool Player::inDeputySkills(const Skill *skill) const
+{
+
+}
+
+const General *Player::actualGeneral1() const
+{
+
+}
+
+const General *Player::actualGeneral2() const
+{
+
+}
+
+QString Player::actualGeneral1Name() const
+{
+
+}
+
+QString Player::actualGeneral2Name() const
+{
+
+}
+
+void Player::setActualGeneral1(const General *general)
+{
+
+}
+
+void Player::setActualGeneral2(const General *general)
+{
+
+}
+
+void Player::setActualGeneral1Name(const QString &name)
+{
+
+}
+
+void Player::setActualGeneral2Name(const QString &name)
+{
+
+}
+
+bool Player::hasShownGeneral1() const
+{
+
+}
+
+bool Player::hasShownGeneral2() const
+{
+
+}
+
+void Player::setGeneral1Showed(bool showed)
+{
+
+}
+
+void Player::setGeneral2Showed(bool showed)
+{
+
+}
+
+bool Player::hasShownOneGeneral() const
+{
+
+}
+
+bool Player::hasShownAllGenerals() const
+{
+
+}
+
+void Player::setSkillPreshowed(const QString &skill, bool preshowed = true)
+{
+
+}
+
+void Player::setSkillsPreshowed(const QString &falgs = "hd", bool preshowed = true)
+{
+
+}
+
+bool Player::hasPreshowedSkill(const QString &name) const
+{
+
+}
+
+bool Player::hasPreshowedSkill(const Skill *skill) const
+{
+
+}
+
+bool Player::isHidden(const bool &head_general) const
+{
+
+}
+
+bool Player::ownSkill(const QString &skill_name) const
+{
+
+}
+
+bool Player::ownSkill(const Skill *skill) const
+{
+
+}
+
+bool Player::isFriendWith(const Player *player) const
+{
+
+}
+
+bool Player::willBeFriendWith(const Player *player) const
+{
+
+}
+
+void Player::setNext(Player *next)
+{
+
+}
+
+void Player::setNext(const QString &next)
+{
+
+}
+
+Player *Player::next(bool ignoreRemoved = true) const
+{
+
+}
+
+QString Player::nextName() const
+{
+
+}
+
+Player *Player::last(bool ignoreRemoved = true) const
+{
+
+}
+
+Player *Player::nextAlive(int n = 1, bool ignoreRemoved = true) const
+{
+
+}
+
+Player *Player::lastAlive(int n = 1, bool ignoreRemoved = true) const
+{
+
+}
+
+QList<const Player *> Player::formation() const
+{
+
+}
 //#include "client.h"
 //#include "standard-basics.h"
 //#include "settings.h"
