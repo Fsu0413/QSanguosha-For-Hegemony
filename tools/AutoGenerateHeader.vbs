@@ -39,6 +39,13 @@ If folder Is Nothing Then
 	Set folder = scriptFile.ParentFolder
 End If
 
+Dim generateonly
+generateonly = False
+
+If outdir.Path = folder.Path Then
+	generateonly = True
+End If
+
 For Each file In folder.Files
 	If fso.GetExtensionName(file.Path) = "h" Then
 		procedureSingleFile(file.Path)
@@ -54,7 +61,9 @@ Sub procedureSingleFile(fileName)
 	Dim outPath
 	outPath = outdir.Path
 	If Right(path, 1) <> "\" Then outPath = outPath & "\"
-	fso.CopyFile fileName, outPath & fso.GetFileName(fileName)
+	If Not generateonly then
+		fso.CopyFile fileName, outPath & fso.GetFileName(fileName)
+	End if
 	Set fs = fso.OpenTextFile(fileName)
 	Do While Not fs.AtEndOfStream
 		line = fs.ReadLine
