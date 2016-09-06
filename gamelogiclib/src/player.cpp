@@ -79,64 +79,75 @@ public:
 bool (Player::*Player::isSuperposed)() const = &Player::faceUp;
 void (Player::*Player::setSuperposed)(bool superposed) = &Player::setFaceUp;
 
-Player::Player(QObject *parent)
+Player::Player(QObject *parent) : d_ptr(new PlayerPrivate)
 {
 
 }
 
 int Player::hp() const
 {
-    return 0;
+    Q_D(const Player);
+    return d->hp;
 }
 
 void Player::setHp(int hp)
 {
-
+    Q_D(Player);
+    d->hp = hp;
 }
 
 int Player::maxHp() const
 {
-    return 0;
+    Q_D(Player);
+    return d->maxHp;
 }
 
 void Player::setMaxHp(int maxHp)
 {
-
+    Q_D(Player);
+    d->maxHp = maxHp;
 }
 
 int Player::lostHp() const
 {
-    return 0;
+    Q_D(const Player);
+    return d->maxHp - d->hp;
 }
 
 bool Player::isWounded() const
 {
-    return false;
+    Q_D(const Player);
+    return d->maxHp != d->hp;
 }
 
 QSgsEnum::GeneralGender Player::gender() const
 {
-    return QSgsEnum::GeneralGender::Sexless;
+    Q_D(const Player);
+    return d->gender;
 }
 
 void Player::setGender(QSgsEnum::GeneralGender gender)
 {
-
+    Q_D(Player);
+    d->gender = gender;
 }
 
 bool Player::isMale() const
 {
-    return false;
+    Q_D(const Player);
+    return d->gender == QSgsEnum::GeneralGender::Male || d->gender == QSgsEnum::GeneralGender::Neuter;
 }
 
 bool Player::isFemale() const
 {
-    return false;
+    Q_D(const Player);
+    return d->gender == QSgsEnum::GeneralGender::Female || d->gender == QSgsEnum::GeneralGender::Neuter;
 }
 
 bool Player::isNeuter() const
 {
-    return false;
+    Q_D(const Player);
+    return d->gender == QSgsEnum::GeneralGender::Neuter;
 }
 
 void Player::setDisableShow(const QString &flags, const QString &reason)
@@ -151,22 +162,26 @@ void Player::removeDisableShow(const QString &reason)
 
 const QStringList &Player::disableShow(bool head) const
 {
-    return QStringList();
+    Q_D(const Player);
+    return d->disableShow;
 }
 
 const QString &Player::kingdom() const
 {
-    return QString();
+    Q_D(const Player);
+    return d->kingdom;
 }
 
 void Player::setKingdom(const QString &kingdom)
 {
-
+    Q_D(Player);
+    d->kingdom = kingdom;
 }
 
 void Player::setGeneral(const General *general)
 {
-
+    Q_D(Player);
+    d->general = general;
 }
 
 void Player::setGeneralName(const QString &general_name)
@@ -191,27 +206,32 @@ const QString &Player::general2Name() const
 
 const General *Player::general2() const
 {
-    return nullptr;
+    Q_D(const Player);
+    return d->general2;
 }
 
 void Player::setState(const QString &state)
 {
-
+    Q_D(Player);
+    d->state = state;
 }
 
 const QString &Player::state() const
 {
-    return QString();
+    Q_D(const Player);
+    return d->state;
 }
 
 int Player::seat() const
 {
-    return 0;
+    Q_D(const Player);
+    return d->seat;
 }
 
 void Player::setSeat(int seat)
 {
-
+    Q_D(Player);
+    d->seat = seat;
 }
 
 bool Player::isAdjacentTo(const Player *another) const
@@ -221,7 +241,7 @@ bool Player::isAdjacentTo(const Player *another) const
 
 QString Player::phaseString() const
 {
-    return QString();
+
 }
 
 void Player::setPhaseString(const QString &phase_str)
@@ -231,12 +251,14 @@ void Player::setPhaseString(const QString &phase_str)
 
 QSgsEnum::PlayerPhase Player::phase() const
 {
-    return QSgsEnum::PlayerPhase::NoPhase;
+    Q_D(const Player);
+    return d->phase;
 }
 
 void Player::setPhase(QSgsEnum::PlayerPhase phase)
 {
-
+    Q_D(Player);
+    d->phase = phase;
 }
 
 int Player::attackRange(bool include_weapon) const
@@ -251,17 +273,20 @@ bool Player::inMyAttackRange(const Player *other) const
 
 bool Player::isAlive() const
 {
-    return false;
+    Q_D(const Player);
+    return d->alive;
 }
 
 bool Player::isDead() const
 {
-    return false;
+    Q_D(const Player);
+    return !d->alive;
 }
 
 void Player::setAlive(bool alive)
 {
-
+    Q_D(Player);
+    d->alive = alive;
 }
 
 QString Player::flags() const
@@ -291,12 +316,14 @@ void Player::clearFlags()
 
 bool Player::faceUp() const
 {
-    return false;
+    Q_D(const Player);
+    return d->faceUp;
 }
 
 void Player::setFaceUp(bool faceUp)
 {
-
+    Q_D(Player);
+    d->faceUp = faceUp;
 }
 
 void Player::setFixedDistance(const Player *player, int distance)
@@ -386,7 +413,8 @@ QList<const Card *> Player::judgingArea() const
 
 QList<int> Player::judgingAreaID() const
 {
-
+    Q_D(const Player);
+    return d->judgingArea;
 }
 
 void Player::addDelayedTrick(const Card *trick)
@@ -426,27 +454,32 @@ QList<const Card *> Player::handcards() const
 
 Card *Player::weapon() const
 {
-
+    Q_D(const Player);
+    return d->weapon;
 }
 
 Card *Player::armor() const
 {
-
+    Q_D(const Player);
+    return d->armor;
 }
 
 Card *Player::defensiveHorse() const
 {
-
+    Q_D(const Player);
+    return d->defensiveHorse;
 }
 
 Card *Player::offensiveHorse() const
 {
-
+    Q_D(const Player);
+    return d->offensiveHorse;
 }
 
 Card *Player::treasure() const
 {
-
+    Q_D(const Player);
+    return d->treasure;
 }
 
 QList<const Card *> Player::equips() const
@@ -521,12 +554,14 @@ int Player::mark(const QString &mark) const
 
 void Player::setChained(bool chained)
 {
-
+    Q_D(Player);
+    d->chained = chained;
 }
 
 bool Player::isChained() const
 {
-
+    Q_D(const Player);
+    return d->chained;
 }
 
 bool Player::canBeChainedBy(const Player *source = NULL) const
@@ -536,12 +571,14 @@ bool Player::canBeChainedBy(const Player *source = NULL) const
 
 void Player::setRemoved(bool removed)
 {
-
+    Q_D(Player);
+    d->removed = removed;
 }
 
 bool Player::isRemoved() const
 {
-
+    Q_D(const Player);
+    return d->removed;
 }
 
 bool Player::isDuanchang(const bool head = true) const
@@ -781,12 +818,14 @@ bool Player::inDeputySkills(const Skill *skill) const
 
 const General *Player::actualGeneral1() const
 {
-
+    Q_D(const Player);
+    return d->actualGeneral1;
 }
 
 const General *Player::actualGeneral2() const
 {
-
+    Q_D(const Player);
+    return d->actualGeneral2;
 }
 
 QString Player::actualGeneral1Name() const
@@ -801,12 +840,14 @@ QString Player::actualGeneral2Name() const
 
 void Player::setActualGeneral1(const General *general)
 {
-
+    Q_D(Player);
+    d->actualGeneral1 = general;
 }
 
 void Player::setActualGeneral2(const General *general)
 {
-
+    Q_D(Player);
+    d->actualGeneral2 = general;
 }
 
 void Player::setActualGeneral1Name(const QString &name)
