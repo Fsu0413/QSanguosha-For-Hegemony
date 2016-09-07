@@ -32,11 +32,11 @@ struct DamageStruct
 {
 
     DamageStruct();
-//    DamageStruct(const Card *card, ServerPlayer *from, ServerPlayer *to, int damage = 1, Nature nature = Normal);
-//    DamageStruct(const QString &reason, ServerPlayer *from, ServerPlayer *to, int damage = 1, Nature nature = Normal);
+//    DamageStruct(const Card *card, Player *from, Player *to, int damage = 1, Nature nature = Normal);
+//    DamageStruct(const QString &reason, Player *from, Player *to, int damage = 1, Nature nature = Normal);
 
-//    ServerPlayer *from;
-//    ServerPlayer *to;
+//    Player *from;
+//    Player *to;
 //    const Card *card;
 //    int damage;
 //    Nature nature;
@@ -56,8 +56,8 @@ struct CardEffectStruct
 
 //    const Card *card;
 
-//    ServerPlayer *from;
-//    ServerPlayer *to;
+//    Player *from;
+//    Player *to;
 
 //    bool multiple; // helper to judge whether the card has multiple targets
 //    // does not make sense if the card inherits SkillCard
@@ -73,8 +73,8 @@ struct SlashEffectStruct
 //    const Card *slash;
 //    const Card *jink;
 
-//    ServerPlayer *from;
-//    ServerPlayer *to;
+//    Player *from;
+//    Player *to;
 
 //    int drank;
 
@@ -87,15 +87,15 @@ struct CardUseStruct
 {
 
     CardUseStruct();
-//    CardUseStruct(const Card *card, ServerPlayer *from, QList<ServerPlayer *> to, bool isOwnerUse = true);
-//    CardUseStruct(const Card *card, ServerPlayer *from, ServerPlayer *target, bool isOwnerUse = true);
+//    CardUseStruct(const Card *card, Player *from, QList<Player *> to, bool isOwnerUse = true);
+//    CardUseStruct(const Card *card, Player *from, Player *target, bool isOwnerUse = true);
     bool isValid(const QString &pattern) const;
     void parse(const QString &str, Room *room);
     bool tryParse(const QVariant &usage, Room *room);
 
 //    const Card *card;
-//    ServerPlayer *from;
-//    QList<ServerPlayer *> to;
+//    Player *from;
+//    QList<Player *> to;
 //    bool m_isOwnerUse;
 //    bool m_addHistory;
 //    bool m_isHandcard;
@@ -275,7 +275,7 @@ struct DyingStruct
 {
     DyingStruct();
 
-//    ServerPlayer *who; // who is ask for help
+//    Player *who; // who is ask for help
 //    DamageStruct *damage; // if it is nullptr that means the dying is caused by losing hp
 };
 
@@ -283,7 +283,7 @@ struct DeathStruct
 {
     DeathStruct();
 
-//    ServerPlayer *who; // who is dead
+//    Player *who; // who is dead
 //    DamageStruct *damage; // if it is nullptr that means the dying is caused by losing hp
 };
 
@@ -292,7 +292,7 @@ struct RecoverStruct
     RecoverStruct();
 
 //    int recover;
-//    ServerPlayer *who;
+//    Player *who;
 //    const Card *card;
 };
 
@@ -301,8 +301,8 @@ struct PindianStruct
     PindianStruct();
     bool isSuccess() const;
 
-//    ServerPlayer *from;
-//    ServerPlayer *to;
+//    Player *from;
+//    Player *to;
 //    const Card *from_card;
 //    const Card *to_card;
 //    int from_number;
@@ -321,7 +321,7 @@ struct JudgeStruct
 
     bool isGood(const Card *card) const; // For AI
 
-//    ServerPlayer *who;
+//    Player *who;
 //    const Card *card;
 //    QString pattern;
 //    bool good;
@@ -376,7 +376,7 @@ struct CardResponseStruct
 //        m_isRetrial = false;
 //    }
 
-//    inline CardResponseStruct(const Card *card, ServerPlayer *who)
+//    inline CardResponseStruct(const Card *card, Player *who)
 //    {
 //        m_card = card;
 //        m_who = who;
@@ -392,7 +392,7 @@ struct CardResponseStruct
 //        m_isRetrial = false;
 //    }
 
-//    inline CardResponseStruct(const Card *card, ServerPlayer *who, bool isUse)
+//    inline CardResponseStruct(const Card *card, Player *who, bool isUse)
 //    {
 //        m_card = card;
 //        m_who = who;
@@ -401,7 +401,7 @@ struct CardResponseStruct
 //    }
 
 //    const Card *m_card;
-//    ServerPlayer *m_who;
+//    Player *m_who;
 //    bool m_isUse;
 //    bool m_isHandcard;
 //    bool m_isRetrial;
@@ -456,8 +456,8 @@ struct LogMessage
     QVariant toVariant() const;
 
 //    QString type;
-//    ServerPlayer *from;
-//    QList<ServerPlayer *> to;
+//    Player *from;
+//    QList<Player *> to;
 //    QString card_str;
 //    QString arg;
 //    QString arg2;
@@ -485,8 +485,8 @@ Q_DECLARE_METATYPE(RecoverStruct)
 Q_DECLARE_METATYPE(PhaseChangeStruct)
 Q_DECLARE_METATYPE(CardResponseStruct)
 Q_DECLARE_METATYPE(PlayerNumStruct)
-//Q_DECLARE_METATYPE(const Card *)
-//Q_DECLARE_METATYPE(ServerPlayer *)
+//Q_DECLARE_METATYPE(Card *)
+//Q_DECLARE_METATYPE(Player *)
 //Q_DECLARE_METATYPE(JudgeStruct *)
 //Q_DECLARE_METATYPE(PindianStruct *)
 Q_DECLARE_METATYPE(AskForMoveCardsStruct)

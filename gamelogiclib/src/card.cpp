@@ -223,8 +223,6 @@ QSgsEnum::CardSuit Card::color() const
 
 bool Card::isEquipped() const
 {
-    // ClientPlayer? NO!!!
-    //return Self->hasEquip(this);
     Q_D(const Card);
     RoomObject::CardPlaceStruct str = d->roomObject->cardPlace(this);
     return str.place == QSgsEnum::CardPlace::Equip;
@@ -449,7 +447,7 @@ void Card::doPreAction(Room *, const CardUseStruct &) const
 void Card::onUse(Room *room, const CardUseStruct &use) const
 {
 //    CardUseStruct card_use = use;
-//    ServerPlayer *player = card_use.from;
+//    Player *player = card_use.from;
 
 //    room->sortByActionOrder(card_use.to);
 
@@ -463,7 +461,7 @@ void Card::onUse(Room *room, const CardUseStruct &use) const
 //    room->sendLog(log);
 
 //    if (card_use.card->isKindOf("Collateral")) { // put it here for I don't wanna repeat these codes in Card::onUse
-//        ServerPlayer *victim = card_use.to.first()->tag["collateralVictim"].value<ServerPlayer *>();
+//        Player *victim = card_use.to.first()->tag["collateralVictim"].value<Player *>();
 //        if (victim) {
 //            LogMessage log;
 //            log.type = "#CollateralSlash";
@@ -524,11 +522,11 @@ void Card::onUse(Room *room, const CardUseStruct &use) const
 //    thread->trigger(CardFinished, room, player, data);
 }
 
-void Card::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const
+void Card::use(Room *room, Player *source, QList<Player *> &targets) const
 {
 //    QStringList nullified_list = room->getTag("CardUseNullifiedList").toStringList();
 //    bool all_nullified = nullified_list.contains("_ALL_TARGETS");
-//    foreach (ServerPlayer *target, targets) {
+//    foreach (Player *target, targets) {
 //        CardEffectStruct effect;
 //        effect.card = this;
 //        effect.from = source;
@@ -571,7 +569,7 @@ QStringList Card::checkTargetModSkillShow(const CardUseStruct &) const
     return QStringList();
 }
 
-void Card::onNullified(ServerPlayer *) const
+void Card::onNullified(Player *) const
 {
     return;
 }
@@ -586,7 +584,7 @@ const Card *Card::validate(CardUseStruct &) const
     return this;
 }
 
-const Card *Card::validateInResponse(ServerPlayer *) const
+const Card *Card::validateInResponse(Player *) const
 {
     return this;
 }

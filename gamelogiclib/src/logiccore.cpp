@@ -919,7 +919,7 @@
 //    return correct;
 //}
 
-//int GameLogicCore::correctMaxCards(const ServerPlayer *target, bool fixed, MaxCardsType::MaxCardsCount type) const
+//int GameLogicCore::correctMaxCards(const Player *target, bool fixed, MaxCardsType::MaxCardsCount type) const
 //{
 //    int extra = 0;
 

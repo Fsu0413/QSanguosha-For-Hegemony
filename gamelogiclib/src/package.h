@@ -40,7 +40,7 @@ public:
     const General *general(const QString &generalName) const;
     const QHash<QString, const CardFace *> &cardFaces() const;
     const CardFace *cardFace(const QString &cardFaceName) const;
-    const QList<const Card *> cards() const;
+    const QList<Card *> cards() const;
     const QHash<QString, const Skill *> skills() const;
     const Skill *skill(const QString &skillName) const;
     const QMultiMap<QString, QString> relatedSkills() const;

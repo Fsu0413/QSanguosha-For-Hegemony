@@ -29,7 +29,7 @@ public:
 
     QHash<QString, const CardFace *> cardFaces;
 
-    QList<const Card *> cards;
+    QList<Card *> cards;
     QHash<QString, const Skill *> skills;
     QMultiMap<QString, QString> relatedSkills;
 
@@ -76,7 +76,7 @@ const CardFace *QSgsPackage::cardFace(const QString &cardFaceName) const
     return d->cardFaces.value(cardFaceName,nullptr);
 }
 
-const QList<const Card *> QSgsPackage::cards() const
+const QList<Card *> QSgsPackage::cards() const
 {
     Q_D(const QSgsPackage);
     return d->cards;

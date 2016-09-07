@@ -49,14 +49,14 @@
 //    judge.negative = true;
 //}
 
-//void DelayedTrick::onNullified(ServerPlayer *target) const
+//void DelayedTrick::onNullified(Player *target) const
 //{
 //    Room *room = target->getRoom();
 //    RoomThread *thread = room->getThread();
 //    if (m_movable) {
-//        QList<ServerPlayer *> players;
-//        QList<ServerPlayer *> count_players = room->getPlayers();
-//        ServerPlayer *starter = target;
+//        QList<Player *> players;
+//        QList<Player *> count_players = room->getPlayers();
+//        Player *starter = target;
 //        int index = count_players.indexOf(starter);
 //        for (int i = index + 1; i < count_players.length(); i++) {
 //            if (count_players[i]->isAlive())
@@ -68,9 +68,9 @@
 //                players << count_players[i];
 //        }
 
-//        ServerPlayer *p = NULL;
+//        Player *p = nullptr;
 
-//        foreach (ServerPlayer *player, players) {
+//        foreach (Player *player, players) {
 //            if (player->containsTrick(objectName()))
 //                continue;
 
@@ -92,7 +92,7 @@
 
 //            if (target == player) break;
 
-//            CardUseStruct use(this, NULL, player);
+//            CardUseStruct use(this, nullptr, player);
 //            QVariant data = QVariant::fromValue(use);
 //            thread->trigger(QSgsEnum::TriggerEvent::TargetConfirming, room, player, data);
 //            CardUseStruct new_use = data.value<CardUseStruct>();
@@ -101,9 +101,9 @@
 //                break;
 //            }
 
-//            foreach(ServerPlayer *p, room->getAllPlayers())
+//            foreach(Player *p, room->getAllPlayers())
 //                thread->trigger(QSgsEnum::TriggerEvent::TargetChosen, room, p, data);
-//            foreach(ServerPlayer *p, room->getAllPlayers())
+//            foreach(Player *p, room->getAllPlayers())
 //                thread->trigger(QSgsEnum::TriggerEvent::TargetConfirmed, room, p, data);
 //            break;
 //        }
@@ -111,7 +111,7 @@
 //            onNullified(p);
 //    } else {
 //        CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, target->objectName());
-//        room->throwCard(this, reason, NULL);
+//        room->throwCard(this, reason, nullptr);
 //    }
 //}
 
@@ -143,7 +143,7 @@
 //    thread->trigger(QSgsEnum::TriggerEvent::CardFinished, room, use.from, data);
 //}
 
-//void DelayedTrick::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const
+//void DelayedTrick::use(Room *room, Player *source, QList<Player *> &targets) const
 //{
 //    QStringList nullified_list = room->getTag("CardUseNullifiedList").toStringList();
 //    bool all_nullified = nullified_list.contains("_ALL_TARGETS");
@@ -153,7 +153,7 @@
 //            if (room->getCardOwner(getEffectiveId()) != source) return;
 //        }
 //        CardMoveReason reason(CardMoveReason::S_REASON_USE, source->objectName(), QString(), this->getSkillName(), QString());
-//        room->moveCardTo(this, NULL, QSgsEnum::CardPlace::DiscardPile, reason, true);
+//        room->moveCardTo(this, nullptr, QSgsEnum::CardPlace::DiscardPile, reason, true);
 //    }
 //}
 
@@ -167,7 +167,7 @@
 //    Room *room = effect.to->getRoom();
 
 //    CardMoveReason reason(CardMoveReason::S_REASON_USE, effect.to->objectName(), getSkillName(), QString());
-//    room->moveCardTo(this, NULL, QSgsEnum::CardPlace::ProceedingArea, reason, true);
+//    room->moveCardTo(this, nullptr, QSgsEnum::CardPlace::ProceedingArea, reason, true);
 
 //    LogMessage log;
 //    log.from = effect.to;
@@ -181,16 +181,16 @@
 
 //    if (judge_struct.isBad()) {
 //        takeEffect(effect.to);
-//        if (room->getCardOwner(getEffectiveId()) == NULL) {
+//        if (room->getCardOwner(getEffectiveId()) == nullptr) {
 //            CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, QString());
-//            room->throwCard(this, reason, NULL);
+//            room->throwCard(this, reason, nullptr);
 //        }
 //    } else if (m_movable) {
 //        onNullified(effect.to);
 //    } else {
-//        if (room->getCardOwner(getEffectiveId()) == NULL) {
+//        if (room->getCardOwner(getEffectiveId()) == nullptr) {
 //            CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, QString());
-//            room->throwCard(this, reason, NULL);
+//            room->throwCard(this, reason, nullptr);
 //        }
 //    }
 //}
@@ -225,7 +225,7 @@
 //{
 //    CardUseStruct use = card_use;
 
-//     ServerPlayer *player = use.from;
+//     Player *player = use.from;
 //     if (use.to.isEmpty())
 //         use.to << player;
 
@@ -236,14 +236,14 @@
 //     thread->trigger(QSgsEnum::TriggerEvent::CardFinished, room, player, data);
 //}
 
-//void EquipCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const
+//void EquipCard::use(Room *room, Player *source, QList<Player *> &targets) const
 //{
 //    if (targets.isEmpty()) {
 //        CardMoveReason reason(CardMoveReason::S_REASON_USE, source->objectName(), QString(), this->getSkillName(), QString());
-//        room->moveCardTo(this, room->getCardOwner(getEffectiveId()), NULL, QSgsEnum::CardPlace::DiscardPile, reason, true);
+//        room->moveCardTo(this, room->getCardOwner(getEffectiveId()), nullptr, QSgsEnum::CardPlace::DiscardPile, reason, true);
 //    }
 //    int equipped_id = Card::S_UNKNOWN_CARD_ID;
-//    ServerPlayer *target = targets.first();
+//    Player *target = targets.first();
 //    if (target->getEquip(location()))
 //        equipped_id = target->getEquip(location())->getEffectiveId();
 
@@ -266,14 +266,14 @@
 
 //    if (equipped_id != Card::S_UNKNOWN_CARD_ID) {
 //        if (room->getCardPlace(equipped_id) == QSgsEnum::CardPlace::ProceedingArea) {
-//            CardsMoveStruct move3(equipped_id, NULL, QSgsEnum::CardPlace::DiscardPile,
+//            CardsMoveStruct move3(equipped_id, nullptr, QSgsEnum::CardPlace::DiscardPile,
 //                CardMoveReason(CardMoveReason::S_REASON_CHANGE_EQUIP, target->objectName()));
 //            room->moveCardsAtomic(move3, true);
 //        }
 //    }
 //}
 
-//void EquipCard::onInstall(ServerPlayer *player) const
+//void EquipCard::onInstall(Player *player) const
 //{
 //    Room *room = player->getRoom();
 
@@ -290,7 +290,7 @@
 //    }
 //}
 
-//void EquipCard::onUninstall(ServerPlayer *player) const
+//void EquipCard::onUninstall(Player *player) const
 //{
 //    Room *room = player->getRoom();
 //    const Skill *skill = Sanguosha->getSkill(this);

@@ -9,11 +9,12 @@
 class Player;
 class Card;
 class Room;
-class ServerPlayer;
 
+class CardFacePrivate;
 
-class CardFace
+class CardFace : public QObject
 {
+    Q_OBJECT
 public:
 
     // In fact there is no such grammar in C++, but I set it here.
@@ -26,6 +27,7 @@ public:
     virtual bool willThrow() const;
     virtual bool hasPreAction() const;
     virtual QSgsEnum::CardHandlingMethod handlingMethod() const;
+
 
     virtual QSgsEnum::CardType typeId() const = 0;
     virtual bool isNDTrick() const;
@@ -40,28 +42,26 @@ public:
     virtual bool isAvailable(const Player *player) const;
 
     virtual const Card *validate(CardUseStruct &cardUse) const;
-    virtual const Card *validateInResponse(ServerPlayer *user) const;
+    virtual const Card *validateInResponse(Player *user) const;
 
     virtual void doPreAction(Room *room, const CardUseStruct &card_use) const;
     virtual void onUse(Room *room, const CardUseStruct &card_use) const;
-    virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
+    virtual void use(Room *room, Player *source, QList<Player *> &targets) const;
     virtual void onEffect(const CardEffectStruct &effect) const;
     virtual bool isCancelable(const CardEffectStruct &effect) const;
 
     virtual QStringList checkTargetModSkillShow(const CardUseStruct & /* use */) const;
 
-    virtual void onNullified(ServerPlayer * /* target */) const;
+    virtual void onNullified(Player *target) const;
     bool isKindOf(const char *cardType) const; // for YanXiao and LuaCard? Should we make Yanxiao as "move cards out of game"?
 
 
 protected:
-    explicit CardFace(const QString &name);
+    explicit CardFace(const QString &name, QSgsEnum::CardHandlingMethod handlingMethod = QSgsEnum::CardHandlingMethod::Use, bool targetFixed = false, bool willThrow = false, bool hasPreact = false);
 
-    QSgsEnum::CardHandlingMethod m_handlingMethod;
-
-    bool m_targetFixed;
-    bool m_willThrow;
-    bool m_hasPreact;
+private:
+    Q_DECLARE_PRIVATE(CardFace)
+    CardFacePrivate *d_ptr;
 
 };
 

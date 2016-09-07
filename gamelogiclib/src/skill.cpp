@@ -110,7 +110,7 @@ bool Skill::isVisible() const
     return !objectName().startsWith("#");
 }
 
-//int Skill::getEffectIndex(const ServerPlayer *, const Card *) const
+//int Skill::getEffectIndex(const ServerPlayer *, Card *) const
 //{
 //    return -1;
 //}
@@ -290,7 +290,7 @@ bool Skill::relateToPlace(bool head) const
 //{
 //}
 
-//const Card *ZeroCardViewAsSkill::viewAs(const QList<const Card *> &cards) const
+//const Card *ZeroCardViewAsSkill::viewAs(const QList<Card *> &cards) const
 //{
 //    if (cards.isEmpty())
 //        return viewAs();
@@ -298,7 +298,7 @@ bool Skill::relateToPlace(bool head) const
 //        return nullptr;
 //}
 
-//bool ZeroCardViewAsSkill::viewFilter(const QList<const Card *> &, const Card *) const
+//bool ZeroCardViewAsSkill::viewFilter(const QList<Card *> &, Card *) const
 //{
 //    return false;
 //}
@@ -308,7 +308,7 @@ bool Skill::relateToPlace(bool head) const
 //{
 //}
 
-//bool OneCardViewAsSkill::viewFilter(const QList<const Card *> &selected, const Card *to_select) const
+//bool OneCardViewAsSkill::viewFilter(const QList<Card *> &selected, const Card *to_select) const
 //{
 //    return selected.isEmpty() && !to_select->hasFlag("using") && viewFilter(to_select);
 //}
@@ -335,7 +335,7 @@ bool Skill::relateToPlace(bool head) const
 //    return false;
 //}
 
-//const Card *OneCardViewAsSkill::viewAs(const QList<const Card *> &cards) const
+//const Card *OneCardViewAsSkill::viewAs(const QList<Card *> &cards) const
 //{
 //    if (cards.length() != 1)
 //        return nullptr;
@@ -630,17 +630,17 @@ bool Skill::relateToPlace(bool head) const
 //    return pattern;
 //}
 
-//int TargetModSkill::residueNum(const Player *, const Card *) const
+//int TargetModSkill::residueNum(const Player *, Card *) const
 //{
 //    return 0;
 //}
 
-//int TargetModSkill::distanceLimit(const Player *, const Card *) const
+//int TargetModSkill::distanceLimit(const Player *, Card *) const
 //{
 //    return 0;
 //}
 
-//int TargetModSkill::extraTargetNum(const Player *, const Card *) const
+//int TargetModSkill::extraTargetNum(const Player *, Card *) const
 //{
 //    return 0;
 //}
