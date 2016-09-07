@@ -12,8 +12,9 @@ class Room;
 
 class CardFacePrivate;
 
-class CardFace
+class CardFace : public QObject
 {
+    Q_OBJECT
 public:
 
     // In fact there is no such grammar in C++, but I set it here.
@@ -26,6 +27,7 @@ public:
     virtual bool willThrow() const;
     virtual bool hasPreAction() const;
     virtual QSgsEnum::CardHandlingMethod handlingMethod() const;
+
 
     virtual QSgsEnum::CardType typeId() const = 0;
     virtual bool isNDTrick() const;
@@ -60,12 +62,6 @@ protected:
 private:
     Q_DECLARE_PRIVATE(CardFace)
     CardFacePrivate *d_ptr;
-
-    QSgsEnum::CardHandlingMethod m_handlingMethod;
-
-    bool m_targetFixed;
-    bool m_willThrow;
-    bool m_hasPreact;
 
 };
 
