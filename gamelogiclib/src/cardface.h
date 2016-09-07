@@ -41,8 +41,8 @@ public:
     virtual bool targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self, int &maxVotes) const;
     virtual bool isAvailable(const Player *player) const;
 
-    virtual const Card *validate(CardUseStruct &cardUse) const;
-    virtual const Card *validateInResponse(Player *user) const;
+    virtual const CardFace *validate(CardUseStruct &cardUse) const;
+    virtual const CardFace *validateInResponse(Player *user) const;
 
     virtual void doPreAction(Room *room, const CardUseStruct &card_use) const;
     virtual void onUse(Room *room, const CardUseStruct &card_use) const;

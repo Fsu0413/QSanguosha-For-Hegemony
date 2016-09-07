@@ -71,12 +71,12 @@ bool CardFace::isAvailable(const Player *) const
     return true;
 }
 
-const Card *CardFace::validate(CardUseStruct &) const
+const CardFace *CardFace::validate(CardUseStruct &) const
 {
     return this;
 }
 
-const Card *CardFace::validateInResponse(Player *) const
+const CardFace *CardFace::validateInResponse(Player *) const
 {
     return this;
 }
