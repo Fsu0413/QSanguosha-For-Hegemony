@@ -12,6 +12,13 @@ public:
 };
 
 
+CardFace::~CardFace()
+{
+    Q_D(CardFace);
+    if (d_ptr)
+        delete d_ptr;
+}
+
 bool CardFace::willThrow() const
 {
     Q_D(const CardFace);
@@ -37,7 +44,7 @@ bool CardFace::isNDTrick() const
 
 QString CardFace::package() const
 {
-    return "";
+    return QString();
 }
 
 bool CardFace::targetFixed() const
@@ -46,7 +53,7 @@ bool CardFace::targetFixed() const
     return d_ptr->targetFixed;
 }
 
-bool CardFace::targetsFeasible(const QList<const Player *> &, const Player *) const
+bool CardFace::targetsFeasible(const QList<const Player *> &targets, const Player *Self) const
 {
     return false;
 }
@@ -66,52 +73,52 @@ bool CardFace::targetFilter(const QList<const Player *> &targets, const Player *
     return result;
 }
 
-bool CardFace::isAvailable(const Player *) const
+bool CardFace::isAvailable(const Player *player) const
 {
     return true;
 }
 
-const Card *CardFace::validate(CardUseStruct &) const
+const CardFace *CardFace::validate(CardUseStruct &use) const
 {
     return this;
 }
 
-const Card *CardFace::validateInResponse(Player *) const
+const CardFace *CardFace::validateInResponse(Player *user) const
 {
     return this;
 }
 
-void CardFace::doPreAction(Room *, const CardUseStruct &) const
+void CardFace::doPreAction(Room *room, const CardUseStruct &use) const
 {
 
 }
 
-void CardFace::onUse(Room *, const CardUseStruct &) const
+void CardFace::onUse(Room *room, const CardUseStruct &use) const
 {
 
 }
 
-void CardFace::use(Room *, Player *, QList<Player *> &) const
+void CardFace::use(Room *room, Player *source, QList<Player *> &targets) const
 {
 
 }
 
-void CardFace::onEffect(const CardEffectStruct &) const
+void CardFace::onEffect(const CardEffectStruct &effect) const
 {
 
 }
 
-bool CardFace::isCancelable(const CardEffectStruct &) const
+bool CardFace::isCancelable(const CardEffectStruct &effect) const
 {
     return true;
 }
 
-QStringList CardFace::checkTargetModSkillShow(const CardUseStruct &) const
+QStringList CardFace::checkTargetModSkillShow(const CardUseStruct &effect) const
 {
     return QStringList();
 }
 
-void CardFace::onNullified(Player *) const
+void CardFace::onNullified(Player *target) const
 {
 
 }
