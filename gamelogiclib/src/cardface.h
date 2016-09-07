@@ -12,9 +12,10 @@ class Room;
 
 class CardFacePrivate;
 
-class CardFace : public QObject
+class LIBQSGSGAMELOGIC_EXPORT CardFace : public QObject
 {
     Q_OBJECT
+
 public:
 
     // In fact there is no such grammar in C++, but I set it here.

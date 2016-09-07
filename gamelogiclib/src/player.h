@@ -30,7 +30,7 @@ class Skill;
 class TriggerSkill;
 class PlayerPrivate;
 
-class Player : public QObject
+class LIBQSGSGAMELOGIC_EXPORT Player : public QObject
 {
     Q_OBJECT
 

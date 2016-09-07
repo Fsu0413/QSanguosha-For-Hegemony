@@ -9,7 +9,7 @@ class Player;
 class Card;
 class ProhibitSkill;
 
-class RoomRequestReceiver
+class LIBQSGSGAMELOGIC_EXPORT RoomRequestReceiver
 {
     // DO NOT INHERIT QObject HERE!!!
     // It is intended to be inherited by Socket/UI/AI, and wait for their reply
@@ -34,7 +34,7 @@ private:
     Q_DISABLE_COPY(RoomRequestReceiver)
 };
 
-class RoomRequestHandler final
+class LIBQSGSGAMELOGIC_EXPORT RoomRequestHandler final
 {
     // There should be no class inherits RoomRequestHandler
 public:
@@ -52,7 +52,7 @@ private:
 
 class RoomObjectPrivate;
 
-class RoomObject : public QObject
+class LIBQSGSGAMELOGIC_EXPORT RoomObject : public QObject
 {
     Q_OBJECT
 

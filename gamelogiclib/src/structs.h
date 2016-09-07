@@ -28,7 +28,7 @@ class Room;
 class Player;
 class Card;
 
-struct DamageStruct
+struct LIBQSGSGAMELOGIC_EXPORT DamageStruct
 {
 
     DamageStruct();
@@ -50,7 +50,7 @@ struct DamageStruct
     QString getReason() const;
 };
 
-struct CardEffectStruct
+struct LIBQSGSGAMELOGIC_EXPORT CardEffectStruct
 {
     CardEffectStruct();
 
@@ -64,7 +64,7 @@ struct CardEffectStruct
 //    bool nullptrified;
 };
 
-struct SlashEffectStruct
+struct LIBQSGSGAMELOGIC_EXPORT SlashEffectStruct
 {
     SlashEffectStruct();
 
@@ -83,7 +83,7 @@ struct SlashEffectStruct
 //    bool nullptrified;
 };
 
-struct CardUseStruct
+struct LIBQSGSGAMELOGIC_EXPORT CardUseStruct
 {
 
     CardUseStruct();
@@ -103,13 +103,13 @@ struct CardUseStruct
     QSgsEnum::CardUseReason m_reason;
 };
 
-struct SkillInvokeStruct
+struct LIBQSGSGAMELOGIC_EXPORT SkillInvokeStruct
 {
     // Skill, player, skillowner, target, card
 
 };
 
-class CardMovement
+class LIBQSGSGAMELOGIC_EXPORT CardMovement
 {
 public:
     QSgsEnum::CardMoveReason m_reason;
@@ -152,7 +152,7 @@ public:
 
 };
 
-struct CardsMoveOneTimeStruct
+struct LIBQSGSGAMELOGIC_EXPORT CardsMoveOneTimeStruct
 {
 //    QList<int> card_ids;
 //    QList<Player::Place> from_places;
@@ -172,7 +172,7 @@ struct CardsMoveOneTimeStruct
 //    bool is_last_handcard;
 };
 
-struct CardsMoveStruct
+struct LIBQSGSGAMELOGIC_EXPORT CardsMoveStruct
 {
     inline CardsMoveStruct()
     {
@@ -271,7 +271,7 @@ struct CardsMoveStruct
     }
 };
 
-struct DyingStruct
+struct LIBQSGSGAMELOGIC_EXPORT DyingStruct
 {
     DyingStruct();
 
@@ -279,7 +279,7 @@ struct DyingStruct
 //    DamageStruct *damage; // if it is nullptr that means the dying is caused by losing hp
 };
 
-struct DeathStruct
+struct LIBQSGSGAMELOGIC_EXPORT DeathStruct
 {
     DeathStruct();
 
@@ -287,7 +287,7 @@ struct DeathStruct
 //    DamageStruct *damage; // if it is nullptr that means the dying is caused by losing hp
 };
 
-struct RecoverStruct
+struct LIBQSGSGAMELOGIC_EXPORT RecoverStruct
 {
     RecoverStruct();
 
@@ -296,7 +296,7 @@ struct RecoverStruct
 //    const Card *card;
 };
 
-struct PindianStruct
+struct LIBQSGSGAMELOGIC_EXPORT PindianStruct
 {
     PindianStruct();
     bool isSuccess() const;
@@ -311,7 +311,7 @@ struct PindianStruct
 //    bool success;
 };
 
-struct JudgeStruct
+struct LIBQSGSGAMELOGIC_EXPORT JudgeStruct
 {
     JudgeStruct();
     bool isGood() const;
@@ -339,13 +339,14 @@ struct JudgeStruct
 //    } _m_result;
 };
 
-struct PhaseChangeStruct
+struct LIBQSGSGAMELOGIC_EXPORT PhaseChangeStruct
 {
     PhaseChangeStruct();
 //    Player::Phase from;
 //    Player::Phase to;
 };
 
+// @todo: Move it to Player?
 struct PhaseStruct
 {
     inline PhaseStruct()
@@ -358,7 +359,7 @@ struct PhaseStruct
 //    bool finished;
 };
 
-struct CardResponseStruct
+struct LIBQSGSGAMELOGIC_EXPORT CardResponseStruct
 {
     inline CardResponseStruct()
     {
@@ -407,15 +408,15 @@ struct CardResponseStruct
 //    bool m_isRetrial;
 };
 
-struct PlayerNumStruct
-{
-    inline PlayerNumStruct()
-    {
+//struct PlayerNumStruct
+//{
+//    inline PlayerNumStruct()
+//    {
 //        m_num = 0;
 //        m_toCalculate = QString();
 //        m_type = MaxCardsType::Max;
 //        m_reason = QString();
-    }
+//    }
 
 //    inline PlayerNumStruct(int num, const QString &toCalculate)
 //    {
@@ -445,11 +446,11 @@ struct PlayerNumStruct
 //    int m_num;
 //    QString m_toCalculate;
 //    QString m_reason;
-};
+//};
 
 
 
-struct LogMessage
+struct LIBQSGSGAMELOGIC_EXPORT LogMessage
 {
     LogMessage();
     QString toString() const;
@@ -484,7 +485,7 @@ Q_DECLARE_METATYPE(DeathStruct)
 Q_DECLARE_METATYPE(RecoverStruct)
 Q_DECLARE_METATYPE(PhaseChangeStruct)
 Q_DECLARE_METATYPE(CardResponseStruct)
-Q_DECLARE_METATYPE(PlayerNumStruct)
+//Q_DECLARE_METATYPE(PlayerNumStruct)
 //Q_DECLARE_METATYPE(Card *)
 //Q_DECLARE_METATYPE(Player *)
 //Q_DECLARE_METATYPE(JudgeStruct *)

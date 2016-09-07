@@ -3,6 +3,11 @@
 
 // NO INCLUDES HERE!!!!
 
+#if 0
+// for header generation
+class _EXPORT QSgsEnum
+#endif
+
 namespace QSgsEnum
 {
 

@@ -29,7 +29,7 @@ class CardFace;
 class RoomObject;
 
 // Make Card a final class, we subclass a class called CardFace to make card functional
-class Card final: public QObject
+class LIBQSGSGAMELOGIC_EXPORT Card final: public QObject
 {
     Q_OBJECT
 

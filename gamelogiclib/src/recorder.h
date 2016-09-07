@@ -23,7 +23,7 @@
 
 #include "libqsgsgamelogicglobal.h"
 
-class Recorder : public QObject
+class LIBQSGSGAMELOGIC_EXPORT Recorder : public QObject
 {
     Q_OBJECT
 
@@ -41,7 +41,7 @@ private:
     QByteArray data;
 };
 
-class Replayer : public QThread
+class LIBQSGSGAMELOGIC_EXPORT Replayer : public QThread
 {
     Q_OBJECT
 

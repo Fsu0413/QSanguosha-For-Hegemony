@@ -30,7 +30,7 @@ class General;
 class Skill;
 class QSgsPackagePrivate;
 
-class QSgsPackage
+class LIBQSGSGAMELOGIC_EXPORT QSgsPackage
 {
 public:
     explicit QSgsPackage(const QString &name, QSgsEnum::PackageType type = QSgsEnum::PackageType::General);

@@ -79,5 +79,16 @@ win32-* {
 }
 generateHeaders.depends = mkdirGenerateHeaders
 
-QMAKE_EXTRA_TARGETS += mkdirGenerateHeaders generateHeaders
-PRE_TARGETDEPS += ../include/$$TARGET/
+generateHeadersCardfaces.target = ../include/$$TARGET/CardFaces/
+win32-* {
+    mkdirGenerateHeadersCardfaces.commands = if not exist $$system_path($$generateHeadersCardfaces.target) md $$system_path($$generateHeadersCardfaces.target)
+    generateHeadersCardfaces.commands = cscript $$system_path($$PWD/../tools/AutoGenerateHeader.vbs) -o $$system_path($$generateHeadersCardfaces.target) -f $$system_path($$PWD/cardfaces/)
+} else {
+    mkdirGenerateHeadersCardfaces.commands = mkdir -p $$generateHeadersCardfaces.target
+    generateHeadersCardfaces.commands = $$PWD/../tools/AutoGenerateHeader.sh -o $$generateHeadersCardfaces.target -f $$PWD/src/
+}
+mkdirGenerateHeadersCardfaces.depends = generateHeaders
+generateHeadersCardfaces.depends = mkdirGenerateHeadersCardfaces
+
+QMAKE_EXTRA_TARGETS += mkdirGenerateHeaders generateHeaders generateHeadersCardfaces mkdirGenerateHeadersCardfaces
+PRE_TARGETDEPS += ../include/$$TARGET/ ../include/$$TARGET/CardFaces/

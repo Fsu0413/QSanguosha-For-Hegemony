@@ -30,7 +30,7 @@ class Card;
 class Player;
 class Room;
 
-class Skill : public QObject
+class LIBQSGSGAMELOGIC_EXPORT Skill : public QObject
 {
     Q_OBJECT
 
@@ -58,7 +58,7 @@ private:
     bool m_lordSkill;
 };
 
-class ViewAsSkill : public Skill
+class LIBQSGSGAMELOGIC_EXPORT ViewAsSkill : public Skill
 {
     Q_OBJECT
 
@@ -89,7 +89,7 @@ protected:
     QString m_expandPile;
 };
 
-class ZeroCardViewAsSkill : public ViewAsSkill
+class LIBQSGSGAMELOGIC_EXPORT ZeroCardViewAsSkill : public ViewAsSkill
 {
     Q_OBJECT
 
@@ -101,7 +101,7 @@ public:
     virtual Card *viewAs() const = 0;
 };
 
-class OneCardViewAsSkill : public ViewAsSkill
+class LIBQSGSGAMELOGIC_EXPORT OneCardViewAsSkill : public ViewAsSkill
 {
     Q_OBJECT
 
@@ -118,17 +118,23 @@ protected:
     QString m_filterPattern;
 };
 
-class FilterSkill : public OneCardViewAsSkill
+class LIBQSGSGAMELOGIC_EXPORT CardTransformSkill : public Skill
 {
     Q_OBJECT
 
 public:
     FilterSkill(const QString &name);
+
+    virtual bool viewFilter(Card *to_select) const;
+    virtual Card *viewAs(Card *originalCard) const = 0;
+
+protected:
+    QString m_filterPattern;
 };
 
 typedef QMap<Player *, QStringList> TriggerList;
 
-class TriggerSkill : public Skill
+class LIBQSGSGAMELOGIC_EXPORT TriggerSkill : public Skill
 {
     Q_OBJECT
 
@@ -177,7 +183,7 @@ class Scenario;
 //    virtual bool triggerable(const Player *target) const;
 //};
 
-class MasochismSkill : public TriggerSkill
+class LIBQSGSGAMELOGIC_EXPORT MasochismSkill : public TriggerSkill
 {
     Q_OBJECT
 
@@ -189,7 +195,7 @@ public:
     virtual void onDamaged(Player *target, const DamageStruct &damage) const = 0;
 };
 
-class PhaseChangeSkill : public TriggerSkill
+class LIBQSGSGAMELOGIC_EXPORT PhaseChangeSkill : public TriggerSkill
 {
     Q_OBJECT
 
@@ -200,7 +206,7 @@ public:
     virtual bool onPhaseChange(Player *target) const = 0;
 };
 
-class DrawCardsSkill : public TriggerSkill
+class LIBQSGSGAMELOGIC_EXPORT DrawCardsSkill : public TriggerSkill
 {
     Q_OBJECT
 
@@ -211,7 +217,7 @@ public:
     virtual int getDrawNum(Player *player, int n) const = 0;
 };
 
-class GameStartSkill : public TriggerSkill
+class LIBQSGSGAMELOGIC_EXPORT GameStartSkill : public TriggerSkill
 {
     Q_OBJECT
 
@@ -222,7 +228,7 @@ public:
     virtual void onGameStart(Player *player) const = 0;
 };
 
-class BattleArraySkill : public TriggerSkill
+class LIBQSGSGAMELOGIC_EXPORT BattleArraySkill : public TriggerSkill
 {
     Q_OBJECT
 
@@ -241,7 +247,7 @@ private:
     QSgsEnum::ArrayType m_arrayType;
 };
 
-class ArraySummonSkill : public ZeroCardViewAsSkill
+class LIBQSGSGAMELOGIC_EXPORT ArraySummonSkill : public ZeroCardViewAsSkill
 {
     Q_OBJECT
 
@@ -253,7 +259,7 @@ public:
     virtual bool isEnabledAtPlay(const Player *player) const;
 };
 
-class ProhibitSkill : public Skill
+class LIBQSGSGAMELOGIC_EXPORT ProhibitSkill : public Skill
 {
     Q_OBJECT
 
@@ -263,7 +269,7 @@ public:
     virtual bool isProhibited(const Player *from, const Player *to, Card *card, const QList<const Player *> &others = QList<const Player *>()) const = 0;
 };
 
-class DistanceSkill : public Skill
+class LIBQSGSGAMELOGIC_EXPORT DistanceSkill : public Skill
 {
     Q_OBJECT
 
@@ -273,7 +279,7 @@ public:
     virtual int getCorrect(const Player *from, const Player *to) const = 0;
 };
 
-class MaxCardsSkill : public Skill
+class LIBQSGSGAMELOGIC_EXPORT MaxCardsSkill : public Skill
 {
     Q_OBJECT
 
@@ -284,7 +290,7 @@ public:
     virtual int getFixed(const Player *target/*, MaxCardsType::MaxCardsCount type = MaxCardsType::Max*/) const;
 };
 
-class TargetModSkill : public Skill
+class LIBQSGSGAMELOGIC_EXPORT TargetModSkill : public Skill
 {
     Q_OBJECT
 
@@ -300,7 +306,7 @@ protected:
     QString m_pattern;
 };
 
-class SlashNoDistanceLimitSkill : public TargetModSkill
+class LIBQSGSGAMELOGIC_EXPORT SlashNoDistanceLimitSkill : public TargetModSkill
 {
     Q_OBJECT
 
@@ -313,7 +319,7 @@ protected:
     QString m_name;
 };
 
-class AttackRangeSkill : public Skill
+class LIBQSGSGAMELOGIC_EXPORT AttackRangeSkill : public Skill
 {
     Q_OBJECT
 
@@ -326,7 +332,7 @@ public:
 
 
 // a nasty way for 'fake moves', usually used in the process of multi-card chosen
-class FakeMoveSkill : public TriggerSkill
+class LIBQSGSGAMELOGIC_EXPORT FakeMoveSkill : public TriggerSkill
 {
     Q_OBJECT
 
@@ -341,7 +347,7 @@ private:
     QString m_name;
 };
 
-class DetachEffectSkill : public TriggerSkill
+class LIBQSGSGAMELOGIC_EXPORT DetachEffectSkill : public TriggerSkill
 {
     Q_OBJECT
 
@@ -356,7 +362,7 @@ private:
     QString m_name, m_pileName;
 };
 
-class WeaponSkill : public TriggerSkill
+class LIBQSGSGAMELOGIC_EXPORT WeaponSkill : public TriggerSkill
 {
     Q_OBJECT
 
@@ -367,7 +373,7 @@ public:
     virtual bool triggerable(const Player *target) const;
 };
 
-class ArmorSkill : public TriggerSkill
+class LIBQSGSGAMELOGIC_EXPORT ArmorSkill : public TriggerSkill
 {
     Q_OBJECT
 
@@ -378,7 +384,7 @@ public:
     virtual bool triggerable(const Player *target) const;
 };
 
-class TreasureSkill : public TriggerSkill
+class LIBQSGSGAMELOGIC_EXPORT TreasureSkill : public TriggerSkill
 {
     Q_OBJECT
 

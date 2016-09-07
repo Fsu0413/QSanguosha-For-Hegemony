@@ -19,7 +19,7 @@ class ProhibitSkill;
 class Player;
 
 
-class GameLogicCore: public QObject
+class LIBQSGSGAMELOGIC_EXPORT GameLogicCore: public QObject
 {
     Q_OBJECT
     

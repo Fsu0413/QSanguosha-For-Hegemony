@@ -29,7 +29,7 @@
 class Room;
 class ScenarioRule;
 
-class Scenario : public QSgsPackage
+class LIBQSGSGAMELOGIC_EXPORT Scenario : public QSgsPackage
 {
 public:
     explicit Scenario(const QString &name);

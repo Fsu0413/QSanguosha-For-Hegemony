@@ -31,7 +31,7 @@ typedef int LuaFunction;
 
 
 
-class QSgsLuaPackage : public QSgsPackage
+class LIBQSGSGAMELOGIC_EXPORT QSgsLuaPackage : public QSgsPackage
 {
 public:
     explicit QSgsLuaPackage(const QString &name, QSgsEnum::PackageType type, const QString &version);

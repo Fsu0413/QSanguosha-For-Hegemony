@@ -6,6 +6,11 @@
 #include <lua.hpp>
 #include <QSgsCore/QSgsCoreGlobal>
 
+#if 0
+// for header generation
+class _EXPORT QSgsGameLogicGlobal
+#endif
+
 #ifdef LIBQSGGAMELOGIC_BUILDING_LIBQSGSGAMELOGIC
 #define LIBQSGSGAMELOGIC_EXPORT Q_DECL_EXPORT
 #else

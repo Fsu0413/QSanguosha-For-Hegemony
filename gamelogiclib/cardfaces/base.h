@@ -5,7 +5,7 @@
 #include "cardface.h"
 #include "structs.h"
 
-class BasicCard : public CardFace
+class LIBQSGSGAMELOGIC_EXPORT BasicCard : public CardFace
 {
 
 
@@ -15,7 +15,7 @@ public:
     QSgsEnum::CardType typeId() const;
 };
 
-class TrickCard : public CardFace
+class LIBQSGSGAMELOGIC_EXPORT TrickCard : public CardFace
 {
 
 
@@ -31,7 +31,7 @@ private:
     bool m_cancelable;
 };
 
-class InstanceTrick : public TrickCard
+class LIBQSGSGAMELOGIC_EXPORT InstanceTrick : public TrickCard
 {
 
 public:
@@ -41,7 +41,7 @@ public:
     QString subtype() const;
 };
 
-class DelayedTrick : public TrickCard
+class LIBQSGSGAMELOGIC_EXPORT DelayedTrick : public TrickCard
 {
 
 
@@ -63,7 +63,7 @@ private:
     bool m_movable;
 };
 
-class EquipCard : public CardFace
+class LIBQSGSGAMELOGIC_EXPORT EquipCard : public CardFace
 {
 
 
@@ -84,7 +84,7 @@ public:
     virtual QSgsEnum::EquipLocation location() const = 0;
 };
 
-class Weapon : public EquipCard
+class LIBQSGSGAMELOGIC_EXPORT Weapon : public EquipCard
 {
 
 
@@ -101,7 +101,7 @@ protected:
     int m_range;
 };
 
-class Armor : public EquipCard
+class LIBQSGSGAMELOGIC_EXPORT Armor : public EquipCard
 {
 
 
@@ -113,7 +113,7 @@ public:
     QString commonEffectName() const;
 };
 
-class Horse : public EquipCard
+class LIBQSGSGAMELOGIC_EXPORT Horse : public EquipCard
 {
 
 
@@ -131,7 +131,7 @@ private:
     int m_correct;
 };
 
-class OffensiveHorse : public Horse
+class LIBQSGSGAMELOGIC_EXPORT OffensiveHorse : public Horse
 {
 
 
@@ -140,7 +140,7 @@ public:
     QString subtype() const;
 };
 
-class DefensiveHorse : public Horse
+class LIBQSGSGAMELOGIC_EXPORT DefensiveHorse : public Horse
 {
 
 
@@ -149,7 +149,7 @@ public:
     QString subtype() const;
 };
 
-class Treasure : public EquipCard
+class LIBQSGSGAMELOGIC_EXPORT Treasure : public EquipCard
 {
 
 

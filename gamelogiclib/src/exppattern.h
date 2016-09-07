@@ -26,7 +26,7 @@
 #include "card.h"
 #include "player.h"
 
-class ExpPattern
+class LIBQSGSGAMELOGIC_EXPORT ExpPattern
 {
 public:
     ExpPattern(const QString &exp);

@@ -31,7 +31,7 @@ class QSize;
 
 class GeneralPrivate;
 
-class General final
+class LIBQSGSGAMELOGIC_EXPORT General final
 {
 public:
     General(QSgsPackage *package, const QString &name, bool lord, int doubleMaxHpHead, int doubleMaxHpDeputy, const QString &kingdom, QSgsEnum::GeneralGender gender);
