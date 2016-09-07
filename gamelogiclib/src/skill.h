@@ -35,34 +35,18 @@ class Skill : public QObject
     Q_OBJECT
 
 public:
-
     explicit Skill(const QString &name, QSgsEnum::SkillFrequency frequent = QSgsEnum::SkillFrequency::NotFrequent);
     bool isLordSkill() const;
     bool isAttachedLordSkill() const;
-    QString description(bool inToolTip = true) const;
-    QString notice(int index) const;
     bool isVisible() const;
 
-//    virtual int getEffectIndex(const Player *player, Card *card) const;
-//    virtual QDialog *getDialog() const;
-
-//    virtual QString getGuhuoBox() const;
-
-//    void initMediaSource();
-//    void playAudioEffect(int index = -1) const;
     QSgsEnum::SkillFrequency frequency() const;
     QString limitMark() const;
-//    QStringList getSources(const QString &general, const int skinId) const;
-//    QStringList getSources() const;
-
     virtual bool canPreshow() const;
     virtual bool relateToPlace(bool head = true) const;
 
     //for LUA
-    inline void setRelateToPlace(const char *rtp)
-    {
-        m_relateToPlace = rtp;
-    }
+    inline void setRelateToPlace(const char *rtp);
 
 protected:
     QSgsEnum::SkillFrequency m_frequency;
@@ -72,8 +56,6 @@ protected:
 
 private:
     bool m_lordSkill;
-    //QStringList sources;
-    //mutable QHash<const QString, QStringList> skinSourceHash;
 };
 
 class ViewAsSkill : public Skill
@@ -156,16 +138,6 @@ public:
     QList<QSgsEnum::TriggerEvent> triggerEvents() const;
 
     virtual int priority() const;
-    //virtual double getDynamicPriority(TriggerEvent e) const;
-    //     double getCurrentPriority() const
-    //     {
-    //         return current_priority;
-    //     }
-    //     void setCurrentPriority(double p) const
-    //     {
-    //         current_priority = p;
-    //     }
-
     void insertPriority(QSgsEnum::TriggerEvent e, double value);
 
     virtual bool triggerable(const Player *target) const;
@@ -190,8 +162,6 @@ protected:
     bool m_global;
     QHash<QSgsEnum::TriggerEvent, double> m_priority;
 
-//private:
-//    mutable double current_priority;
 };
 
 class Scenario;

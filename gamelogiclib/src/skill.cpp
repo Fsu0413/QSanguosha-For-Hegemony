@@ -50,8 +50,8 @@ bool Skill::isAttachedLordSkill() const
     return m_attachedLordSkill;
 }
 
-QString Skill::description(bool inToolTip) const
-{
+//QString Skill::description(bool inToolTip) const
+//{
 //    QString desc;
 //    if (!canPreshow())
 //        desc.prepend(QString("<font color=gray>(%1)</font><br/>").arg(tr("this skill cannot preshow")));
@@ -93,17 +93,17 @@ QString Skill::description(bool inToolTip) const
 
 //    desc.append(QString("<font color=%1>%2</font>").arg(inToolTip ? Config.SkillDescriptionInToolTipColor.name() : Config.SkillDescriptionInOverviewColor.name()).arg(des_src));
 //    return desc;
-    return QString();
-}
+//    return QString();
+//}
 
-QString Skill::notice(int index) const
-{
+//QString Skill::notice(int index) const
+//{
 //    if (index == -1)
 //        return Sanguosha->translate("~" + objectName());
 
 //    return Sanguosha->translate(QString("~%1%2").arg(objectName()).arg(index));
-    return QString();
-}
+//    return QString();
+//}
 
 bool Skill::isVisible() const
 {
@@ -230,6 +230,11 @@ bool Skill::relateToPlace(bool head) const
     else
         return m_relateToPlace == "deputy";
     return false;
+}
+
+void Skill::setRelateToPlace(const char *rtp)
+{
+    m_relateToPlace = rtp;
 }
 
 //ViewAsSkill::ViewAsSkill(const QString &name)
@@ -786,3 +791,8 @@ bool Skill::relateToPlace(bool head) const
 //        return false;
 //    return target->hasTreasure(objectName());
 //}
+
+TriggerSkill::~TriggerSkill()
+{
+
+}
