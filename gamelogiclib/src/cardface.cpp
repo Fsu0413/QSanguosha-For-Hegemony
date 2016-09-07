@@ -12,6 +12,13 @@ public:
 };
 
 
+CardFace::~CardFace()
+{
+    Q_D(CardFace);
+    if (d_ptr)
+        delete d_ptr;
+}
+
 bool CardFace::willThrow() const
 {
     Q_D(const CardFace);
