@@ -22,7 +22,7 @@
 #define _SCENARIO_H
 
 
-#include "libqsgscoreglobal.h"
+#include "libqsgsgamelogicglobal.h"
 #include "package.h"
 #include "enumeration.h"
 

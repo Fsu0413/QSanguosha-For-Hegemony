@@ -51,6 +51,7 @@ unix: !android: !mac: QMAKE_LFLAGS += -Wl,--rpath=../lib
 }
 
 LIBS += -L$$OUT_PWD/../inst/lib
+INCLUDEPATH += $$OUT_PWD/../include
 
 !winrt: !ios { # !macos?
     win32: dlltarget.path = /bin/
@@ -120,3 +121,5 @@ swig.output = ${QMAKE_FILE_BASE}_wrap.cpp
 swig.variable_out = SOURCES
 
 QMAKE_EXTRA_COMPILERS += swig
+
+

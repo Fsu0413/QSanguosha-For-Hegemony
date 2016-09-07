@@ -21,7 +21,7 @@
 #include "recorder.h"
 //#include "client.h"
 //#include "protocol.h"
-#include "src/protocol.h"
+#include <QSgsCore/QSgsProtocol>
 
 
 //#include <QMessageBox>

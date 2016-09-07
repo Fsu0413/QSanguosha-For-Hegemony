@@ -23,6 +23,11 @@
 
 #include "libqsgscoreglobal.h"
 
+#if 0
+// for header generation
+class _EXPORT QSgsCoreUtil
+#endif
+
 template<typename T>
 void qShuffle(QList<T> &list)
 {

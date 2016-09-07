@@ -77,6 +77,11 @@ protected:
     QString error;
 };
 
+#if 0
+// for header generation
+class _EXPORT JsonUtils
+#endif
+
 namespace JsonUtils
 {
 

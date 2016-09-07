@@ -19,7 +19,7 @@
     *********************************************************************/
 
 #include "lua-wrapper.h"
-#include "src/engine.h"
+#include <QSgsCore/QSgsEngine>
 #include "package.h"
 
 

@@ -22,13 +22,13 @@ CONFIG(bundledlua) {
 
 CONFIG += precompiled_header
 
-PRECOMPILED_HEADER = libqsgscoreglobal.h
+PRECOMPILED_HEADER = src/libqsgscoreglobal.h
 
 HEADERS += \
     src/engine.h \
     src/json.h \
     src/protocol.h \
-    libqsgscoreglobal.h \
+    src/libqsgscoreglobal.h \
     src/nativesocket.h \
     src/socket.h \
     src/util.h \
@@ -46,3 +46,17 @@ DESTDIR = $$OUT_PWD/../inst/lib
 DLLDESTDIR = $$OUT_PWD/../inst/bin
 
 SWIGFILES += swig/qsgscore.i
+
+generateHeaders.target = ../include/$$TARGET/
+win32-* {
+    mkdirGenerateHeaders.commands = if not exist $$system_path(../include/$$TARGET/) md $$system_path(../include/$$TARGET/)
+    generateHeaders.commands = cscript $$system_path($$PWD/../tools/AutoGenerateHeader.vbs) -o $$system_path($$generateHeaders.target) -f $$system_path($$PWD/src/)
+} else {
+    mkdirGenerateHeaders.commands = mkdir -p ../include/$$TARGET/
+    generateHeaders.commands = $$PWD/../tools/AutoGenerateHeader.sh -o $$generateHeaders.target -f $$PWD/src/
+}
+generateHeaders.depends = mkdirGenerateHeaders
+
+QMAKE_EXTRA_TARGETS += mkdirGenerateHeaders generateHeaders
+PRE_TARGETDEPS += ../include/$$TARGET/
+

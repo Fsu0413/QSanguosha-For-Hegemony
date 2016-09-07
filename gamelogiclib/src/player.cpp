@@ -19,7 +19,7 @@
     *********************************************************************/
 
 #include "player.h"
-#include "src/engine.h"
+#include <QSgsCore/QSgsEngine>
 
 class PlayerPrivate
 {

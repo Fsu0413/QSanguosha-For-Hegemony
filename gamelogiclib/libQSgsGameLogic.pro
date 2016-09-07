@@ -22,7 +22,7 @@ CONFIG(bundledlua) {
 
 CONFIG += precompiled_header
 
-PRECOMPILED_HEADER = libqsgsgamelogicglobal.h
+PRECOMPILED_HEADER = src/libqsgsgamelogicglobal.h
 
 INCLUDEPATH += \
     ../corelib/ \
@@ -31,7 +31,7 @@ INCLUDEPATH += \
 
 
 HEADERS += \
-    libqsgsgamelogicglobal.h \
+    src/libqsgsgamelogicglobal.h \
     src/card.h \
     src/cardface.h \
     src/general.h \
@@ -68,3 +68,16 @@ DESTDIR = $$OUT_PWD/../inst/lib
 DLLDESTDIR = $$OUT_PWD/../inst/bin
 
 LIBS += -lQSgsCore
+
+generateHeaders.target = ../include/$$TARGET/
+win32-* {
+    mkdirGenerateHeaders.commands = if not exist $$system_path(../include/$$TARGET/) md $$system_path(../include/$$TARGET/)
+    generateHeaders.commands = cscript $$system_path($$PWD/../tools/AutoGenerateHeader.vbs) -o $$system_path($$generateHeaders.target) -f $$system_path($$PWD/src/)
+} else {
+    mkdirGenerateHeaders.commands = mkdir -p ../include/$$TARGET/
+    generateHeaders.commands = $$PWD/../tools/AutoGenerateHeader.sh -o $$generateHeaders.target -f $$PWD/src/
+}
+generateHeaders.depends = mkdirGenerateHeaders
+
+QMAKE_EXTRA_TARGETS += mkdirGenerateHeaders generateHeaders
+PRE_TARGETDEPS += ../include/$$TARGET/

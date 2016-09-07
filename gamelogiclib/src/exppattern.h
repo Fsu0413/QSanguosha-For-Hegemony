@@ -21,6 +21,7 @@
 #ifndef _EXPPATTERN_H
 #define _EXPPATTERN_H
 
+#include "libqsgsgamelogicglobal.h"
 #include "package.h"
 #include "card.h"
 #include "player.h"
