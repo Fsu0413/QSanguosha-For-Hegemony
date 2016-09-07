@@ -24,7 +24,7 @@
 NativeServerSocket::NativeServerSocket()
 {
     server = new QTcpServer(this);
-    daemon = NULL;
+    daemon = nullptr;
     connect(server, &QTcpServer::newConnection, this, &NativeServerSocket::processNewConnection);
 }
 
