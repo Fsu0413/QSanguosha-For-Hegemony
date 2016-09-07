@@ -83,8 +83,8 @@ class ViewAsSkill : public Skill
 public:
     ViewAsSkill(const QString &name);
 
-    virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const = 0;
-    virtual const Card *viewAs(const QList<const Card *> &cards) const = 0;
+    virtual bool viewFilter(const QList<Card *> &selected, const Card *to_select) const = 0;
+    virtual const Card *viewAs(const QList<Card *> &cards) const = 0;
 
     bool isAvailable(const Player *invoker, QSgsEnum::CardUseReason reason, const QString &pattern) const;
     virtual bool isEnabledAtPlay(const Player *player) const;
@@ -114,8 +114,8 @@ class ZeroCardViewAsSkill : public ViewAsSkill
 public:
     ZeroCardViewAsSkill(const QString &name);
 
-    virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const;
-    virtual const Card *viewAs(const QList<const Card *> &cards) const;
+    virtual bool viewFilter(const QList<Card *> &selected, const Card *to_select) const;
+    virtual const Card *viewAs(const QList<Card *> &cards) const;
     virtual const Card *viewAs() const = 0;
 };
 
@@ -126,8 +126,8 @@ class OneCardViewAsSkill : public ViewAsSkill
 public:
     OneCardViewAsSkill(const QString &name);
 
-    virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const;
-    virtual const Card *viewAs(const QList<const Card *> &cards) const;
+    virtual bool viewFilter(const QList<Card *> &selected, const Card *to_select) const;
+    virtual const Card *viewAs(const QList<Card *> &cards) const;
 
     virtual bool viewFilter(const Card *to_select) const;
     virtual const Card *viewAs(const Card *originalCard) const = 0;

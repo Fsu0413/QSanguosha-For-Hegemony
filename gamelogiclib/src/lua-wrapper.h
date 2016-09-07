@@ -143,8 +143,8 @@ QSgsLuaPackage *parseLuaPackage(const QString &fileName, bool *ok = nullptr);
 //    }
 //    virtual QString getGuhuoBox() const;
 
-//    virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const;
-//    virtual const Card *viewAs(const QList<const Card *> &cards) const;
+//    virtual bool viewFilter(const QList<Card *> &selected, const Card *to_select) const;
+//    virtual const Card *viewAs(const QList<Card *> &cards) const;
 
 
 //    void pushSelf(lua_State *L) const;

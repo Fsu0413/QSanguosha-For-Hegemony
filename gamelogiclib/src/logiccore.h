@@ -74,7 +74,7 @@ public:
 
     int cardCount() const;
     //const Card *getEngineCard(int cardId) const;
-    // @todo: consider making this const Card *
+    // @todo: consider making this Card *
     Card *card(int cardId);
     //************************************
     // Method:    getRandomGenerals

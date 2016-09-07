@@ -72,7 +72,7 @@ Replayer::Replayer(QObject *parent, const QString &filename)
     : QThread(parent), m_commandSeriesCounter(1),
     filename(filename), speed(1.0), playing(true)
 {
-    QIODevice *device = NULL;
+    QIODevice *device = nullptr;
     if (filename.endsWith(".qsgs")) {
         QFile *file = new QFile(filename);
         if (file->open(QFile::ReadOnly)) {
@@ -93,7 +93,7 @@ Replayer::Replayer(QObject *parent, const QString &filename)
         }
     }
 
-    if (device == NULL)
+    if (device == nullptr)
         return;
 
     if (!device->open(QIODevice::ReadOnly | QIODevice::Text))

@@ -111,19 +111,19 @@ public:
     bool hasInnateSkill(const QString &skill_name) const;
     bool hasLordSkill(const QString &skill_name, bool include_lose = false) const;
 
-    bool hasEquip(const Card *card) const;
+    bool hasEquip(Card *card) const;
     bool hasEquip() const;
 
-    QList<const Card *> judgingArea() const;
+    QList<Card *> judgingArea() const;
     QList<int> judgingAreaID() const;
-    void addDelayedTrick(const Card *trick);
-    void removeDelayedTrick(const Card *trick);
+    void addDelayedTrick(Card *trick);
+    void removeDelayedTrick(Card *trick);
     bool containsTrick(const QString &trick_name) const;
 
     int handcardNum() const;
-    void removeCard(const Card *card, QSgsEnum::CardPlace place);
-    void addCard(const Card *card, QSgsEnum::CardPlace place);
-    QList<const Card *> handcards() const;
+    void removeCard(Card *card, QSgsEnum::CardPlace place);
+    void addCard(Card *card, QSgsEnum::CardPlace place);
+    QList<Card *> handcards() const;
 
     Card *weapon() const;
     Card *armor() const;
@@ -131,8 +131,8 @@ public:
     Card *offensiveHorse() const;
     Card *treasure() const;
 
-    QList<const Card *> equips() const;
-    const Card *equip(int index) const;
+    QList<Card *> equips() const;
+    Card *equip(int index) const;
 
     bool hasWeapon(const QString &weapon_name) const;
     bool hasArmor(const QString &armor_name) const;
@@ -152,14 +152,14 @@ public:
 
     void setChained(bool chained);
     bool isChained() const;
-    bool canBeChainedBy(const Player *source = NULL) const;
+    bool canBeChainedBy(const Player *source = nullptr) const;
 
     void setRemoved(bool removed);
     bool isRemoved() const;
 
     bool isDuanchang(const bool head = true) const;
 
-    bool canSlash(const Player *other, const Card *slash, bool distance_limit = true, int rangefix = 0) const;
+    bool canSlash(const Player *other, Card *slash, bool distance_limit = true, int rangefix = 0) const;
     bool canSlash(const Player *other, bool distance_limit = true, int rangefix = 0) const;
     int getCardCount(bool include_equip) const;
 
@@ -191,15 +191,15 @@ public:
 
     QStringList acquiredSkills(const QString &flags) const;
 
-    bool isProhibited(const Player *to, const Card *card) const;
-    bool canSlashWithoutCrossbow(const Card *slash = NULL) const;
-    bool isLastHandCard(const Card *card, bool contain = false) const;
+    bool isProhibited(const Player *to, Card *card) const;
+    bool canSlashWithoutCrossbow(Card *slash = nullptr) const;
+    bool isLastHandCard(Card *card, bool contain = false) const;
 
-    inline bool isJilei(const Card *card) const
+    inline bool isJilei(Card *card) const
     {
         return isCardLimited(card, QSgsEnum::CardHandlingMethod::Discard);
     }
-    inline bool isLocked(const Card *card) const
+    inline bool isLocked(Card *card) const
     {
         return isCardLimited(card, QSgsEnum::CardHandlingMethod::Use);
     }
@@ -207,11 +207,11 @@ public:
     void setCardLimitation(const QString &limit_list, const QString &pattern, bool single_turn = false);
     void removeCardLimitation(const QString &limit_list, const QString &pattern);
     void clearCardLimitation(bool single_turn = false);
-    bool isCardLimited(const Card *card, QSgsEnum::CardHandlingMethod method, bool isHandcard = false) const;
+    bool isCardLimited(Card *card, QSgsEnum::CardHandlingMethod method, bool isHandcard = false) const;
 
     // just for convenience
-    void addQinggangTag(const Card *card);
-    void removeQinggangTag(const Card *card);
+    void addQinggangTag(Card *card);
+    void removeQinggangTag(Card *card);
     const Player *getLord(bool include_death = false) const; // a small function put here, simple but useful
 
     void copyFrom(Player *p);

@@ -68,7 +68,7 @@
 //                players << count_players[i];
 //        }
 
-//        ServerPlayer *p = NULL;
+//        ServerPlayer *p = nullptr;
 
 //        foreach (ServerPlayer *player, players) {
 //            if (player->containsTrick(objectName()))
@@ -92,7 +92,7 @@
 
 //            if (target == player) break;
 
-//            CardUseStruct use(this, NULL, player);
+//            CardUseStruct use(this, nullptr, player);
 //            QVariant data = QVariant::fromValue(use);
 //            thread->trigger(QSgsEnum::TriggerEvent::TargetConfirming, room, player, data);
 //            CardUseStruct new_use = data.value<CardUseStruct>();
@@ -111,7 +111,7 @@
 //            onNullified(p);
 //    } else {
 //        CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, target->objectName());
-//        room->throwCard(this, reason, NULL);
+//        room->throwCard(this, reason, nullptr);
 //    }
 //}
 
@@ -153,7 +153,7 @@
 //            if (room->getCardOwner(getEffectiveId()) != source) return;
 //        }
 //        CardMoveReason reason(CardMoveReason::S_REASON_USE, source->objectName(), QString(), this->getSkillName(), QString());
-//        room->moveCardTo(this, NULL, QSgsEnum::CardPlace::DiscardPile, reason, true);
+//        room->moveCardTo(this, nullptr, QSgsEnum::CardPlace::DiscardPile, reason, true);
 //    }
 //}
 
@@ -167,7 +167,7 @@
 //    Room *room = effect.to->getRoom();
 
 //    CardMoveReason reason(CardMoveReason::S_REASON_USE, effect.to->objectName(), getSkillName(), QString());
-//    room->moveCardTo(this, NULL, QSgsEnum::CardPlace::ProceedingArea, reason, true);
+//    room->moveCardTo(this, nullptr, QSgsEnum::CardPlace::ProceedingArea, reason, true);
 
 //    LogMessage log;
 //    log.from = effect.to;
@@ -181,16 +181,16 @@
 
 //    if (judge_struct.isBad()) {
 //        takeEffect(effect.to);
-//        if (room->getCardOwner(getEffectiveId()) == NULL) {
+//        if (room->getCardOwner(getEffectiveId()) == nullptr) {
 //            CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, QString());
-//            room->throwCard(this, reason, NULL);
+//            room->throwCard(this, reason, nullptr);
 //        }
 //    } else if (m_movable) {
 //        onNullified(effect.to);
 //    } else {
-//        if (room->getCardOwner(getEffectiveId()) == NULL) {
+//        if (room->getCardOwner(getEffectiveId()) == nullptr) {
 //            CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, QString());
-//            room->throwCard(this, reason, NULL);
+//            room->throwCard(this, reason, nullptr);
 //        }
 //    }
 //}
@@ -240,7 +240,7 @@
 //{
 //    if (targets.isEmpty()) {
 //        CardMoveReason reason(CardMoveReason::S_REASON_USE, source->objectName(), QString(), this->getSkillName(), QString());
-//        room->moveCardTo(this, room->getCardOwner(getEffectiveId()), NULL, QSgsEnum::CardPlace::DiscardPile, reason, true);
+//        room->moveCardTo(this, room->getCardOwner(getEffectiveId()), nullptr, QSgsEnum::CardPlace::DiscardPile, reason, true);
 //    }
 //    int equipped_id = Card::S_UNKNOWN_CARD_ID;
 //    ServerPlayer *target = targets.first();
@@ -266,7 +266,7 @@
 
 //    if (equipped_id != Card::S_UNKNOWN_CARD_ID) {
 //        if (room->getCardPlace(equipped_id) == QSgsEnum::CardPlace::ProceedingArea) {
-//            CardsMoveStruct move3(equipped_id, NULL, QSgsEnum::CardPlace::DiscardPile,
+//            CardsMoveStruct move3(equipped_id, nullptr, QSgsEnum::CardPlace::DiscardPile,
 //                CardMoveReason(CardMoveReason::S_REASON_CHANGE_EQUIP, target->objectName()));
 //            room->moveCardsAtomic(move3, true);
 //        }
