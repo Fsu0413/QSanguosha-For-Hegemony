@@ -22,19 +22,19 @@ CardFace::~CardFace()
 bool CardFace::willThrow() const
 {
     Q_D(const CardFace);
-    return d_ptr->willThrow;
+    return d->willThrow;
 }
 
 bool CardFace::hasPreAction() const
 {
     Q_D(const CardFace);
-    return d_ptr->hasPreact;
+    return d->hasPreact;
 }
 
 QSgsEnum::CardHandlingMethod CardFace::handlingMethod() const
 {
     Q_D(const CardFace);
-    return d_ptr->handlingMethod;
+    return d->handlingMethod;
 }
 
 bool CardFace::isNDTrick() const
@@ -50,7 +50,7 @@ QString CardFace::package() const
 bool CardFace::targetFixed() const
 {
     Q_D(const CardFace);
-    return d_ptr->targetFixed;
+    return d->targetFixed;
 }
 
 bool CardFace::targetsFeasible(const QList<const Player *> &targets, const Player *Self) const
@@ -137,9 +137,9 @@ CardFace::CardFace(const QString &name, QSgsEnum::CardHandlingMethod handlingMet
 {
     setObjectName(name);
     Q_D(CardFace);
-    d_ptr->handlingMethod = handlingMethod;
-    d_ptr->targetFixed = targetFixed;
-    d_ptr->willThrow = willThrow;
-    d_ptr->hasPreact = hasPreact;
+    d->handlingMethod = handlingMethod;
+    d->targetFixed = targetFixed;
+    d->willThrow = willThrow;
+    d->hasPreact = hasPreact;
 
 }
