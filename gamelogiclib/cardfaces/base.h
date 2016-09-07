@@ -7,7 +7,7 @@
 
 class BasicCard : public CardFace
 {
-    Q_OBJECT
+
 
 public:
     BasicCard(const QString &name);
@@ -17,7 +17,7 @@ public:
 
 class TrickCard : public CardFace
 {
-    Q_OBJECT
+
 
 public:
     TrickCard(const QString &name);
@@ -33,7 +33,7 @@ private:
 
 class InstanceTrick : public TrickCard
 {
-    Q_OBJECT
+
 public:
     InstanceTrick(const QString &name) :TrickCard(name){
 
@@ -43,18 +43,18 @@ public:
 
 class DelayedTrick : public TrickCard
 {
-    Q_OBJECT
+
 
 public:
     DelayedTrick(const QString &name, bool movable = false);
 
-    void onNullified(ServerPlayer *target) const;
+    void onNullified(Player *target) const;
 
     void onUse(Room *room, const CardUseStruct &card_use) const;
-    void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
+    void use(Room *room, Player *source, QList<Player *> &targets) const;
     QString subtype() const;
     void onEffect(const CardEffectStruct &effect) const;
-    virtual void takeEffect(ServerPlayer *target) const = 0;
+    virtual void takeEffect(Player *target) const = 0;
 
 protected:
     JudgeStruct m_judge;
@@ -65,7 +65,7 @@ private:
 
 class EquipCard : public CardFace
 {
-    Q_OBJECT
+
 
 public:
 
@@ -76,17 +76,17 @@ public:
 
     bool isAvailable(const Player *player) const;
     void onUse(Room *room, const CardUseStruct &card_use) const;
-    void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
+    void use(Room *room, Player *source, QList<Player *> &targets) const;
 
-    void onInstall(ServerPlayer *player) const;
-    void onUninstall(ServerPlayer *player) const;
+    void onInstall(Player *player) const;
+    void onUninstall(Player *player) const;
 
     virtual QSgsEnum::EquipLocation location() const = 0;
 };
 
 class Weapon : public EquipCard
 {
-    Q_OBJECT
+
 
 public:
     Weapon(const QString &name, int range);
@@ -103,7 +103,7 @@ protected:
 
 class Armor : public EquipCard
 {
-    Q_OBJECT
+
 
 public:
     Armor(const QString &name);
@@ -115,15 +115,15 @@ public:
 
 class Horse : public EquipCard
 {
-    Q_OBJECT
+
 
 public:
     Horse(const QString &name, int correct);
     int correctNum() const;
 
     QSgsEnum::EquipLocation location() const;
-    /*void onInstall(ServerPlayer *player) const;
-    void onUninstall(ServerPlayer *player) const;*/
+    /*void onInstall(Player *player) const;
+    void onUninstall(Player *player) const;*/
 
     QString commonEffectName() const;
 
@@ -133,7 +133,7 @@ private:
 
 class OffensiveHorse : public Horse
 {
-    Q_OBJECT
+
 
 public:
     Q_INVOKABLE OffensiveHorse(const QString &name, int correct = -1, bool is_transferable = false);
@@ -142,7 +142,7 @@ public:
 
 class DefensiveHorse : public Horse
 {
-    Q_OBJECT
+
 
 public:
     Q_INVOKABLE DefensiveHorse(const QString &name, int correct = +1);
@@ -151,7 +151,7 @@ public:
 
 class Treasure : public EquipCard
 {
-    Q_OBJECT
+
 
 public:
     Treasure(const QString &name);

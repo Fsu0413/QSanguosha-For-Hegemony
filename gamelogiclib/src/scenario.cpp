@@ -80,7 +80,7 @@ bool Scenario::generalSelection() const
     return false;
 }
 
-//AI::Relation Scenario::relationTo(const ServerPlayer *a, const ServerPlayer *b) const
+//AI::Relation Scenario::relationTo(const Player *a, const Player *b) const
 //{
 //    return AI::GetRelationHegemony(a, b);
 //}

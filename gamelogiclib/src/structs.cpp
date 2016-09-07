@@ -106,7 +106,7 @@ LogMessage::LogMessage()
 QString LogMessage::toString() const
 {
 //    QStringList tos;
-//    foreach (ServerPlayer *player, to)
+//    foreach (Player *player, to)
 //        if (player != nullptr) tos << player->objectName();
 
 //    return QString("%1:%2->%3:%4:%5:%6")
@@ -120,7 +120,7 @@ QString LogMessage::toString() const
 QVariant LogMessage::toVariant() const
 {
 //    QStringList tos;
-//    foreach (ServerPlayer *player, to)
+//    foreach (Player *player, to)
 //        if (player != nullptr) tos << player->objectName();
 
 //    QStringList log;
@@ -134,7 +134,7 @@ DamageStruct::DamageStruct()
 {
 }
 
-//DamageStruct::DamageStruct(const Card *card, ServerPlayer *from, ServerPlayer *to, int damage, DamageStruct::Nature nature)
+//DamageStruct::DamageStruct(const Card *card, Player *from, Player *to, int damage, DamageStruct::Nature nature)
 //    : chain(false), transfer(false), by_user(true), reason(QString()), transfer_reason(QString()), prevented(false)
 //{
 //    this->card = card;
@@ -144,7 +144,7 @@ DamageStruct::DamageStruct()
 //    this->nature = nature;
 //}
 
-//DamageStruct::DamageStruct(const QString &reason, ServerPlayer *from, ServerPlayer *to, int damage, DamageStruct::Nature nature)
+//DamageStruct::DamageStruct(const QString &reason, Player *from, Player *to, int damage, DamageStruct::Nature nature)
 //    : card(nullptr), chain(false), transfer(false), by_user(true), transfer_reason(QString()), prevented(false)
 //{
 //    this->from = from;
@@ -249,7 +249,7 @@ CardUseStruct::CardUseStruct()
 {
 }
 
-//CardUseStruct::CardUseStruct(const Card *card, ServerPlayer *from, QList<ServerPlayer *> to, bool isOwnerUse)
+//CardUseStruct::CardUseStruct(const Card *card, Player *from, QList<Player *> to, bool isOwnerUse)
 //{
 //    this->card = card;
 //    this->from = from;
@@ -258,7 +258,7 @@ CardUseStruct::CardUseStruct()
 //    this->m_addHistory = true;
 //}
 
-//CardUseStruct::CardUseStruct(const Card *card, ServerPlayer *from, ServerPlayer *target, bool isOwnerUse)
+//CardUseStruct::CardUseStruct(const Card *card, Player *from, Player *target, bool isOwnerUse)
 //{
 //    this->card = card;
 //    this->from = from;
@@ -308,7 +308,7 @@ bool CardUseStruct::isValid(const QString &pattern) const
     return true;
     else {
     QList<const Player *> targets;
-    foreach (const ServerPlayer *player, to)
+    foreach (const Player *player, to)
     targets.push_back(player);
     return card->targetsFeasible(targets, from);
     }*/
@@ -326,7 +326,7 @@ bool CardUseStruct::tryParse(const QVariant &usage, Room *room)
 
 //    foreach (const QVariant &target, targets) {
 //        if (!JsonUtils::isString(target)) return false;
-//        this->to << room->findChild<ServerPlayer *>(target.toString());
+//        this->to << room->findChild<Player *>(target.toString());
 //    }
 //    return true;
     return false;
@@ -348,7 +348,7 @@ void CardUseStruct::parse(const QString &str, Room *room)
 //    if (target_str != ".") {
 //        QStringList target_names = target_str.split("+");
 //        foreach (const QString &target_name, target_names)
-//            to << room->findChild<ServerPlayer *>(target_name);
+//            to << room->findChild<Player *>(target_name);
 //    }
 }
 

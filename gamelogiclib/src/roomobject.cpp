@@ -67,7 +67,7 @@ public:
     QList<Card *> discardPile;
     QList<Card *> proceedingArea;
 
-    QHash<Card *, RoomObject::CardPlaceStruct> cardPlaces;
+    QHash<const Card *, RoomObject::CardPlaceStruct> cardPlaces;
 
     RoomRequestHandler *handler;
 };

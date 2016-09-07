@@ -147,7 +147,7 @@ public:
     const ProhibitSkill *isProhibited(const Player *from, const Player *to, const Card *card) const;
     int correctDistance(const Player *from, const Player *to) const;
     int correctMaxCards(const Player *target, bool fixed = false) const;
-    int correctCardTarget(const QSgsEnum::ModType type, const Player *from, const Card *card) const;
+    int correctCardTarget(const QSgsEnum::ModType type, const Player *from, Card *card) const;
     int correctAttackRange(const Player *target, bool include_weapon = true, bool fixed = false) const;
 
     // if this class is meant to be a virtual class, make sure this section is protected
