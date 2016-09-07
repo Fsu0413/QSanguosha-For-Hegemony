@@ -22,19 +22,19 @@ CardFace::~CardFace()
 bool CardFace::willThrow() const
 {
     Q_D(const CardFace);
-    return d_ptr->willThrow;
+    return d->willThrow;
 }
 
 bool CardFace::hasPreAction() const
 {
     Q_D(const CardFace);
-    return d_ptr->hasPreact;
+    return d->hasPreact;
 }
 
 QSgsEnum::CardHandlingMethod CardFace::handlingMethod() const
 {
     Q_D(const CardFace);
-    return d_ptr->handlingMethod;
+    return d->handlingMethod;
 }
 
 bool CardFace::isNDTrick() const
@@ -44,81 +44,81 @@ bool CardFace::isNDTrick() const
 
 QString CardFace::package() const
 {
-    return "";
+    return QString();
 }
 
 bool CardFace::targetFixed() const
 {
     Q_D(const CardFace);
-    return d_ptr->targetFixed;
+    return d->targetFixed;
 }
 
-bool CardFace::targetsFeasible(const QList<const Player *> &, const Player *) const
+bool CardFace::targetsFeasible(const QList<const Player *> &targets, const Player *self) const
 {
     return false;
 }
 
-bool CardFace::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const
+bool CardFace::targetFilter(const QList<const Player *> &targets, const Player *toSelect, const Player *self) const
 {
     return targets.length() == 0;
 }
 
-bool CardFace::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self, int &maxVotes) const
+bool CardFace::targetFilter(const QList<const Player *> &targets, const Player *toSelect, const Player *self, int &maxVotes) const
 {
-    bool result = this->targetFilter(targets,to_select,Self);
+    bool result = this->targetFilter(targets, toSelect, self);
     if (result)
-        maxVotes == 1;
+        maxVotes = 1;
     else
-        maxVotes == 0;
+        maxVotes = 0;
     return result;
 }
 
-bool CardFace::isAvailable(const Player *) const
+bool CardFace::isAvailable(const Player *player) const
 {
     return true;
 }
 
-const CardFace *CardFace::validate(CardUseStruct &) const
+const CardFace *CardFace::validate(CardUseStruct &use) const
 {
     return this;
 }
 
-const CardFace *CardFace::validateInResponse(Player *) const
+const CardFace *CardFace::validateInResponse(Player *user) const
 {
     return this;
 }
 
-void CardFace::doPreAction(Room *, const CardUseStruct &) const
+void CardFace::doPreAction(Room *room, const CardUseStruct &use) const
 {
 
 }
 
-void CardFace::onUse(Room *, const CardUseStruct &) const
+void CardFace::onUse(Room *room, const CardUseStruct &use) const
 {
 
 }
 
-void CardFace::use(Room *, Player *, QList<Player *> &) const
+void CardFace::use(Room *room, Player *source, QList<Player *> &targets) const
 {
 
 }
 
-void CardFace::onEffect(const CardEffectStruct &) const
+void CardFace::onEffect(const CardEffectStruct &effect) const
 {
 
 }
 
-bool CardFace::isCancelable(const CardEffectStruct &) const
+bool CardFace::isCancelable(const CardEffectStruct &effect) const
 {
     return true;
 }
 
-QStringList CardFace::checkTargetModSkillShow(const CardUseStruct &) const
+QStringList CardFace::checkTargetModSkillShow(const CardUseStruct &effect) const
 {
     return QStringList();
 }
 
-void CardFace::onNullified(Player *) const
+void CardFace::onNullified(Player *target) const
 {
 
 }
@@ -137,9 +137,9 @@ CardFace::CardFace(const QString &name, QSgsEnum::CardHandlingMethod handlingMet
 {
     setObjectName(name);
     Q_D(CardFace);
-    d_ptr->handlingMethod = handlingMethod;
-    d_ptr->targetFixed = targetFixed;
-    d_ptr->willThrow = willThrow;
-    d_ptr->hasPreact = hasPreact;
+    d->handlingMethod = handlingMethod;
+    d->targetFixed = targetFixed;
+    d->willThrow = willThrow;
+    d->hasPreact = hasPreact;
 
 }
