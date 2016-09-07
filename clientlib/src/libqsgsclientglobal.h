@@ -1,0 +1,9 @@
+
+#include <QtCore>
+#include <QtNetwork>
+
+#ifdef LIBQSGSCLIENT_BUILDING_LIBQSGSCLIENT
+#define LIBQSGSCLIENT_EXPORT Q_DECL_EXPORT
+#else
+#define LIBQSGSCLIENT_EXPORT Q_DECL_IMPORT
+#endif
