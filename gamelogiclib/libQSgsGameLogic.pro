@@ -70,7 +70,7 @@ DLLDESTDIR = $$OUT_PWD/../inst/bin
 LIBS += -lQSgsCore
 
 generateHeaders.target = ../include/$$TARGET/
-win32-* {
+contains(QMAKE_HOST.os, "Windows") {
     mkdirGenerateHeaders.commands = if not exist $$system_path(../include/$$TARGET/) md $$system_path(../include/$$TARGET/)
     generateHeaders.commands = cscript $$system_path($$PWD/../tools/AutoGenerateHeader.vbs) -o $$system_path($$generateHeaders.target) -f $$system_path($$PWD/src/)
 } else {
@@ -80,7 +80,7 @@ win32-* {
 generateHeaders.depends = mkdirGenerateHeaders
 
 generateHeadersCardfaces.target = ../include/$$TARGET/CardFaces/
-win32-* {
+contains(QMAKE_HOST.os, "Windows") {
     mkdirGenerateHeadersCardfaces.commands = if not exist $$system_path($$generateHeadersCardfaces.target) md $$system_path($$generateHeadersCardfaces.target)
     generateHeadersCardfaces.commands = cscript $$system_path($$PWD/../tools/AutoGenerateHeader.vbs) -o $$system_path($$generateHeadersCardfaces.target) -f $$system_path($$PWD/cardfaces/)
 } else {

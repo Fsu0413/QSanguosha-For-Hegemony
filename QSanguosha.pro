@@ -1,5 +1,6 @@
 
 message("Current Qt version: $$QT_VERSION")
+message("You are building on: $$QMAKE_HOST.os")
 
 lessThan(QT_MAJOR_VERSION, 5): error("QSanguosha needs Qt 5.6.0 or later, please update your Qt version.")
 else: lessThan(QT_MINOR_VERSION, 6): error("QSanguosha needs Qt 5.6.0 or later, please update your Qt version.")

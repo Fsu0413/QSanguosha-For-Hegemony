@@ -48,7 +48,7 @@ DLLDESTDIR = $$OUT_PWD/../inst/bin
 SWIGFILES += swig/qsgscore.i
 
 generateHeaders.target = ../include/$$TARGET/
-win32-* {
+contains(QMAKE_HOST.os, "Windows") {
     mkdirGenerateHeaders.commands = if not exist $$system_path(../include/$$TARGET/) md $$system_path(../include/$$TARGET/)
     generateHeaders.commands = cscript $$system_path($$PWD/../tools/AutoGenerateHeader.vbs) -o $$system_path($$generateHeaders.target) -f $$system_path($$PWD/src/)
 } else {
