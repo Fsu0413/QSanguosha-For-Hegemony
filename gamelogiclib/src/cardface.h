@@ -35,10 +35,10 @@ public:
 
     // card target selection
     virtual bool targetFixed() const;
-    virtual bool targetsFeasible(const QList<const Player *> &targets, const Player *Self) const;
+    virtual bool targetsFeasible(const QList<const Player *> &targets, const Player *self) const;
     // @todo: the following two functions should be merged into one.
-    virtual bool targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const;
-    virtual bool targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self, int &maxVotes) const;
+    virtual bool targetFilter(const QList<const Player *> &targets, const Player *toSelect, const Player *self) const;
+    virtual bool targetFilter(const QList<const Player *> &targets, const Player *toSelect, const Player *self, int &maxVotes) const;
     virtual bool isAvailable(const Player *player) const;
 
     virtual const CardFace *validate(CardUseStruct &cardUse) const;

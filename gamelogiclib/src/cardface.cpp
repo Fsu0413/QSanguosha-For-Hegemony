@@ -53,23 +53,23 @@ bool CardFace::targetFixed() const
     return d->targetFixed;
 }
 
-bool CardFace::targetsFeasible(const QList<const Player *> &targets, const Player *Self) const
+bool CardFace::targetsFeasible(const QList<const Player *> &targets, const Player *self) const
 {
     return false;
 }
 
-bool CardFace::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const
+bool CardFace::targetFilter(const QList<const Player *> &targets, const Player *toSelect, const Player *self) const
 {
     return targets.length() == 0;
 }
 
-bool CardFace::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self, int &maxVotes) const
+bool CardFace::targetFilter(const QList<const Player *> &targets, const Player *toSelect, const Player *self, int &maxVotes) const
 {
-    bool result = this->targetFilter(targets,to_select,Self);
+    bool result = this->targetFilter(targets, toSelect, self);
     if (result)
-        maxVotes == 1;
+        maxVotes = 1;
     else
-        maxVotes == 0;
+        maxVotes = 0;
     return result;
 }
 
