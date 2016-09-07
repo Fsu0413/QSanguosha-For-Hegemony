@@ -4,10 +4,10 @@
 class CardFacePrivate
 {
 public:
-    QSgsEnum::CardHandlingMethod m_handlingMethod;
-    bool m_targetFixed;
-    bool m_willThrow;
-    bool m_hasPreact;
+    QSgsEnum::CardHandlingMethod handlingMethod;
+    bool targetFixed;
+    bool willThrow;
+    bool hasPreact;
 
 };
 
@@ -15,19 +15,19 @@ public:
 bool CardFace::willThrow() const
 {
     Q_D(const CardFace);
-    return d_ptr->m_willThrow;
+    return d_ptr->willThrow;
 }
 
 bool CardFace::hasPreAction() const
 {
     Q_D(const CardFace);
-    return d_ptr->m_hasPreact;
+    return d_ptr->hasPreact;
 }
 
 QSgsEnum::CardHandlingMethod CardFace::handlingMethod() const
 {
     Q_D(const CardFace);
-    return d_ptr->m_handlingMethod;
+    return d_ptr->handlingMethod;
 }
 
 bool CardFace::isNDTrick() const
@@ -43,7 +43,7 @@ QString CardFace::package() const
 bool CardFace::targetFixed() const
 {
     Q_D(const CardFace);
-    return d_ptr->m_targetFixed;
+    return d_ptr->targetFixed;
 }
 
 bool CardFace::targetsFeasible(const QList<const Player *> &, const Player *) const
@@ -130,9 +130,9 @@ CardFace::CardFace(const QString &name, QSgsEnum::CardHandlingMethod handlingMet
 {
     setObjectName(name);
     Q_D(CardFace);
-    d_ptr->m_handlingMethod = handlingMethod;
-    d_ptr->m_targetFixed = targetFixed;
-    d_ptr->m_willThrow = willThrow;
-    d_ptr->m_hasPreact = hasPreact;
+    d_ptr->handlingMethod = handlingMethod;
+    d_ptr->targetFixed = targetFixed;
+    d_ptr->willThrow = willThrow;
+    d_ptr->hasPreact = hasPreact;
 
 }
