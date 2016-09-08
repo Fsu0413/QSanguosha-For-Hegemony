@@ -88,7 +88,8 @@ public:
 
     void addSubcard(int cardId);
     void addSubcard(Card *card);
-    const QList<Card *> &subcards() const;
+    QList<const Card *> subcards() const;
+    const QList<Card *> &subcards();
     void clearSubcards();
     QString subcardString() const;
     void addSubcards(const QList<Card *> &cards);

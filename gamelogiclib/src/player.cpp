@@ -407,7 +407,12 @@ bool Player::hasEquip() const
     return false;
 }
 
-QList<Card *> Player::judgingArea() const
+QList<const Card *> Player::judgingArea() const
+{
+    return QList<Card *>();
+}
+
+const QList<Card *> &Player::judgingArea()
 {
     return QList<Card *>();
 }
@@ -448,7 +453,12 @@ void Player::addCard(Card *card, QSgsEnum::CardPlace place)
 
 }
 
-QList<Card *> Player::handcards() const
+QList<const Card *> Player::handcards() const
+{
+    return QList<Card *>();
+}
+
+const QList<Card *> &Player::handcards()
 {
     return QList<Card *>();
 }
@@ -483,7 +493,12 @@ Card *Player::treasure() const
     return d->treasure;
 }
 
-QList<Card *> Player::equips() const
+QList<const Card *> Player::equips() const
+{
+    return QList<Card *>();
+}
+
+const QList<Card *> &Player::equips()
 {
     return QList<Card *>();
 }
@@ -767,14 +782,24 @@ void Player::copyFrom(Player *p)
 
 }
 
-QList<const Player *> Player::getSiblings() const
+QList<const Player *> Player::siblings() const
 {
     return QList<const Player *>();
 }
 
-QList<const Player *> Player::getAliveSiblings() const
+const QList<Player *> &Player::siblings()
+{
+    return QList<Player *>();
+}
+
+QList<const Player *> Player::aliveSiblings() const
 {
     return QList<const Player *>();
+}
+
+const QList<Player *> &Player::aliveSiblings()
+{
+    return QList<Player *>();
 }
 
 bool Player::hasShownSkill(const Skill *skill) const
@@ -974,6 +999,11 @@ Player *Player::lastAlive(int n, bool ignoreRemoved) const
 QList<const Player *> Player::formation() const
 {
     return QList<const Player *>();
+}
+
+const QList<Player *> &Player::formation()
+{
+    return QList<Player *>();
 }
 
 //#include "client.h"

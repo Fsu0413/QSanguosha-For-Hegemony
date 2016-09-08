@@ -114,7 +114,8 @@ public:
     bool hasEquip(Card *card) const;
     bool hasEquip() const;
 
-    QList<Card *> judgingArea() const;
+    QList<const Card *> judgingArea() const;
+    const QList<Card *> &judgingArea();
     QList<int> judgingAreaID() const;
     void addDelayedTrick(Card *trick);
     void removeDelayedTrick(Card *trick);
@@ -123,7 +124,8 @@ public:
     int handcardNum() const;
     void removeCard(Card *card, QSgsEnum::CardPlace place);
     void addCard(Card *card, QSgsEnum::CardPlace place);
-    QList<Card *> handcards() const;
+    QList<const Card *> handcards() const;
+    const QList<Card *> &handcards();
 
     Card *weapon() const;
     Card *armor() const;
@@ -131,7 +133,8 @@ public:
     Card *offensiveHorse() const;
     Card *treasure() const;
 
-    QList<Card *> equips() const;
+    QList<const Card *> equips() const;
+    const QList<Card *> &equips();
     Card *equip(int index) const;
 
     bool hasWeapon(const QString &weapon_name) const;
@@ -216,8 +219,10 @@ public:
 
     void copyFrom(Player *p);
 
-    QList<const Player *> getSiblings() const;
-    QList<const Player *> getAliveSiblings() const;
+    QList<const Player *> siblings() const;
+    const QList<Player *> &siblings();
+    QList<const Player *> aliveSiblings() const;
+    const QList<Player *> &aliveSiblings();
 
     bool hasShownSkill(const Skill *skill) const;
     bool hasShownSkill(const QString &skill_name) const;
@@ -261,6 +266,7 @@ public:
     Player *lastAlive(int n = 1, bool ignoreRemoved = true) const;
 
     QList<const Player *> formation() const;
+    const QList<Player *> &formation();
 
     QVariantMap tag;
 

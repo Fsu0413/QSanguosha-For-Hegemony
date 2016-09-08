@@ -70,17 +70,20 @@ public:
     void addRealCards(QList<Card *> cards);
     void addVirtualCard(Card *card);
 
-    const QList<Card *> &cards() const;
+    const QList<Card *> &cards();
+    QList<const Card *> cards() const;
     Card *card(int id) const;
-    const QList<Player *> &players() const;
+    const QList<Player *> &players();
+    QList<const Player *> players() const;
 
     const QString &currentCardUsePattern() const;
     QSgsEnum::CardUseReason currentCardUseReason() const;
 
-    QList<Card *> &drawPile();
-    const QList<Card *> &drawPile() const;
+    QList<const Card *> &drawPile() const;
+    const QList<Card *> drawPile();
 
-    const QList<Card *> &discardPile() const;
+    QList<const Card *> discardPile() const;
+    const QList<Card *> &discardPile();
 
     const CardPlaceStruct &cardPlace(const Card *card) const; // using the const functions of the QHash to get the place of a card
 

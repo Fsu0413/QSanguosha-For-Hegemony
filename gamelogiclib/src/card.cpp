@@ -644,9 +644,15 @@ void Card::addSubcard(Card *card)
         addSubcards(card->subcards());
 }
 
-const QList<Card *> &Card::subcards() const
+QList<const Card *> Card::subcards() const
 {
     Q_D(const Card);
+    return d->subcards;
+}
+
+const QList<Card *> &Card::subcards()
+{
+    Q_D(Card);
     return d->subcards;
 }
 

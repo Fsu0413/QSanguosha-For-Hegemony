@@ -104,7 +104,13 @@ void RoomObject::addVirtualCard(Card *card)
     // card->setParent(this);
 }
 
-const QList<Card *> &RoomObject::cards() const
+const QList<Card *> &RoomObject::cards()
+{
+    Q_D(RoomObject);
+    return d->availableCards;
+}
+
+QList<const Card *> RoomObject::cards() const
 {
     Q_D(const RoomObject);
     return d->availableCards;
@@ -116,7 +122,13 @@ Card *RoomObject::card(int id) const
     return d->availableCards.value(id, nullptr);
 }
 
-const QList<Player *> &RoomObject::players() const
+const QList<Player *> &RoomObject::players()
+{
+    Q_D(RoomObject);
+    return d->players;
+}
+
+QList<const Player *> RoomObject::players() const
 {
     Q_D(const RoomObject);
     return d->players;
@@ -134,21 +146,29 @@ QSgsEnum::CardUseReason RoomObject::currentCardUseReason() const
     return d->currentCardUseReason;
 }
 
+
+
 QList<Card *> &RoomObject::drawPile()
 {
     Q_D(RoomObject);
     return d->drawPile;
 }
 
-const QList<Card *> &RoomObject::drawPile() const
+const QList<Card *> RoomObject::drawPile()
 {
-    Q_D(const RoomObject);
+    Q_D(RoomObject);
     return d->drawPile;
 }
 
-const QList<Card *> &RoomObject::discardPile() const
+QList<const Card *> RoomObject::discardPile() const
 {
     Q_D(const RoomObject);
+    return d->discardPile;
+}
+
+const QList<Card *> &RoomObject::discardPile()
+{
+    Q_D(RoomObject);
     return d->discardPile;
 }
 
