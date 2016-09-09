@@ -647,7 +647,10 @@ void Card::addSubcard(Card *card)
 QList<const Card *> Card::subcards() const
 {
     Q_D(const Card);
-    return d->subcards;
+    QList<const Card *> c;
+    foreach (Card *card, d->subcards)
+        c << card;
+    return c;
 }
 
 const QList<Card *> &Card::subcards()

@@ -79,11 +79,11 @@ public:
     const QString &currentCardUsePattern() const;
     QSgsEnum::CardUseReason currentCardUseReason() const;
 
-    QList<const Card *> &drawPile() const;
-    const QList<Card *> drawPile();
+    QList<Card *> &drawPile();
+    QList<const Card *> drawPile() const;
 
-    QList<const Card *> discardPile() const;
     const QList<Card *> &discardPile();
+    QList<const Card *> discardPile() const;
 
     const CardPlaceStruct &cardPlace(const Card *card) const; // using the const functions of the QHash to get the place of a card
 

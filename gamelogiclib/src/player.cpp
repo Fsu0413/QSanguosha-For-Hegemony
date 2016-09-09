@@ -409,7 +409,7 @@ bool Player::hasEquip() const
 
 QList<const Card *> Player::judgingArea() const
 {
-    return QList<Card *>();
+    return QList<const Card *>();
 }
 
 const QList<Card *> &Player::judgingArea()
@@ -455,7 +455,7 @@ void Player::addCard(Card *card, QSgsEnum::CardPlace place)
 
 QList<const Card *> Player::handcards() const
 {
-    return QList<Card *>();
+    return QList<const Card *>();
 }
 
 const QList<Card *> &Player::handcards()
@@ -495,7 +495,7 @@ Card *Player::treasure() const
 
 QList<const Card *> Player::equips() const
 {
-    return QList<Card *>();
+    return QList<const Card *>();
 }
 
 const QList<Card *> &Player::equips()

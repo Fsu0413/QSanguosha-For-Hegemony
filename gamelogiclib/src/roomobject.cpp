@@ -113,7 +113,10 @@ const QList<Card *> &RoomObject::cards()
 QList<const Card *> RoomObject::cards() const
 {
     Q_D(const RoomObject);
-    return d->availableCards;
+    QList<const Card *> c;
+    foreach (Card *card, d->availableCards)
+        c << card;
+    return c;
 }
 
 Card *RoomObject::card(int id) const
@@ -131,7 +134,10 @@ const QList<Player *> &RoomObject::players()
 QList<const Player *> RoomObject::players() const
 {
     Q_D(const RoomObject);
-    return d->players;
+    QList<const Player *> p;
+    foreach (Player *player, d->players)
+        p << player;
+    return p;
 }
 
 const QString &RoomObject::currentCardUsePattern() const
@@ -154,16 +160,22 @@ QList<Card *> &RoomObject::drawPile()
     return d->drawPile;
 }
 
-const QList<Card *> RoomObject::drawPile()
+QList<const Card *> RoomObject::drawPile() const
 {
-    Q_D(RoomObject);
-    return d->drawPile;
+    Q_D(const RoomObject);
+    QList<const Card *> c;
+    foreach (Card *card, d->drawPile)
+        c << card;
+    return c;
 }
 
 QList<const Card *> RoomObject::discardPile() const
 {
     Q_D(const RoomObject);
-    return d->discardPile;
+    QList<const Card *> c;
+    foreach (Card *card, d->discardPile)
+        c << card;
+    return c;
 }
 
 const QList<Card *> &RoomObject::discardPile()
