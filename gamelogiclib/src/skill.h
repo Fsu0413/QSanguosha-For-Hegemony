@@ -123,7 +123,7 @@ class LIBQSGSGAMELOGIC_EXPORT CardTransformSkill : public Skill
     Q_OBJECT
 
 public:
-    FilterSkill(const QString &name);
+    CardTransformSkill(const QString &name);
 
     virtual bool viewFilter(Card *to_select) const;
     virtual Card *viewAs(Card *originalCard) const = 0;
