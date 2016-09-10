@@ -149,54 +149,6 @@ bool Skill::isDeputySkill() const
     return d->relateToPlace == QSgsEnum::SkillPlace::Deputy || d->relateToPlace == QSgsEnum::SkillPlace::Both;
 }
 
-
-//QStringList Skill::getSources(const QString &general, const int skinId) const
-//{
-//    if (skinId == 0)
-//        return sources;
-
-//    const QString key = QString("%1_%2")
-//        .arg(QString::number(skinId))
-//        .arg(general);
-
-//    if (skinSourceHash.contains(key))
-//        return skinSourceHash[key];
-
-//    for (int i = 1;; ++i) {
-//        QString effectFile = QString("hero-skin/%1/%2/%3%4.ogg")
-//            .arg(general).arg(QString::number(skinId))
-//            .arg(objectName()).arg(QString::number(i));
-//        if (QFile::exists(effectFile))
-//            skinSourceHash[key] << effectFile;
-//        else
-//            break;
-//    }
-
-//    if (skinSourceHash[key].isEmpty()) {
-//        QString effectFile = QString("hero-skin/%1/%2/%3.ogg")
-//            .arg(general).arg(QString::number(skinId)).arg(objectName());
-//        if (QFile::exists(effectFile))
-//            skinSourceHash[key] << effectFile;
-//    }
-
-//    return skinSourceHash[key].isEmpty() ? sources : skinSourceHash[key];
-//}
-
-//QStringList Skill::getSources() const
-//{
-//    return sources;
-//}
-
-//QDialog *Skill::getDialog() const
-//{
-//    return nullptr;
-//}
-
-//QString Skill::getGuhuoBox() const
-//{
-//    return "";
-//}
-
 bool Skill::canPreshow() const
 {
     Q_D(const Skill);
@@ -205,7 +157,14 @@ bool Skill::canPreshow() const
 
 void Skill::setCanPreshow(bool c)
 {
-
+    Q_D(Skill);
+#ifndef QT_NO_DEBUG
+    if ((!inherits("TriggerSkill") || inherits("EquipSkill") && c)) {
+        qWarning() << objectName() << QStringLiteral("is not a TriggerSkill or is an EquipSkill. It should not be able to preshow");
+        Q_ASSERT_X(false, __FILE__ QT_STRINGIFY(__LINE__), "INVALID CANPRESHOW SET");
+    }
+#endif
+    d->canPreshow = c;
 }
 
 
