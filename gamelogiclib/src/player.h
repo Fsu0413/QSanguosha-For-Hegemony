@@ -271,8 +271,10 @@ public:
     QVariantMap tag;
 
 protected:
-    Q_DECLARE_PRIVATE(Player)
     PlayerPrivate *d_ptr;
+
+private:
+    Q_DECLARE_PRIVATE(Player)
 };
 
 #endif

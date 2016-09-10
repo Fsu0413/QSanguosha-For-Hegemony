@@ -24,147 +24,131 @@
 
 #include <QFile>
 
-Skill::Skill(const QString &name, QSgsEnum::SkillFrequency frequency)
-    : m_frequency(frequency), m_limitMark(QString()), m_relateToPlace(QString()), m_attachedLordSkill(false)
+class SkillPrivate
 {
-    static QChar lord_symbol('$');
+public:
+    virtual ~SkillPrivate();
 
-    if (name.endsWith(lord_symbol)) {
-        QString copy = name;
-        copy.remove(lord_symbol);
-        setObjectName(copy);
-        m_lordSkill = true;
-    } else {
-        setObjectName(name);
-        m_lordSkill = false;
-    }
+    QSgsEnum::SkillFrequency frequency;
+    QSgsEnum::SkillPlace relateToPlace;
+    QString limitMark;
+    bool attachedSkill;
+    bool lordSkill;
+    bool visible;
+    bool canPreshow;
+};
+
+SkillPrivate::~SkillPrivate()
+{
+}
+
+Skill::Skill(const QString &name, QSgsEnum::SkillFrequency frequency, QSgsEnum::SkillPlace place)
+    : d_ptr(new SkillPrivate)
+{
+    setObjectName(name);
+    Q_D(Skill);
+    d->frequency = frequency;
+    d->relateToPlace = place;
+    d->attachedSkill = d->lordSkill = d->canPreshow = false;
+    d->visible = true;
+}
+
+Skill::~Skill()
+{
+    Q_D(Skill);
+    delete d;
 }
 
 bool Skill::isLordSkill() const
 {
-    return m_lordSkill;
+    Q_D(const Skill);
+    return d->lordSkill;
 }
 
-bool Skill::isAttachedLordSkill() const
+void Skill::setLordSkill(bool l)
 {
-    return m_attachedLordSkill;
+    Q_D(Skill);
+#ifndef QT_NO_DEBUG
+    if (d->attachedSkill && l) {
+        qWarning() << objectName() << QStringLiteral("is already an attached skill, It should not be set to LordSkill");
+        Q_ASSERT_X(false, __FILE__ QT_STRINGIFY(__LINE__), "INVALID LORDSKILL SET");
+    }
+#endif
+    d->lordSkill = l;
 }
 
-//QString Skill::description(bool inToolTip) const
-//{
-//    QString desc;
-//    if (!canPreshow())
-//        desc.prepend(QString("<font color=gray>(%1)</font><br/>").arg(tr("this skill cannot preshow")));
+bool Skill::isAttachedSkill() const
+{
+    Q_D(const Skill);
+    return d->attachedSkill;
+}
 
-//    QString skill_name = objectName();
-
-//    if (objectName().contains("_")) {
-//        skill_name = objectName().split("_").first();
-//    }
-
-//    QString des_src = Sanguosha->translate(":" + skill_name);
-//    if (des_src == ":" + skill_name)
-//        return desc;
-
-//    foreach (const QString &skill_type, Sanguosha->getSkillColorMap().keys()) {
-//        QString to_replace = Sanguosha->translate(skill_type);
-//        if (to_replace == skill_type) continue;
-//        QString color_str = Sanguosha->getSkillColor(skill_type).name();
-//        if (des_src.contains(to_replace))
-//            des_src.replace(to_replace, QString("<font color=%1><b>%2</b></font>").arg(color_str)
-//            .arg(to_replace));
-//    }
-
-//    for (int i = 0; i < 6; i++) {
-//        Card::Suit suit = (Card::Suit)i;
-//        QString str = Card::Suit2String(suit);
-//        QString to_replace = Sanguosha->translate(str);
-//        bool red = suit == Card::Heart
-//            || suit == Card::Diamond
-//            || suit == Card::NoSuitRed;
-//        if (to_replace == str) continue;
-//        if (des_src.contains(to_replace)) {
-//            if (red)
-//                des_src.replace(to_replace, QString("<font color=#FF0000>%1</font>").arg(Sanguosha->translate(str + "_char")));
-//            else
-//                des_src.replace(to_replace, QString("<font color=#000000><span style=background-color:white>%1</span></font>").arg(Sanguosha->translate(str + "_char")));
-//        }
-//    }
-
-//    desc.append(QString("<font color=%1>%2</font>").arg(inToolTip ? Config.SkillDescriptionInToolTipColor.name() : Config.SkillDescriptionInOverviewColor.name()).arg(des_src));
-//    return desc;
-//    return QString();
-//}
-
-//QString Skill::notice(int index) const
-//{
-//    if (index == -1)
-//        return Sanguosha->translate("~" + objectName());
-
-//    return Sanguosha->translate(QString("~%1%2").arg(objectName()).arg(index));
-//    return QString();
-//}
+void Skill::setAttachedSkill(bool a)
+{
+    Q_D(Skill);
+#ifndef QT_NO_DEBUG
+    if (d->lordSkill && a) {
+        qWarning() << objectName() << QStringLiteral("is already a lord skill, It should not be set to AttachedSkill");
+        Q_ASSERT_X(false, __FILE__ QT_STRINGIFY(__LINE__), "INVALID ATTACHEDSKILL SET");
+    }
+#endif
+    d->attachedSkill = a;
+}
 
 bool Skill::isVisible() const
 {
-    return !objectName().startsWith("#");
+    Q_D(const Skill);
+    return d->visible;
 }
 
-//int Skill::getEffectIndex(const ServerPlayer *, Card *) const
-//{
-//    return -1;
-//}
+void Skill::setVisible(bool v)
+{
+    Q_D(Skill);
+#ifndef QT_NO_DEBUG
+    if (inherits("ViewAsSkill") && !v) {
+        qWarning() << objectName() << QStringLiteral("is a ViewAsSkill. It shouldn't be invisible.");
+        Q_ASSERT_X(false, __FILE__ QT_STRINGIFY(__LINE__), "INVALID VISIBILITY SET");
+    }
+#endif
+    d->visible = v;
+}
 
-//void Skill::initMediaSource()
-//{
-//    sources.clear();
-//    for (int i = 1;; ++i) {
-//        QString effect_file = QString("audio/skill/%1%2.ogg").arg(objectName()).arg(QString::number(i));
-//        if (QFile::exists(effect_file))
-//            sources << effect_file;
-//        else
-//            break;
-//    }
+const QString &Skill::limitMark() const
+{
+    Q_D(const Skill);
+    return d->limitMark;
+}
 
-//    if (sources.isEmpty()) {
-//        QString effect_file = QString("audio/skill/%1.ogg").arg(objectName());
-//        if (QFile::exists(effect_file))
-//            sources << effect_file;
-//    }
-//}
-
-//void Skill::playAudioEffect(int index) const
-//{
-//    if (!sources.isEmpty()) {
-//        if (index == -1)
-//            index = qrand() % sources.length();
-//        else
-//            index--;
-
-//        // check length
-//        QString filename;
-//        if (index >= 0 && index < sources.length())
-//            filename = sources.at(index);
-//        else if (index >= sources.length()) {
-//            while (index >= sources.length())
-//                index -= sources.length();
-//            filename = sources.at(index);
-//        } else
-//            filename = sources.first();
-
-//        Sanguosha->playAudioEffect(filename);
-//    }
-//}
+void Skill::setLimitMark(const QString &lm)
+{
+    Q_D(Skill);
+#ifndef QT_NO_DEBUG
+    if (d->frequency != QSgsEnum::SkillFrequency::Limited && !lm.isEmpty()) {
+        qWarning() << objectName() << QStringLiteral("is not a limited skill, It should not set limit mark");
+        Q_ASSERT_X(false, __FILE__ QT_STRINGIFY(__LINE__), "INVALID LIMITMARK SET");
+    }
+#endif
+    d->limitMark = lm;
+}
 
 QSgsEnum::SkillFrequency Skill::frequency() const
 {
-    return m_frequency;
+    Q_D(const Skill);
+    return d->frequency;
 }
 
-QString Skill::limitMark() const
+bool Skill::isHeadSkill() const
 {
-    return m_limitMark;
+    Q_D(const Skill);
+    return d->relateToPlace == QSgsEnum::SkillPlace::Head || d->relateToPlace == QSgsEnum::SkillPlace::Both;
 }
+
+bool Skill::isDeputySkill() const
+{
+    Q_D(const Skill);
+    return d->relateToPlace == QSgsEnum::SkillPlace::Deputy || d->relateToPlace == QSgsEnum::SkillPlace::Both;
+}
+
 
 //QStringList Skill::getSources(const QString &general, const int skinId) const
 //{
@@ -215,27 +199,16 @@ QString Skill::limitMark() const
 
 bool Skill::canPreshow() const
 {
-//    if (inherits("TriggerSkill")) {
-//        const TriggerSkill *triskill = qobject_cast<const TriggerSkill *>(this);
-//        return triskill->viewAsSkill() == nullptr;
-//    }
-
-    return false;
+    Q_D(const Skill);
+    return d->canPreshow;
 }
 
-bool Skill::relateToPlace(bool head) const
+void Skill::setCanPreshow(bool c)
 {
-    if (head)
-        return m_relateToPlace == "head";
-    else
-        return m_relateToPlace == "deputy";
-    return false;
+
 }
 
-void Skill::setRelateToPlace(const char *rtp)
-{
-    m_relateToPlace = rtp;
-}
+
 
 //ViewAsSkill::ViewAsSkill(const QString &name)
 //    : Skill(name), m_responsePattern(QString()), m_responseOrUse(false), m_expandPile(QString())

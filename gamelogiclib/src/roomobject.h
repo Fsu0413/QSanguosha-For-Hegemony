@@ -13,7 +13,8 @@ class LIBQSGSGAMELOGIC_EXPORT RoomRequestReceiver
 {
     // DO NOT INHERIT QObject HERE!!!
     // It is intended to be inherited by Socket/UI/AI, and wait for their reply
-    // Because all these components needs to inherit QObject, so this class should not inherit QObject
+    // Because all these components needs to inherit QObject, if this class inherits QObject, that will cause troubles in multi-inheriting
+    // THIS SHOULD BE ON A DIFFERENT THREAD THAN RoomRequestHandler!!!
 public:
     virtual ~RoomRequestReceiver();
 
@@ -37,6 +38,7 @@ private:
 class LIBQSGSGAMELOGIC_EXPORT RoomRequestHandler final
 {
     // There should be no class inherits RoomRequestHandler
+    // This instance of this class should be on the same thread of RoomObject
 public:
     RoomRequestHandler(RoomRequestReceiver *receiver);
     ~RoomRequestHandler();
@@ -87,9 +89,9 @@ public:
 
     const CardPlaceStruct &cardPlace(const Card *card) const; // using the const functions of the QHash to get the place of a card
 
-    // set the handler of the following interactive methods
+    // set the handler of the following interactive methods. Note that RoomObject takes the ownership of the handler, DO NOT DELETE IT AFTER YOU SET IT!!
     RoomRequestHandler *requestHandler() const;
-    void setRequestHandler(RoomRequestHandler *handler);
+    bool setRequestHandler(RoomRequestHandler *handler);
     // Interactive Methods: Note these functions does not do the actual operations, it is caller's responsibility to do the things
     // calls when this player is in the free time of Play Phase, note that in this phase this player can use a card, or invoke a skill
     // for return value: true means one of the 2 pointer contains value, else means both of them are nullptr
@@ -153,7 +155,7 @@ public:
     int correctCardTarget(const QSgsEnum::ModType type, const Player *from, Card *card) const;
     int correctAttackRange(const Player *target, bool include_weapon = true, bool fixed = false) const;
 
-    // if this class is meant to be a virtual class, make sure this section is protected
+    // if this class is meant to be a virtual class, make sure RoomObjectPrivate *d_ptr is protected and Q_DECLARE_PRIVATE is private
 private:
     Q_DECLARE_PRIVATE(RoomObject)
     RoomObjectPrivate *d_ptr;

@@ -121,6 +121,13 @@ enum class SkillFrequency
     Wake
 };
 
+enum class SkillPlace
+{
+    Head = 1,
+    Deputy = 2,
+    Both = 3
+};
+
 enum class DamageNature
 {
     Normal, // normal slash, duel and most damage caused by skill

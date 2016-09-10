@@ -82,7 +82,9 @@ RoomObject::RoomObject(QObject *parent)
 
 RoomObject::~RoomObject()
 {
-    delete d_ptr;
+    Q_D(RoomObject);
+    delete d->handler;
+    delete d;
 }
 
 void RoomObject::addRealCard(Card *card)
@@ -196,10 +198,13 @@ RoomRequestHandler *RoomObject::requestHandler() const
     return d->handler;
 }
 
-void RoomObject::setRequestHandler(RoomRequestHandler *handler)
+bool RoomObject::setRequestHandler(RoomRequestHandler *handler)
 {
     Q_D(RoomObject);
+    delete d->handler;
     d->handler = handler;
+
+    return true;
 }
 
 bool RoomObject::activate(Player *player, CardUseStruct *&cardUse, SkillInvokeStruct *&skillInvoke)
@@ -292,4 +297,24 @@ QList<Card *> RoomObject::askForPindian(Player *from, Player *to, const QString 
 const ProhibitSkill *RoomObject::isProhibited(const Player *from, const Player *to, const Card *card) const
 {
     return nullptr;
+}
+
+int RoomObject::correctDistance(const Player *from, const Player *to) const
+{
+    return 0;
+}
+
+int RoomObject::correctMaxCards(const Player *target, bool fixed) const
+{
+    return 0;
+}
+
+int RoomObject::correctCardTarget(const QSgsEnum::ModType type, const Player *from, Card *card) const
+{
+    return 0;
+}
+
+int RoomObject::correctAttackRange(const Player *target, bool include_weapon, bool fixed) const
+{
+    return 0;
 }

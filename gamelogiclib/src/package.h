@@ -51,8 +51,10 @@ public:
     QSgsEnum::PackageType type() const;
 	
 protected:
-    Q_DECLARE_PRIVATE(QSgsPackage)
     QSgsPackagePrivate *d_ptr;
+
+private:
+    Q_DECLARE_PRIVATE(QSgsPackage)
 };
 
 Q_DECLARE_INTERFACE(QSgsPackage, "org.qsanguosha.Hegemony.QSgsPackage")

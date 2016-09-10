@@ -27,35 +27,40 @@
 #include "player.h"
 
 class Card;
-class Player;
-class Room;
+class RoomObject;
+
+class SkillPrivate;
 
 class LIBQSGSGAMELOGIC_EXPORT Skill : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit Skill(const QString &name, QSgsEnum::SkillFrequency frequent = QSgsEnum::SkillFrequency::NotFrequent);
+    virtual ~Skill();
+
     bool isLordSkill() const;
-    bool isAttachedLordSkill() const;
+    void setLordSkill(bool l);
+    bool isAttachedSkill() const;
+    void setAttachedSkill(bool a);
     bool isVisible() const;
+    void setVisible(bool v);
+    const QString &limitMark() const;
+    void setLimitMark(const QString &lm);
+    bool canPreshow() const;
+    void setCanPreshow(bool c);
 
     QSgsEnum::SkillFrequency frequency() const;
-    QString limitMark() const;
-    virtual bool canPreshow() const;
-    virtual bool relateToPlace(bool head = true) const;
 
-    //for LUA
-    inline void setRelateToPlace(const char *rtp);
+    // Note: Both functions should return true for skills without a description of head skill or deputy skill
+    bool isHeadSkill() const;
+    bool isDeputySkill() const;
 
 protected:
-    QSgsEnum::SkillFrequency m_frequency;
-    QString m_limitMark;
-    QString m_relateToPlace;
-    bool m_attachedLordSkill;
+    explicit Skill(const QString &name, QSgsEnum::SkillFrequency frequency = QSgsEnum::SkillFrequency::NotFrequent, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both);
+    SkillPrivate *d_ptr;
 
 private:
-    bool m_lordSkill;
+    Q_DECLARE_PRIVATE(Skill)
 };
 
 class LIBQSGSGAMELOGIC_EXPORT ViewAsSkill : public Skill
