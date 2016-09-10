@@ -26,6 +26,10 @@
 
 class QUdpSocket;
 
+class NativeServerSocketPrivate;
+
+class NativeClientSocketPrivate;
+
 class LIBQSGSCORE_EXPORT NativeServerSocket : public ServerSocket
 {
     Q_OBJECT
@@ -42,8 +46,9 @@ private slots:
 
 private:
     // @todo: use D-pointer to handle this
-    QTcpServer *server;
-    QUdpSocket *daemon;
+    Q_DECLARE_PRIVATE(NativeServerSocket)
+    NativeServerSocketPrivate *d_ptr;
+
 };
 
 
@@ -71,7 +76,9 @@ private slots:
 
 private:
     // @todo: use D-pointer to handle this
-    QTcpSocket *const socket;
+
+    Q_DECLARE_PRIVATE(NativeClientSocket)
+    NativeClientSocketPrivate *d_ptr;
 
     void init();
 };

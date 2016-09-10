@@ -27,6 +27,8 @@
 typedef QVariantList JsonArray;
 typedef QVariantMap JsonObject;
 
+class JsonDocumentPrivate;
+
 class LIBQSGSCORE_EXPORT JsonDocument
 {
 public:
@@ -40,41 +42,19 @@ public:
     static JsonDocument fromJson(const QByteArray &json, bool allowComment = false);
     static JsonDocument fromFilePath(const QString &path, bool allowComment = true);
 
-    inline bool isArray() const
-    {
-        return value.canConvert<JsonArray>();
-    }
-    inline bool isObject() const
-    {
-        return value.canConvert<JsonObject>();
-    }
-    inline bool isValid() const
-    {
-        return valid;
-    }
+    bool isArray() const;
+    bool isObject() const;
+    bool isValid() const;
 
-    inline JsonArray array() const
-    {
-        return value.value<JsonArray>();
-    }
-    inline JsonObject object() const
-    {
-        return value.value<JsonObject>();
-    }
-    inline const QVariant& toVariant() const
-    {
-        return value;
-    }
-    inline const QString errorString() const
-    {
-        return error;
-    }
+    JsonArray array() const;
+    JsonObject object() const;
+    const QVariant &toVariant() const;
+    const QString errorString() const;
 
 protected:
     // @todo: use D-pointer to handle this
-    QVariant value;
-    bool valid;
-    QString error;
+    Q_DECLARE_PRIVATE(JsonDocument)
+    JsonDocumentPrivate *d_ptr;
 };
 
 #if 0
@@ -101,8 +81,8 @@ namespace JsonUtils
         return var.userType() == QMetaType::Bool;
     }
 
-    bool LIBQSGSCORE_EXPORT isStringArray(const QVariant &var, unsigned from, unsigned to);
-    bool LIBQSGSCORE_EXPORT isNumberArray(const QVariant &var, unsigned from, unsigned to);
+    bool LIBQSGSCORE_EXPORT isStringArray(const QVariant &var, int from, int to);
+    bool LIBQSGSCORE_EXPORT isNumberArray(const QVariant &var, int from, int to);
 
     QVariant LIBQSGSCORE_EXPORT toJsonArray(const QList<int> &intArray);
     QVariant LIBQSGSCORE_EXPORT toJsonArray(const QStringList &stringArray);

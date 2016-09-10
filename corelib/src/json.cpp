@@ -20,24 +20,43 @@
 
 #include "json.h"
 
-JsonDocument::JsonDocument()
-    :valid(false)
+class JsonDocumentPrivate
 {
+public:
+    QVariant value;
+    bool valid;
+    QString error;
+};
+
+JsonDocument::JsonDocument()
+    :d_ptr(new JsonDocumentPrivate)
+{
+    Q_D(JsonDocument);
+    d->valid = false;
 }
 
 JsonDocument::JsonDocument(const QVariant &var)
-    : value(var), valid(true)
+    : d_ptr(new JsonDocumentPrivate)
 {
+    Q_D(JsonDocument);
+    d->valid = true;
+    d->value = var;
 }
 
 JsonDocument::JsonDocument(const JsonArray &array)
-    : value(array), valid(true)
+    : d_ptr(new JsonDocumentPrivate)
 {
+    Q_D(JsonDocument);
+    d->valid = true;
+    d->value = array;
 }
 
 JsonDocument::JsonDocument(const JsonObject &object)
-    : value(object), valid(true)
+    : d_ptr(new JsonDocumentPrivate)
 {
+    Q_D(JsonDocument);
+    d->valid = true;
+    d->value = object;
 }
 
 JsonDocument JsonDocument::fromFilePath(const QString &path, bool allowComment)
@@ -47,32 +66,74 @@ JsonDocument JsonDocument::fromFilePath(const QString &path, bool allowComment)
     return fromJson(file.readAll(), allowComment);
 }
 
-bool JsonUtils::isStringArray(const QVariant &var, unsigned from, unsigned to)
+bool JsonDocument::isArray() const
+{
+    Q_D(const JsonDocument);
+    return d->value.canConvert<JsonArray>();
+}
+
+bool JsonDocument::isObject() const
+{
+    Q_D(const JsonDocument);
+    return d->value.canConvert<JsonObject>();
+}
+
+bool JsonDocument::isValid() const
+{
+    Q_D(const JsonDocument);
+    return d->valid;
+}
+
+JsonArray JsonDocument::array() const
+{
+    Q_D(const JsonDocument);
+    return d->value.value<JsonArray>();
+}
+
+JsonObject JsonDocument::object() const
+{
+    Q_D(const JsonDocument);
+    return d->value.value<JsonObject>();
+}
+
+const QVariant &JsonDocument::toVariant() const
+{
+    Q_D(const JsonDocument);
+    return d->value;
+}
+
+const QString JsonDocument::errorString() const
+{
+    Q_D(const JsonDocument);
+    return d->error;
+}
+
+bool JsonUtils::isStringArray(const QVariant &var, int from, int to)
 {
     if (!var.canConvert<JsonArray>())
         return false;
 
     JsonArray array = var.value<JsonArray>();
 
-    if ((unsigned)array.length() <= to)
+    if (array.length() <= to)
         return false;
-    for (unsigned int i = from; i <= to; i++) {
+    for (int i = from; i <= to; i++) {
         if (!array.at(i).canConvert<QString>())
             return false;
     }
     return true;
 }
 
-bool JsonUtils::isNumberArray(const QVariant &var, unsigned from, unsigned to)
+bool JsonUtils::isNumberArray(const QVariant &var, int from, int to)
 {
     if (!var.canConvert<JsonArray>())
         return false;
 
     JsonArray array = var.value<JsonArray>();
 
-    if ((unsigned)array.length() <= to)
+    if (array.length() <= to)
         return false;
-    for (unsigned int i = from; i <= to; i++) {
+    for (int i = from; i <= to; i++) {
         if (!array.at(i).canConvert<int>())
             return false;
     }
@@ -269,7 +330,8 @@ QByteArray clearComment(const QByteArray &src)
 
 QByteArray JsonDocument::toJson(bool isIndented) const
 {
-    QJsonDocument doc = QJsonDocument::fromVariant(value);
+    Q_D(const JsonDocument);
+    QJsonDocument doc = QJsonDocument::fromVariant(d->value);
     return doc.toJson(isIndented ? QJsonDocument::Indented : QJsonDocument::Compact);
 }
 
@@ -280,11 +342,11 @@ JsonDocument JsonDocument::fromJson(const QByteArray &json, bool allowComment)
 
     JsonDocument doc;
     if (error.error == QJsonParseError::NoError) {
-        doc.value = jsondoc.toVariant();
-        doc.valid = true;
+        doc.d_func()->value = jsondoc.toVariant();
+        doc.d_func()->valid = true;
     } else {
-        doc.valid = false;
-        doc.error = error.errorString();
+        doc.d_func()->valid = false;
+        doc.d_func()->error = error.errorString();
     }
     return doc;
 }

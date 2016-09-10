@@ -21,71 +21,96 @@
 #include "nativesocket.h"
 #include "settings.h"
 
-NativeServerSocket::NativeServerSocket()
+class NativeServerSocketPrivate
 {
-    server = new QTcpServer(this);
-    daemon = nullptr;
-    connect(server, &QTcpServer::newConnection, this, &NativeServerSocket::processNewConnection);
+public:
+    QTcpServer *server;
+    QUdpSocket *daemon;
+};
+
+NativeServerSocket::NativeServerSocket()
+    :d_ptr(new NativeServerSocketPrivate)
+{
+    Q_D(NativeServerSocket);
+    d->server = new QTcpServer(this);
+    d->daemon = nullptr;
+    connect(d->server, &QTcpServer::newConnection, this, &NativeServerSocket::processNewConnection);
 }
 
 bool NativeServerSocket::listen()
 {
-    return server->listen(QHostAddress::Any, QSgsCoreSettings::serverPort());
+    Q_D(NativeServerSocket);
+    return d->server->listen(QHostAddress::Any, QSgsCoreSettings::serverPort());
 }
 
 void NativeServerSocket::daemonize()
 {
-    daemon = new QUdpSocket(this);
-    daemon->bind(QSgsCoreSettings::serverPort(), QUdpSocket::ShareAddress);
-    connect(daemon, &QUdpSocket::readyRead, this, &NativeServerSocket::processNewDatagram);
+    Q_D(NativeServerSocket);
+    d->daemon = new QUdpSocket(this);
+    d->daemon->bind(QSgsCoreSettings::serverPort(), QUdpSocket::ShareAddress);
+    connect(d->daemon, &QUdpSocket::readyRead, this, &NativeServerSocket::processNewDatagram);
 }
 
 void NativeServerSocket::processNewDatagram()
 {
-    while (daemon->hasPendingDatagrams()) {
+    Q_D(NativeServerSocket);
+    while (d->daemon->hasPendingDatagrams()) {
         QHostAddress from;
         char ask_str[256];
 
-        daemon->readDatagram(ask_str, sizeof(ask_str), &from);
+        d->daemon->readDatagram(ask_str, sizeof(ask_str), &from);
 
         QByteArray data = QSgsCoreSettings::serverName().toUtf8();
-        daemon->writeDatagram(data, from, QSgsCoreSettings::detectorPort());
-        daemon->flush();
+        d->daemon->writeDatagram(data, from, QSgsCoreSettings::detectorPort());
+        d->daemon->flush();
     }
 }
 
 void NativeServerSocket::processNewConnection()
 {
-    QTcpSocket *socket = server->nextPendingConnection();
+    Q_D(NativeServerSocket);
+    QTcpSocket *socket = d->server->nextPendingConnection();
     NativeClientSocket *connection = new NativeClientSocket(socket);
     emit new_connection(connection);
 }
 
 // ---------------------------------
 
-NativeClientSocket::NativeClientSocket()
-    : socket(new QTcpSocket(this))
+class NativeClientSocketPrivate
 {
+public:
+    QTcpSocket *socket;
+};
+
+NativeClientSocket::NativeClientSocket()
+    : d_ptr(new NativeClientSocketPrivate)
+{
+    Q_D(NativeClientSocket);
+    d->socket = new QTcpSocket(this);
     init();
 }
 
 NativeClientSocket::NativeClientSocket(QTcpSocket *socket)
-    : socket(socket)
+    : d_ptr(new NativeClientSocketPrivate)
 {
+    Q_D(NativeClientSocket);
+    d->socket = socket;
     socket->setParent(this);
     init();
 }
 
 void NativeClientSocket::init()
 {
-    connect(socket, &QTcpSocket::disconnected, this, &NativeClientSocket::disconnected);
-    connect(socket, &QTcpSocket::readyRead, this, &NativeClientSocket::getMessage);
-    connect(socket, (void (QTcpSocket::*)(QAbstractSocket::SocketError))(&QTcpSocket::error), this, &NativeClientSocket::raiseError);
-    connect(socket, &QTcpSocket::connected, this, &NativeClientSocket::connected);
+    Q_D(NativeClientSocket);
+    connect(d->socket, &QTcpSocket::disconnected, this, &NativeClientSocket::disconnected);
+    connect(d->socket, &QTcpSocket::readyRead, this, &NativeClientSocket::getMessage);
+    connect(d->socket, (void (QTcpSocket::*)(QAbstractSocket::SocketError))(&QTcpSocket::error), this, &NativeClientSocket::raiseError);
+    connect(d->socket, &QTcpSocket::connected, this, &NativeClientSocket::connected);
 }
 
 void NativeClientSocket::connectToHost()
 {
+    Q_D(NativeClientSocket);
     QString address = "127.0.0.1";
     ushort port = 9527u;
 
@@ -99,24 +124,27 @@ void NativeClientSocket::connectToHost()
             port = QSgsCoreSettings::serverPort();
     }
 
-    socket->connectToHost(address, port);
+    d->socket->connectToHost(address, port);
 }
 
 void NativeClientSocket::connectToHost(const QHostAddress &address)
 {
+    Q_D(NativeClientSocket);
     ushort port = QSgsCoreSettings::serverPort();
-    socket->connectToHost(address, port);
+    d->socket->connectToHost(address, port);
 }
 
 void NativeClientSocket::connectToHost(const QHostAddress &address, ushort port)
 {
-    socket->connectToHost(address, port);
+    Q_D(NativeClientSocket);
+    d->socket->connectToHost(address, port);
 }
 
 void NativeClientSocket::getMessage()
 {
-    while (socket->canReadLine()) {
-        QByteArray msg = socket->readLine();
+    Q_D(NativeClientSocket);
+    while (d->socket->canReadLine()) {
+        QByteArray msg = d->socket->readLine();
 #ifndef QT_NO_DEBUG
         printf("recv: %s", msg.constData());
 #endif
@@ -126,47 +154,52 @@ void NativeClientSocket::getMessage()
 
 void NativeClientSocket::disconnectFromHost()
 {
-    socket->disconnectFromHost();
+    Q_D(NativeClientSocket);
+    d->socket->disconnectFromHost();
 }
 
 void NativeClientSocket::send(const QByteArray &message)
 {
+    Q_D(NativeClientSocket);
     if (message.isEmpty())
         return;
-
-    socket->write(message);
+    d->socket->write(message);
     if (!message.endsWith('\n')) {
-        socket->write("\n");
+        d->socket->write("\n");
     }
 
 #ifndef QT_NO_DEBUG
     printf(": %s\n", message.constData());
 #endif
-    socket->flush();
+    d->socket->flush();
 }
 
 bool NativeClientSocket::isConnected() const
 {
-    return socket->state() == QTcpSocket::ConnectedState;
+    Q_D(const NativeClientSocket);
+    return d->socket->state() == QTcpSocket::ConnectedState;
 }
 
 QString NativeClientSocket::peerName() const
 {
-    QString peer_name = socket->peerName();
+    Q_D(const NativeClientSocket);
+    QString peer_name = d->socket->peerName();
     if (peer_name.isEmpty())
-        peer_name = QString("%1:%2").arg(socket->peerAddress().toString()).arg(socket->peerPort());
+        peer_name = QString("%1:%2").arg(d->socket->peerAddress().toString()).arg(d->socket->peerPort());
 
     return peer_name;
 }
 
 QString NativeClientSocket::peerAddress() const
 {
-    return socket->peerAddress().toString();
+    Q_D(const NativeClientSocket);
+    return d->socket->peerAddress().toString();
 }
 
 ushort NativeClientSocket::peerPort() const
 {
-    return socket->peerPort();
+    Q_D(const NativeClientSocket);
+    return d->socket->peerPort();
 }
 
 void NativeClientSocket::raiseError(QAbstractSocket::SocketError socket_error)
