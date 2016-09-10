@@ -26,6 +26,10 @@
 // @todo: These classes don't have any meaningful effect. Should it be removed later?
 // Another question, why do these classes appear in the QSanguosha-v2? For legacy API compatibility with V1?
 
+// @Fs: I happened on something we may support later using these pure virtual classes....
+// If we introduce a new connection mechanism(e.g. Bluetooth connection), we can inherit these pure virtual classes
+// to develop it, and does not need to couple with the existing network connection logic.
+
 class ClientSocket;
 
 class LIBQSGSCORE_EXPORT ServerSocket : public QObject
