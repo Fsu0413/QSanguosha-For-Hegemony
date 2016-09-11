@@ -4,6 +4,7 @@ include(../QSanguosha.pri)
 winrt|ios {
     TEMPLATE = lib
     CONFIG += staticlib
+    VERSION = 0.1.0.0
 
     QT -= gui widgets
 
