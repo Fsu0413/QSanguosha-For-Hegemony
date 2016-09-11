@@ -15,8 +15,7 @@ public:
 CardFace::~CardFace()
 {
     Q_D(CardFace);
-    if (d_ptr)
-        delete d_ptr;
+    delete d;
 }
 
 bool CardFace::willThrow() const

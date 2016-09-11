@@ -34,6 +34,8 @@ public:
     QSet<QString> flags;
     QHash<QString, int> history;
 
+    QStringList delayedEffects;
+
     const General *general;
     const General *general2;
 
@@ -395,6 +397,22 @@ bool Player::hasInnateSkill(const QString &skill_name) const
 bool Player::hasLordSkill(const QString &skill_name, bool include_lose) const
 {
     return false;
+}
+
+bool Player::hasDelayedEffect(const QString &effectName) const
+{
+    Q_D(const Player);
+    return d->delayedEffects.contains(effectName);
+}
+
+void Player::setDelayedEffect(const QString &effectName)
+{
+    Q_D(Player);
+    if (effectName.startsWith("-")) {
+        QString removed = effectName.mid(1);
+        d->delayedEffects.removeAll(removed);
+    } else
+        d->delayedEffects << effectName;
 }
 
 bool Player::hasEquip(Card *card) const

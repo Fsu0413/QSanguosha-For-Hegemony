@@ -111,6 +111,9 @@ public:
     bool hasInnateSkill(const QString &skill_name) const;
     bool hasLordSkill(const QString &skill_name, bool include_lose = false) const;
 
+    bool hasDelayedEffect(const QString &effectName) const;
+    void setDelayedEffect(const QString &effectName);
+
     bool hasEquip(Card *card) const;
     bool hasEquip() const;
 
@@ -271,10 +274,8 @@ public:
     QVariantMap tag;
 
 protected:
-    PlayerPrivate *d_ptr;
-
-private:
     Q_DECLARE_PRIVATE(Player)
+    PlayerPrivate *d_ptr;
 };
 
 #endif

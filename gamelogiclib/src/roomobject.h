@@ -155,7 +155,7 @@ public:
     int correctCardTarget(const QSgsEnum::ModType type, const Player *from, Card *card) const;
     int correctAttackRange(const Player *target, bool include_weapon = true, bool fixed = false) const;
 
-    // if this class is meant to be a virtual class, make sure RoomObjectPrivate *d_ptr is protected and Q_DECLARE_PRIVATE is private
+    // if this class is meant to be a virtual class, make sure RoomObjectPrivate *d_ptr and Q_DECLARE_PRIVATE are protected
 private:
     Q_DECLARE_PRIVATE(RoomObject)
     RoomObjectPrivate *d_ptr;

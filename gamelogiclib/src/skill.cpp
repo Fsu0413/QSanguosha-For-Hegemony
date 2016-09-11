@@ -22,13 +22,11 @@
 #include "player.h"
 #include "scenario.h"
 
-#include <QFile>
+#include "card.h"
 
 class SkillPrivate
 {
 public:
-    virtual ~SkillPrivate();
-
     QSgsEnum::SkillFrequency frequency;
     QSgsEnum::SkillPlace relateToPlace;
     QString limitMark;
@@ -37,10 +35,6 @@ public:
     bool visible;
     bool canPreshow;
 };
-
-SkillPrivate::~SkillPrivate()
-{
-}
 
 Skill::Skill(const QString &name, QSgsEnum::SkillFrequency frequency, QSgsEnum::SkillPlace place)
     : d_ptr(new SkillPrivate)
@@ -68,12 +62,10 @@ bool Skill::isLordSkill() const
 void Skill::setLordSkill(bool l)
 {
     Q_D(Skill);
-#ifndef QT_NO_DEBUG
     if (d->attachedSkill && l) {
         qWarning() << objectName() << QStringLiteral("is already an attached skill, It should not be set to LordSkill");
         Q_ASSERT_X(false, __FILE__ QT_STRINGIFY(__LINE__), "INVALID LORDSKILL SET");
     }
-#endif
     d->lordSkill = l;
 }
 
@@ -86,12 +78,10 @@ bool Skill::isAttachedSkill() const
 void Skill::setAttachedSkill(bool a)
 {
     Q_D(Skill);
-#ifndef QT_NO_DEBUG
     if (d->lordSkill && a) {
         qWarning() << objectName() << QStringLiteral("is already a lord skill, It should not be set to AttachedSkill");
         Q_ASSERT_X(false, __FILE__ QT_STRINGIFY(__LINE__), "INVALID ATTACHEDSKILL SET");
     }
-#endif
     d->attachedSkill = a;
 }
 
@@ -104,12 +94,10 @@ bool Skill::isVisible() const
 void Skill::setVisible(bool v)
 {
     Q_D(Skill);
-#ifndef QT_NO_DEBUG
     if (inherits("ViewAsSkill") && !v) {
         qWarning() << objectName() << QStringLiteral("is a ViewAsSkill. It shouldn't be invisible.");
         Q_ASSERT_X(false, __FILE__ QT_STRINGIFY(__LINE__), "INVALID VISIBILITY SET");
     }
-#endif
     d->visible = v;
 }
 
@@ -122,12 +110,10 @@ const QString &Skill::limitMark() const
 void Skill::setLimitMark(const QString &lm)
 {
     Q_D(Skill);
-#ifndef QT_NO_DEBUG
     if (d->frequency != QSgsEnum::SkillFrequency::Limited && !lm.isEmpty()) {
         qWarning() << objectName() << QStringLiteral("is not a limited skill, It should not set limit mark");
         Q_ASSERT_X(false, __FILE__ QT_STRINGIFY(__LINE__), "INVALID LIMITMARK SET");
     }
-#endif
     d->limitMark = lm;
 }
 
@@ -158,87 +144,176 @@ bool Skill::canPreshow() const
 void Skill::setCanPreshow(bool c)
 {
     Q_D(Skill);
-#ifndef QT_NO_DEBUG
     if ((!inherits("TriggerSkill") || inherits("EquipSkill") && c)) {
         qWarning() << objectName() << QStringLiteral("is not a TriggerSkill or is an EquipSkill. It should not be able to preshow");
         Q_ASSERT_X(false, __FILE__ QT_STRINGIFY(__LINE__), "INVALID CANPRESHOW SET");
     }
-#endif
     d->canPreshow = c;
 }
 
+class ViewAsSkillPrivate
+{
+public:
+    QString responsePattern;
+    bool responseOrUse;
+    QString expandPile;
+};
+
+ViewAsSkill::ViewAsSkill(const QString &name, QSgsEnum::SkillFrequency frequency, QSgsEnum::SkillPlace place)
+    : Skill(name, frequency, place), d_ptr_viewAsSkill(new ViewAsSkillPrivate)
+{
+    Q_D(ViewAsSkill);
+    d->responseOrUse = false;
+}
+
+bool ViewAsSkill::isAvailable(const Player *invoker, QSgsEnum::CardUseReason reason, const QString &pattern) const
+{
+    // Make sure TransferSkill is invoked properly
+    if (objectName() != "transfer") {
+        // Make sure skill that was temporily invoked and skill that has delayed effect can be invoked properly
+        if (!invoker->hasFlag("TempInvoke_" + objectName()) && !invoker->hasSkill(objectName()) && !invoker->hasDelayedEffect(objectName()))
+            return false;
+    }
+
+    switch (reason) {
+    case QSgsEnum::CardUseReason::Play:
+        return isEnabledAtPlay(invoker);
+    case QSgsEnum::CardUseReason::Response:
+    case QSgsEnum::CardUseReason::ResponseUse:
+        return isEnabledAtResponse(invoker, reason, pattern);
+    default:
+        return false;
+    }
+
+    return false;
+}
+
+bool ViewAsSkill::isEnabledAtPlay(const Player *player) const
+{
+    Q_D(const ViewAsSkill);
+    return d->responsePattern.isEmpty();
+}
+
+bool ViewAsSkill::isEnabledAtResponse(const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const
+{
+    Q_D(const ViewAsSkill);
+    if (!d->responsePattern.isEmpty()) {
+        QRegularExpression regex(d->responsePattern);
+        return regex.match(pattern).hasMatch();
+    }
+
+    return false;
+}
+
+bool ViewAsSkill::isEnabledAtNullification(const Player *player) const
+{
+    return false;
+}
+
+bool ViewAsSkill::isResponseOrUse() const
+{
+    Q_D(const ViewAsSkill);
+    return d->responseOrUse;
+}
+
+const QString &ViewAsSkill::expandPile() const
+{
+    Q_D(const ViewAsSkill);
+    return d->expandPile;
+}
+
+const QString &ViewAsSkill::responsePattern() const
+{
+    Q_D(const ViewAsSkill);
+    return d->responsePattern;
+}
+
+void ViewAsSkill::setResponsePattern(const QString &pattern)
+{
+    QString p = pattern;
+    if (!pattern.isEmpty()) {
+        if (!p.startsWith(QStringLiteral("^")))
+            p.prepend(QStringLiteral("^"));
+
+        if (!p.endsWith(QStringLiteral("$")))
+            p.append(QStringLiteral("$"));
+    }
+
+    QRegularExpression re(p);
+    if (!re.isValid()) {
+        qWarning() << QStringLiteral("Regular Expression") << p << QStringLiteral("is invalid.");
+        qWarning() << re.errorString();
+        Q_ASSERT_X(false, __FILE__ QT_STRINGIFY(__LINE__), "INVALID REGEXP SET");
+        p.clear();
+    }
+
+    Q_D(ViewAsSkill);
+    d->responsePattern = p;
+}
 
 
-//ViewAsSkill::ViewAsSkill(const QString &name)
-//    : Skill(name), m_responsePattern(QString()), m_responseOrUse(false), m_expandPile(QString())
+ZeroCardViewAsSkill::ZeroCardViewAsSkill(const QString &name, QSgsEnum::SkillFrequency frequency, QSgsEnum::SkillPlace place)
+    : ViewAsSkill(name, frequency, place)
+{
+
+}
+
+bool ZeroCardViewAsSkill::viewFilter(const QList<Card *> &selected, Card *toSelect, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const
+{
+    return false;
+}
+
+Card *ZeroCardViewAsSkill::viewAs(const QList<Card *> &cards, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const
+{
+    if (cards.isEmpty())
+        return viewAs(player, reason, pattern);
+
+    return nullptr;
+}
+
+class OneCardViewAsSkillPrivate
+{
+public:
+    QString filterPattern;
+};
+
+OneCardViewAsSkill::OneCardViewAsSkill(const QString &name, QSgsEnum::SkillFrequency frequency, QSgsEnum::SkillPlace place)
+    : ViewAsSkill(name, frequency, place), d_ptr_oneCardViewAsSkill(new OneCardViewAsSkillPrivate)
+{
+
+}
+
+bool OneCardViewAsSkill::viewFilter(const QList<Card *> &selected, Card *toSelect, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const
+{
+    return selected.isEmpty() && !toSelect->hasFlag("using") && viewFilter(toSelect, player, reason, pattern);
+}
+
+Card *OneCardViewAsSkill::viewAs(const QList<Card *> &cards, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const
+{
+    if (cards.length() != 1)
+        return nullptr;
+
+    return viewAs(cards.first(), player, reason, pattern);
+}
+
+bool OneCardViewAsSkill::viewFilter(Card *card, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const
+{
+    // @todo: exppattern
+    return false;
+}
+
+CardTransformSkill::CardTransformSkill(const QString &name, QSgsEnum::SkillPlace place)
+    : Skill(name, QSgsEnum::SkillFrequency::Compulsory, place)
+{
+
+}
+
+
+//TriggerSkill::~TriggerSkill()
 //{
+
 //}
 
-//bool ViewAsSkill::isAvailable(const Player *invoker, CardUseStruct::CardUseReason reason, const QString &pattern) const
-//{
-//    if (!inherits("TransferSkill") && !invoker->hasSkill(objectName())
-//        && !invoker->hasFlag(objectName())) { // For Shuangxiong
-//        return false;
-//    }
-//    switch (reason) {
-//        case CardUseStruct::CARD_USE_REASON_PLAY: return isEnabledAtPlay(invoker);
-//        case CardUseStruct::CARD_USE_REASON_RESPONSE:
-//        case CardUseStruct::CARD_USE_REASON_RESPONSE_USE: return isEnabledAtResponse(invoker, pattern);
-//        default:
-//            return false;
-//    }
-//}
-
-//bool ViewAsSkill::isEnabledAtPlay(const Player *) const
-//{
-//    return m_responsePattern.isEmpty();
-//}
-
-//bool ViewAsSkill::isEnabledAtResponse(const Player *, const QString &pattern) const
-//{
-//    if (!m_responsePattern.isEmpty())
-//        return pattern == m_responsePattern;
-//    return false;
-//}
-
-//bool ViewAsSkill::isEnabledAtNullification(const ServerPlayer *) const
-//{
-//    return false;
-//}
-
-//const ViewAsSkill *ViewAsSkill::parseViewAsSkill(const Skill *skill)
-//{
-//    if (skill == nullptr) return nullptr;
-//    if (skill->inherits("ViewAsSkill")) {
-//        const ViewAsSkill *view_as_skill = qobject_cast<const ViewAsSkill *>(skill);
-//        return view_as_skill;
-//    }
-//    if (skill->inherits("TriggerSkill")) {
-//        const TriggerSkill *trigger_skill = qobject_cast<const TriggerSkill *>(skill);
-//        Q_ASSERT(trigger_skill != nullptr);
-//        const ViewAsSkill *view_as_skill = trigger_skill->viewAsSkill();
-//        if (view_as_skill != nullptr) return view_as_skill;
-//    }
-//    return nullptr;
-//}
-
-//ZeroCardViewAsSkill::ZeroCardViewAsSkill(const QString &name)
-//    : ViewAsSkill(name)
-//{
-//}
-
-//const Card *ZeroCardViewAsSkill::viewAs(const QList<Card *> &cards) const
-//{
-//    if (cards.isEmpty())
-//        return viewAs();
-//    else
-//        return nullptr;
-//}
-
-//bool ZeroCardViewAsSkill::viewFilter(const QList<Card *> &, Card *) const
-//{
-//    return false;
-//}
 
 //OneCardViewAsSkill::OneCardViewAsSkill(const QString &name)
 //    : ViewAsSkill(name), m_filterPattern(QString())
@@ -723,8 +798,3 @@ void Skill::setCanPreshow(bool c)
 //        return false;
 //    return target->hasTreasure(objectName());
 //}
-
-TriggerSkill::~TriggerSkill()
-{
-
-}

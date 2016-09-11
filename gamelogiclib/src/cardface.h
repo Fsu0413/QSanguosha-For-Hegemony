@@ -60,10 +60,8 @@ public:
 protected:
     explicit CardFace(const QString &name, QSgsEnum::CardHandlingMethod handlingMethod = QSgsEnum::CardHandlingMethod::Use, bool targetFixed = false, bool willThrow = false, bool hasPreact = false);
 
-private:
     Q_DECLARE_PRIVATE(CardFace)
     CardFacePrivate *d_ptr;
-
 };
 
 class DummyCardFace : public CardFace

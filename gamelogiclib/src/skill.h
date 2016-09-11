@@ -36,7 +36,7 @@ class LIBQSGSGAMELOGIC_EXPORT Skill : public QObject
     Q_OBJECT
 
 public:
-    virtual ~Skill();
+    virtual ~Skill(); // = 0?
 
     bool isLordSkill() const;
     void setLordSkill(bool l);
@@ -57,41 +57,36 @@ public:
 
 protected:
     explicit Skill(const QString &name, QSgsEnum::SkillFrequency frequency = QSgsEnum::SkillFrequency::NotFrequent, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both);
-    SkillPrivate *d_ptr;
-
-private:
     Q_DECLARE_PRIVATE(Skill)
+    SkillPrivate *d_ptr;
 };
+
+class ViewAsSkillPrivate;
 
 class LIBQSGSGAMELOGIC_EXPORT ViewAsSkill : public Skill
 {
     Q_OBJECT
 
 public:
-    ViewAsSkill(const QString &name);
+    explicit ViewAsSkill(const QString &name, QSgsEnum::SkillFrequency frequency = QSgsEnum::SkillFrequency::NotFrequent, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both);
 
-    virtual bool viewFilter(const QList<Card *> &selected, Card *to_select) const = 0;
-    virtual Card *viewAs(const QList<Card *> &cards) const = 0;
+    virtual bool viewFilter(const QList<Card *> &selected, Card *to_select, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const = 0;
+    virtual Card *viewAs(const QList<Card *> &cards, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const = 0;
 
     bool isAvailable(const Player *invoker, QSgsEnum::CardUseReason reason, const QString &pattern) const;
     virtual bool isEnabledAtPlay(const Player *player) const;
-    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const;
+    virtual bool isEnabledAtResponse(const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const;
     virtual bool isEnabledAtNullification(const Player *player) const;
-    static const ViewAsSkill *parseViewAsSkill(const Skill *skill);
 
-    inline bool isResponseOrUse() const
-    {
-        return m_responseOrUse;
-    }
-    inline QString expandPile() const
-    {
-        return m_expandPile;
-    }
+    bool isResponseOrUse() const;
+    const QString &expandPile() const;
+
+    const QString &responsePattern() const;
+    void setResponsePattern(const QString &pattern);
 
 protected:
-    QString m_responsePattern;
-    bool m_responseOrUse;
-    QString m_expandPile;
+    Q_DECLARE_PRIVATE_D(d_ptr_viewAsSkill, ViewAsSkill)
+    ViewAsSkillPrivate *d_ptr_viewAsSkill;
 };
 
 class LIBQSGSGAMELOGIC_EXPORT ZeroCardViewAsSkill : public ViewAsSkill
@@ -99,28 +94,32 @@ class LIBQSGSGAMELOGIC_EXPORT ZeroCardViewAsSkill : public ViewAsSkill
     Q_OBJECT
 
 public:
-    ZeroCardViewAsSkill(const QString &name);
+    explicit ZeroCardViewAsSkill(const QString &name, QSgsEnum::SkillFrequency frequency = QSgsEnum::SkillFrequency::NotFrequent, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both);
 
-    virtual bool viewFilter(const QList<Card *> &selected, Card *to_select) const;
-    virtual Card *viewAs(const QList<Card *> &cards) const;
-    virtual Card *viewAs() const = 0;
+    virtual bool viewFilter(const QList<Card *> &selected, Card *toSelect, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const final override;
+    virtual Card *viewAs(const QList<Card *> &cards, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const final override;
+
+    virtual Card *viewAs(const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const = 0;
 };
+
+class OneCardViewAsSkillPrivate;
 
 class LIBQSGSGAMELOGIC_EXPORT OneCardViewAsSkill : public ViewAsSkill
 {
     Q_OBJECT
 
 public:
-    OneCardViewAsSkill(const QString &name);
+    explicit OneCardViewAsSkill(const QString &name, QSgsEnum::SkillFrequency frequency = QSgsEnum::SkillFrequency::NotFrequent, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both);
 
-    virtual bool viewFilter(const QList<Card *> &selected, Card *to_select) const;
-    virtual Card *viewAs(const QList<Card *> &cards) const;
+    virtual bool viewFilter(const QList<Card *> &selected, Card *toSelect, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const final override;
+    virtual Card *viewAs(const QList<Card *> &cards, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const final override;
 
-    virtual bool viewFilter(Card *to_select) const;
-    virtual Card *viewAs(Card *originalCard) const = 0;
+    virtual bool viewFilter(Card *card, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const;
+    virtual Card *viewAs(Card *originalCard, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const = 0;
 
 protected:
-    QString m_filterPattern;
+    Q_DECLARE_PRIVATE_D(d_ptr_oneCardViewAsSkill, OneCardViewAsSkill)
+    OneCardViewAsSkillPrivate *d_ptr_oneCardViewAsSkill;
 };
 
 class LIBQSGSGAMELOGIC_EXPORT CardTransformSkill : public Skill
@@ -128,13 +127,10 @@ class LIBQSGSGAMELOGIC_EXPORT CardTransformSkill : public Skill
     Q_OBJECT
 
 public:
-    CardTransformSkill(const QString &name);
+    CardTransformSkill(const QString &name, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both);
 
-    virtual bool viewFilter(Card *to_select) const;
+    virtual bool viewFilter(Card *to_select) const = 0;
     virtual Card *viewAs(Card *originalCard) const = 0;
-
-protected:
-    QString m_filterPattern;
 };
 
 typedef QMap<Player *, QStringList> TriggerList;
