@@ -22,6 +22,7 @@ linux {
 }
 
 TARGET = lua
+VERSION = 5.3.3
 
 HEADERS += \
     src/lapi.h \

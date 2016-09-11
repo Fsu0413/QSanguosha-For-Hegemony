@@ -4,6 +4,7 @@ include(../QSanguosha.pri)
 TEMPLATE = lib
 winrt|ios: CONFIG += staticlib
 TARGET = QSgsUi
+VERSION = 0.1.0.0
 
 QT += network widgets
 

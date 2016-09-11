@@ -5,6 +5,7 @@ include(../QSanguosha.pri)
 TEMPLATE = lib
 winrt|ios: CONFIG += staticlib
 TARGET = QSgsCore
+VERSION = 0.1.0.0
 
 QT -= widgets gui
 QT += network
