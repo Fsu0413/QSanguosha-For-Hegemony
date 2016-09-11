@@ -51,7 +51,7 @@
 
 //void DelayedTrick::onNullified(Player *target) const
 //{
-//    Room *room = target->getRoom();
+//    RoomObject *room = target->getRoom();
 //    RoomThread *thread = room->getThread();
 //    if (m_movable) {
 //        QList<Player *> players;
@@ -115,7 +115,7 @@
 //    }
 //}
 
-//void DelayedTrick::onUse(Room *room, const CardUseStruct &card_use) const
+//void DelayedTrick::onUse(RoomObject *room, const CardUseStruct &card_use) const
 //{
 //    CardUseStruct use = card_use;
 //    //WrappedCard *wrapped = Sanguosha->getWrappedCard(this->getEffectiveId());
@@ -143,7 +143,7 @@
 //    thread->trigger(QSgsEnum::TriggerEvent::CardFinished, room, use.from, data);
 //}
 
-//void DelayedTrick::use(Room *room, Player *source, QList<Player *> &targets) const
+//void DelayedTrick::use(RoomObject *room, Player *source, QList<Player *> &targets) const
 //{
 //    QStringList nullified_list = room->getTag("CardUseNullifiedList").toStringList();
 //    bool all_nullified = nullified_list.contains("_ALL_TARGETS");
@@ -164,7 +164,7 @@
 
 //void DelayedTrick::onEffect(const CardEffectStruct &effect) const
 //{
-//    Room *room = effect.to->getRoom();
+//    RoomObject *room = effect.to->getRoom();
 
 //    CardMoveReason reason(CardMoveReason::S_REASON_USE, effect.to->objectName(), getSkillName(), QString());
 //    room->moveCardTo(this, nullptr, QSgsEnum::CardPlace::ProceedingArea, reason, true);
@@ -221,7 +221,7 @@
 //    return !player->isProhibited(player, this) && CardFace::isAvailable(player);
 //}
 
-//void EquipCard::onUse(Room *room, const CardUseStruct &card_use) const
+//void EquipCard::onUse(RoomObject *room, const CardUseStruct &card_use) const
 //{
 //    CardUseStruct use = card_use;
 
@@ -236,7 +236,7 @@
 //     thread->trigger(QSgsEnum::TriggerEvent::CardFinished, room, player, data);
 //}
 
-//void EquipCard::use(Room *room, Player *source, QList<Player *> &targets) const
+//void EquipCard::use(RoomObject *room, Player *source, QList<Player *> &targets) const
 //{
 //    if (targets.isEmpty()) {
 //        CardMoveReason reason(CardMoveReason::S_REASON_USE, source->objectName(), QString(), this->getSkillName(), QString());
@@ -275,7 +275,7 @@
 
 //void EquipCard::onInstall(Player *player) const
 //{
-//    Room *room = player->getRoom();
+//    RoomObject *room = player->getRoom();
 
 //    const Skill *skill = Sanguosha->getSkill(this);
 //    if (skill) {
@@ -292,7 +292,7 @@
 
 //void EquipCard::onUninstall(Player *player) const
 //{
-//    Room *room = player->getRoom();
+//    RoomObject *room = player->getRoom();
 //    const Skill *skill = Sanguosha->getSkill(this);
 //    if (skill) {
 //        if (skill->inherits("ViewAsSkill")) {

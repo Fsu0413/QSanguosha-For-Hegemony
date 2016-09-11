@@ -440,11 +440,11 @@ bool Card::targetFilter(const QList<const Player *> &targets, const Player *to_s
     return canSelect;
 }
 
-void Card::doPreAction(Room *, const CardUseStruct &) const
+void Card::doPreAction(RoomObject *, const CardUseStruct &) const
 {
 }
 
-void Card::onUse(Room *room, const CardUseStruct &use) const
+void Card::onUse(RoomObject *room, const CardUseStruct &use) const
 {
 //    CardUseStruct card_use = use;
 //    Player *player = card_use.from;
@@ -522,7 +522,7 @@ void Card::onUse(Room *room, const CardUseStruct &use) const
 //    thread->trigger(CardFinished, room, player, data);
 }
 
-void Card::use(Room *room, Player *source, QList<Player *> &targets) const
+void Card::use(RoomObject *room, Player *source, QList<Player *> &targets) const
 {
 //    QStringList nullified_list = room->getTag("CardUseNullifiedList").toStringList();
 //    bool all_nullified = nullified_list.contains("_ALL_TARGETS");
@@ -768,7 +768,7 @@ QString SkillCard::toString(bool hidden) const
         return str;
 }
 
-void SkillCard::extraCost(Room *room, const CardUseStruct &card_use) const
+void SkillCard::extraCost(RoomObject *room, const CardUseStruct &card_use) const
 {
     if (card_use.card->willThrow()) {
         CardMoveReason reason(CardMoveReason::S_REASON_THROW, card_use.from->objectName(), QString(), card_use.card->skillName(), QString());

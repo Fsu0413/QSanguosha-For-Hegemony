@@ -50,8 +50,8 @@ public:
 
     void onNullified(Player *target) const;
 
-    void onUse(Room *room, const CardUseStruct &card_use) const;
-    void use(Room *room, Player *source, QList<Player *> &targets) const;
+    void onUse(RoomObject *room, const CardUseStruct &card_use) const;
+    void use(RoomObject *room, Player *source, QList<Player *> &targets) const;
     QString subtype() const;
     void onEffect(const CardEffectStruct &effect) const;
     virtual void takeEffect(Player *target) const = 0;
@@ -75,8 +75,8 @@ public:
     QSgsEnum::CardType typeId() const;
 
     bool isAvailable(const Player *player) const;
-    void onUse(Room *room, const CardUseStruct &card_use) const;
-    void use(Room *room, Player *source, QList<Player *> &targets) const;
+    void onUse(RoomObject *room, const CardUseStruct &card_use) const;
+    void use(RoomObject *room, Player *source, QList<Player *> &targets) const;
 
     void onInstall(Player *player) const;
     void onUninstall(Player *player) const;

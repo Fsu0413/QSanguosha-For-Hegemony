@@ -2442,8 +2442,8 @@ const QList<Player *> &Player::formation()
 //    const Skill *skill = Sanguosha->getSkill(skill_name);
 //    if (skill == nullptr) {
 //        QObject *roomObject = Sanguosha->currentRoomObject();
-//        if (roomObject != nullptr && roomObject->inherits("Room")) {
-//            Room *room = Sanguosha->currentRoom();
+//        if (roomObject != nullptr && roomObject->inherits("RoomObject")) {
+//            RoomObject *room = Sanguosha->currentRoom();
 //            room->output("no such skill " + skill_name);
 //            qWarning("%s", QString("no such skill " + skill_name).toStdString().c_str());
 //        }

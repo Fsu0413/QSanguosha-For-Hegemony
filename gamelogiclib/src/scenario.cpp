@@ -41,7 +41,7 @@ bool Scenario::exposeRoles() const
     return true;
 }
 
-//void Scenario::onTagSet(Room *, const QString &) const
+//void Scenario::onTagSet(RoomObject *, const QString &) const
 //{
 
 //}
@@ -58,7 +58,7 @@ QString Scenario::getRoles() const
     return roles;
 }
 
-//void Scenario::assign(QStringList &generals, QStringList &, QStringList &roles, Room *) const
+//void Scenario::assign(QStringList &generals, QStringList &, QStringList &roles, RoomObject *) const
 //{
 //    generals << lord << loyalists << rebels << renegades;
 //    qShuffle(generals);

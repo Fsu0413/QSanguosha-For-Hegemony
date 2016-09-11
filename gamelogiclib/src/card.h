@@ -128,7 +128,7 @@ public:
     virtual CardType typeId() const;
     virtual QString toString(bool hidden = false) const;
 
-    virtual void extraCost(Room *room, const CardUseStruct &card_use) const;
+    virtual void extraCost(RoomObject *room, const CardUseStruct &card_use) const;
 
 protected:
     QString m_userString;

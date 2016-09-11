@@ -8,7 +8,6 @@
 
 class Player;
 class Card;
-class Room;
 
 class CardFacePrivate;
 
@@ -45,9 +44,9 @@ public:
     virtual const CardFace *validate(CardUseStruct &cardUse) const;
     virtual const CardFace *validateInResponse(Player *user) const;
 
-    virtual void doPreAction(Room *room, const CardUseStruct &card_use) const;
-    virtual void onUse(Room *room, const CardUseStruct &card_use) const;
-    virtual void use(Room *room, Player *source, QList<Player *> &targets) const;
+    virtual void doPreAction(RoomObject *room, const CardUseStruct &card_use) const;
+    virtual void onUse(RoomObject *room, const CardUseStruct &card_use) const;
+    virtual void use(RoomObject *room, Player *source, QList<Player *> &targets) const;
     virtual void onEffect(const CardEffectStruct &effect) const;
     virtual bool isCancelable(const CardEffectStruct &effect) const;
 

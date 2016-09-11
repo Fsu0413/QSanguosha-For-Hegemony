@@ -69,6 +69,7 @@ class LIBQSGSGAMELOGIC_EXPORT ViewAsSkill : public Skill
 
 public:
     explicit ViewAsSkill(const QString &name, QSgsEnum::SkillFrequency frequency = QSgsEnum::SkillFrequency::NotFrequent, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both);
+    virtual ~ViewAsSkill() override;
 
     virtual bool viewFilter(const QList<Card *> &selected, Card *to_select, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const = 0;
     virtual Card *viewAs(const QList<Card *> &cards, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const = 0;
@@ -110,6 +111,7 @@ class LIBQSGSGAMELOGIC_EXPORT OneCardViewAsSkill : public ViewAsSkill
 
 public:
     explicit OneCardViewAsSkill(const QString &name, QSgsEnum::SkillFrequency frequency = QSgsEnum::SkillFrequency::NotFrequent, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both);
+    virtual ~OneCardViewAsSkill() override;
 
     virtual bool viewFilter(const QList<Card *> &selected, Card *toSelect, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const final override;
     virtual Card *viewAs(const QList<Card *> &cards, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const final override;
@@ -127,48 +129,39 @@ class LIBQSGSGAMELOGIC_EXPORT CardTransformSkill : public Skill
     Q_OBJECT
 
 public:
-    CardTransformSkill(const QString &name, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both);
+    CardTransformSkill(const QString &name, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both); // frequency is limited to Compulsory
 
     virtual bool viewFilter(Card *to_select) const = 0;
     virtual Card *viewAs(Card *originalCard) const = 0;
 };
 
-typedef QMap<Player *, QStringList> TriggerList;
+class TriggerSkillPrivate;
 
 class LIBQSGSGAMELOGIC_EXPORT TriggerSkill : public Skill
 {
     Q_OBJECT
 
 public:
-    TriggerSkill(const QString &name);
-    const ViewAsSkill *viewAsSkill() const;
-    QList<QSgsEnum::TriggerEvent> triggerEvents() const;
+    virtual ~TriggerSkill() override;
+    const QList<QSgsEnum::TriggerEvent> &triggerEvents() const;
+    void addTriggerEvent(QSgsEnum::TriggerEvent triggerEvent);
 
-    virtual int priority() const;
-    void insertPriority(QSgsEnum::TriggerEvent e, double value);
+    int priority() const;
+    void setPriority(int priority);
 
-    virtual bool triggerable(const Player *target) const;
+    bool isGlobal() const;
+    void setGlobal(bool global);
 
-    virtual void record(QSgsEnum::TriggerEvent triggerEvent, Room *room, Player *player, QVariant &data) const;
-
-    virtual TriggerList triggerable(QSgsEnum::TriggerEvent triggerEvent, Room *room, Player *player, QVariant &data) const;
-    virtual QStringList triggerable(QSgsEnum::TriggerEvent triggerEvent, Room *room, Player *player, QVariant &data, Player* &ask_who) const;
-    virtual bool cost(QSgsEnum::TriggerEvent triggerEvent, Room *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
-    virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, Room *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
-
-    inline bool isGlobal() const
-    {
-        return m_global;
-    }
-
-    virtual ~TriggerSkill();
+    virtual void record(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, QVariant &data) const;
+    virtual QList<SkillInvokeStruct> triggerable(QSgsEnum::TriggerEvent triggerEvent, const RoomObject *room, const Player *player, const QVariant &data) const = 0;
+    virtual bool cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillInvokeStruct> invoke, Player *player, QVariant &data) const;
+    virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillInvokeStruct> invoke, Player *player, QVariant &data) const = 0;
 
 protected:
-    const ViewAsSkill *m_viewAsSkill;
-    QList<QSgsEnum::TriggerEvent> m_events;
-    bool m_global;
-    QHash<QSgsEnum::TriggerEvent, double> m_priority;
+    explicit TriggerSkill(const QString &name, QSgsEnum::SkillFrequency frequency = QSgsEnum::SkillFrequency::NotFrequent, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both);
 
+    Q_DECLARE_PRIVATE_D(d_ptr_triggerSkill, TriggerSkill)
+    TriggerSkillPrivate *d_ptr_triggerSkill;
 };
 
 class Scenario;
@@ -191,8 +184,8 @@ class LIBQSGSGAMELOGIC_EXPORT MasochismSkill : public TriggerSkill
 public:
     MasochismSkill(const QString &name);
 
-    virtual bool cost(QSgsEnum::TriggerEvent triggerEvent, Room *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
-    virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, Room *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
+    virtual bool cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
+    virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
     virtual void onDamaged(Player *target, const DamageStruct &damage) const = 0;
 };
 
@@ -203,7 +196,7 @@ class LIBQSGSGAMELOGIC_EXPORT PhaseChangeSkill : public TriggerSkill
 public:
     PhaseChangeSkill(const QString &name);
 
-    virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, Room *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
+    virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
     virtual bool onPhaseChange(Player *target) const = 0;
 };
 
@@ -214,7 +207,7 @@ class LIBQSGSGAMELOGIC_EXPORT DrawCardsSkill : public TriggerSkill
 public:
     DrawCardsSkill(const QString &name);
 
-    virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, Room *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
+    virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
     virtual int getDrawNum(Player *player, int n) const = 0;
 };
 
@@ -225,7 +218,7 @@ class LIBQSGSGAMELOGIC_EXPORT GameStartSkill : public TriggerSkill
 public:
     GameStartSkill(const QString &name);
 
-    virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, Room *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
+    virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
     virtual void onGameStart(Player *player) const = 0;
 };
 
@@ -341,8 +334,8 @@ public:
     FakeMoveSkill(const QString &skillname);
 
     virtual int priority() const;
-    virtual QStringList triggerable(QSgsEnum::TriggerEvent, Room *, Player *target, QVariant &, Player * &ask_who) const;
-    virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, Room *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
+    virtual QStringList triggerable(QSgsEnum::TriggerEvent, RoomObject *, Player *target, QVariant &, Player * &ask_who) const;
+    virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
 
 private:
     QString m_name;
@@ -355,9 +348,9 @@ class LIBQSGSGAMELOGIC_EXPORT DetachEffectSkill : public TriggerSkill
 public:
     DetachEffectSkill(const QString &skillname, const QString &pilename = QString());
 
-    virtual QStringList triggerable(QSgsEnum::TriggerEvent triggerEvent, Room *room, Player *player, QVariant &data, Player * &ask_who) const;
-    virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, Room *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
-    virtual void onSkillDetached(Room *room, Player *player) const;
+    virtual QStringList triggerable(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, QVariant &data, Player * &ask_who) const;
+    virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
+    virtual void onSkillDetached(RoomObject *room, Player *player) const;
 
 private:
     QString m_name, m_pileName;

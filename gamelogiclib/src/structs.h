@@ -24,9 +24,9 @@
 #include "libqsgsgamelogicglobal.h"
 #include "enumeration.h"
 
-class Room;
 class Player;
 class Card;
+class RoomObject;
 
 struct LIBQSGSGAMELOGIC_EXPORT DamageStruct
 {
@@ -90,8 +90,8 @@ struct LIBQSGSGAMELOGIC_EXPORT CardUseStruct
 //    CardUseStruct(const Card *card, Player *from, QList<Player *> to, bool isOwnerUse = true);
 //    CardUseStruct(const Card *card, Player *from, Player *target, bool isOwnerUse = true);
     bool isValid(const QString &pattern) const;
-    void parse(const QString &str, Room *room);
-    bool tryParse(const QVariant &usage, Room *room);
+    void parse(const QString &str, RoomObject *room);
+    bool tryParse(const QVariant &usage, RoomObject *room);
 
 //    const Card *card;
 //    Player *from;

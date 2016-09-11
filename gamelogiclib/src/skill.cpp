@@ -166,6 +166,12 @@ ViewAsSkill::ViewAsSkill(const QString &name, QSgsEnum::SkillFrequency frequency
     d->responseOrUse = false;
 }
 
+ViewAsSkill::~ViewAsSkill()
+{
+    Q_D(ViewAsSkill);
+    delete d;
+}
+
 bool ViewAsSkill::isAvailable(const Player *invoker, QSgsEnum::CardUseReason reason, const QString &pattern) const
 {
     // Make sure TransferSkill is invoked properly
@@ -283,6 +289,12 @@ OneCardViewAsSkill::OneCardViewAsSkill(const QString &name, QSgsEnum::SkillFrequ
 
 }
 
+OneCardViewAsSkill::~OneCardViewAsSkill()
+{
+    Q_D(OneCardViewAsSkill);
+    delete d;
+}
+
 bool OneCardViewAsSkill::viewFilter(const QList<Card *> &selected, Card *toSelect, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const
 {
     return selected.isEmpty() && !toSelect->hasFlag(QStringLiteral("using")) && viewFilter(toSelect, player, reason, pattern);
@@ -306,6 +318,76 @@ CardTransformSkill::CardTransformSkill(const QString &name, QSgsEnum::SkillPlace
     : Skill(name, QSgsEnum::SkillFrequency::Compulsory, place)
 {
 
+}
+
+class TriggerSkillPrivate
+{
+public:
+    QList<QSgsEnum::TriggerEvent> events;
+    bool global;
+    int priority;
+};
+
+TriggerSkill::TriggerSkill(const QString &name, QSgsEnum::SkillFrequency frequency, QSgsEnum::SkillPlace place)
+    : Skill(name, frequency, place), d_ptr_triggerSkill(new TriggerSkillPrivate)
+{
+    Q_D(TriggerSkill);
+    d->global = false;
+    d->priority = 3;
+}
+
+TriggerSkill::~TriggerSkill()
+{
+    Q_D(TriggerSkill);
+    delete d;
+}
+
+const QList<QSgsEnum::TriggerEvent> &TriggerSkill::triggerEvents() const
+{
+    Q_D(const TriggerSkill);
+    return d->events;
+}
+
+void TriggerSkill::addTriggerEvent(QSgsEnum::TriggerEvent triggerEvent)
+{
+    Q_D(TriggerSkill);
+    d->events << triggerEvent;
+}
+
+int TriggerSkill::priority() const
+{
+    Q_D(const TriggerSkill);
+    return d->priority;
+}
+
+void TriggerSkill::setPriority(int priority)
+{
+    Q_D(TriggerSkill);
+    d->priority = priority;
+}
+
+bool TriggerSkill::isGlobal() const
+{
+    Q_D(const TriggerSkill);
+    return d->global;
+}
+
+void TriggerSkill::setGlobal(bool global)
+{
+    Q_D(TriggerSkill);
+    d->global = global;
+}
+
+void TriggerSkill::record(QSgsEnum::TriggerEvent, RoomObject *, Player *, QVariant &) const
+{
+    // Apperantly, this function should be a no-op.
+}
+
+bool TriggerSkill::cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillInvokeStruct> invoke, Player *player, QVariant &data) const
+{
+    // if compulsory then return true
+    // else askForConfirm
+    return false;
 }
 
 
@@ -403,9 +485,9 @@ CardTransformSkill::CardTransformSkill(const QString &name, QSgsEnum::SkillPlace
 //    \endlist
 //    */
 
-//TriggerList TriggerSkill::triggerable(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const
+//QMap<Player *, QStringList> TriggerSkill::triggerable(TriggerEvent triggerEvent, RoomObject *room, ServerPlayer *player, QVariant &data) const
 //{
-//    TriggerList skill_lists;
+//    QMap<Player *, QStringList> skill_lists;
 //    if (objectName() == "game_rule") return skill_lists;
 //    ServerPlayer *ask_who = player;
 //    QStringList skill_list = triggerable(triggerEvent, room, player, data, ask_who);
@@ -424,24 +506,24 @@ CardTransformSkill::CardTransformSkill(const QString &name, QSgsEnum::SkillPlace
 //    m_priority.insert(e, value);
 //}
 
-//void TriggerSkill::record(TriggerEvent, Room *, ServerPlayer *, QVariant &) const
+//void TriggerSkill::record(TriggerEvent, RoomObject *, ServerPlayer *, QVariant &) const
 //{
 
 //}
 
-//QStringList TriggerSkill::triggerable(TriggerEvent, Room *, ServerPlayer *target, QVariant &, ServerPlayer* &) const
+//QStringList TriggerSkill::triggerable(TriggerEvent, RoomObject *, ServerPlayer *target, QVariant &, ServerPlayer* &) const
 //{
 //    if (triggerable(target))
 //        return QStringList(objectName());
 //    return QStringList();
 //}
 
-//bool TriggerSkill::cost(TriggerEvent, Room *, ServerPlayer *, QVariant &, ServerPlayer *) const
+//bool TriggerSkill::cost(TriggerEvent, RoomObject *, ServerPlayer *, QVariant &, ServerPlayer *) const
 //{
 //    return true;
 //}
 
-//bool TriggerSkill::effect(TriggerEvent, Room *, ServerPlayer *, QVariant &, ServerPlayer *) const
+//bool TriggerSkill::effect(TriggerEvent, RoomObject *, ServerPlayer *, QVariant &, ServerPlayer *) const
 //{
 //    return false;
 //}
@@ -475,12 +557,12 @@ CardTransformSkill::CardTransformSkill(const QString &name, QSgsEnum::SkillPlace
 //    m_events << Damaged;
 //}
 
-//bool MasochismSkill::cost(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data, ServerPlayer *ask_who) const
+//bool MasochismSkill::cost(TriggerEvent triggerEvent, RoomObject *room, ServerPlayer *player, QVariant &data, ServerPlayer *ask_who) const
 //{
 //    return TriggerSkill::cost(triggerEvent, room, player, data, ask_who);
 //}
 
-//bool MasochismSkill::effect(TriggerEvent, Room *, ServerPlayer *player, QVariant &data, ServerPlayer *) const
+//bool MasochismSkill::effect(TriggerEvent, RoomObject *, ServerPlayer *player, QVariant &data, ServerPlayer *) const
 //{
 //    DamageStruct damage = data.value<DamageStruct>();
 //    onDamaged(player, damage);
@@ -494,7 +576,7 @@ CardTransformSkill::CardTransformSkill(const QString &name, QSgsEnum::SkillPlace
 //    m_events << EventPhaseStart;
 //}
 
-//bool PhaseChangeSkill::effect(TriggerEvent, Room *, ServerPlayer *player, QVariant &, ServerPlayer *) const
+//bool PhaseChangeSkill::effect(TriggerEvent, RoomObject *, ServerPlayer *player, QVariant &, ServerPlayer *) const
 //{
 //    return onPhaseChange(player);
 //}
@@ -505,7 +587,7 @@ CardTransformSkill::CardTransformSkill(const QString &name, QSgsEnum::SkillPlace
 //    m_events << DrawNCards;
 //}
 
-//bool DrawCardsSkill::effect(TriggerEvent, Room *, ServerPlayer *player, QVariant &data, ServerPlayer *) const
+//bool DrawCardsSkill::effect(TriggerEvent, RoomObject *, ServerPlayer *player, QVariant &data, ServerPlayer *) const
 //{
 //    int n = data.toInt();
 //    data = getDrawNum(player, n);
@@ -518,7 +600,7 @@ CardTransformSkill::CardTransformSkill(const QString &name, QSgsEnum::SkillPlace
 //    m_events << GameStart;
 //}
 
-//bool GameStartSkill::effect(TriggerEvent, Room *, ServerPlayer *player, QVariant &, ServerPlayer *) const
+//bool GameStartSkill::effect(TriggerEvent, RoomObject *, ServerPlayer *player, QVariant &, ServerPlayer *) const
 //{
 //    onGameStart(player);
 //    return false;
@@ -706,12 +788,12 @@ CardTransformSkill::CardTransformSkill(const QString &name, QSgsEnum::SkillPlace
 //    return 10;
 //}
 
-//QStringList FakeMoveSkill::triggerable(TriggerEvent, Room *, ServerPlayer *target, QVariant &, ServerPlayer * &) const
+//QStringList FakeMoveSkill::triggerable(TriggerEvent, RoomObject *, ServerPlayer *target, QVariant &, ServerPlayer * &) const
 //{
 //    return (target != nullptr) ? QStringList(objectName()) : QStringList();
 //}
 
-//bool FakeMoveSkill::effect(TriggerEvent, Room *room, ServerPlayer *, QVariant &, ServerPlayer *) const
+//bool FakeMoveSkill::effect(TriggerEvent, RoomObject *room, ServerPlayer *, QVariant &, ServerPlayer *) const
 //{
 //    QString flag = QString("%1_InTempMoving").arg(name);
 
@@ -727,14 +809,14 @@ CardTransformSkill::CardTransformSkill(const QString &name, QSgsEnum::SkillPlace
 //    m_events << EventLoseSkill;
 //}
 
-//QStringList DetachEffectSkill::triggerable(TriggerEvent, Room *, ServerPlayer *target, QVariant &data, ServerPlayer * &) const
+//QStringList DetachEffectSkill::triggerable(TriggerEvent, RoomObject *, ServerPlayer *target, QVariant &data, ServerPlayer * &) const
 //{
 //    if (target && data.toString() == name)
 //        return QStringList(objectName());
 //    return QStringList();
 //}
 
-//bool DetachEffectSkill::effect(TriggerEvent, Room *room, ServerPlayer *player, QVariant &, ServerPlayer *) const
+//bool DetachEffectSkill::effect(TriggerEvent, RoomObject *room, ServerPlayer *player, QVariant &, ServerPlayer *) const
 //{
 //    if (!pile_name.isEmpty())
 //        player->clearOnePrivatePile(pile_name);
@@ -744,7 +826,7 @@ CardTransformSkill::CardTransformSkill(const QString &name, QSgsEnum::SkillPlace
 //    return false;
 //}
 
-//void DetachEffectSkill::onSkillDetached(Room *, ServerPlayer *) const
+//void DetachEffectSkill::onSkillDetached(RoomObject *, ServerPlayer *) const
 //{
 //}
 

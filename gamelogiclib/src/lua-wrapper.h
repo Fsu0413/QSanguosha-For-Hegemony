@@ -80,11 +80,11 @@ QSgsLuaPackage *parseLuaPackage(const QString &fileName, bool *ok = nullptr);
 
 //    virtual int getPriority() const;
 //    virtual bool canPreshow() const;
-//    virtual TriggerList triggerable(TriggerEvent triggerEvent, Room *room, Player *player, QVariant &data) const;
-//    virtual bool cost(TriggerEvent triggerEvent, Room *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
-//    virtual bool effect(TriggerEvent triggerEvent, Room *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
-//    void onTurnBroken(const char *function_name, TriggerEvent triggerEvent, Room *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
-//    virtual void record(TriggerEvent triggerEvent, Room *room, Player *player, QVariant &data) const;
+//    virtual QMap<Player *, QStringList> triggerable(TriggerEvent triggerEvent, RoomObject *room, Player *player, QVariant &data) const;
+//    virtual bool cost(TriggerEvent triggerEvent, RoomObject *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
+//    virtual bool effect(TriggerEvent triggerEvent, RoomObject *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
+//    void onTurnBroken(const char *function_name, TriggerEvent triggerEvent, RoomObject *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
+//    virtual void record(TriggerEvent triggerEvent, RoomObject *room, Player *player, QVariant &data) const;
 
 //    LuaFunction on_record;
 //    LuaFunction can_trigger;
@@ -115,11 +115,11 @@ QSgsLuaPackage *parseLuaPackage(const QString &fileName, bool *ok = nullptr);
 
 //    virtual int getPriority() const;
 
-//    virtual TriggerList triggerable(TriggerEvent triggerEvent, Room *room, Player *player, QVariant &data) const;
-//    virtual bool cost(TriggerEvent triggerEvent, Room *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
-//    virtual bool effect(TriggerEvent triggerEvent, Room *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
-//    void onTurnBroken(const char *function_name, TriggerEvent triggerEvent, Room *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
-//    virtual void record(TriggerEvent triggerEvent, Room *room, Player *player, QVariant &data) const;
+//    virtual QMap<Player *, QStringList> triggerable(TriggerEvent triggerEvent, RoomObject *room, Player *player, QVariant &data) const;
+//    virtual bool cost(TriggerEvent triggerEvent, RoomObject *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
+//    virtual bool effect(TriggerEvent triggerEvent, RoomObject *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
+//    void onTurnBroken(const char *function_name, TriggerEvent triggerEvent, RoomObject *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
+//    virtual void record(TriggerEvent triggerEvent, RoomObject *room, Player *player, QVariant &data) const;
 
 //    LuaFunction on_record;
 //    LuaFunction can_trigger;
@@ -273,13 +273,13 @@ QSgsLuaPackage *parseLuaPackage(const QString &fileName, bool *ok = nullptr);
 //    virtual bool targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self,
 //        int &maxVotes) const;
 //    virtual bool targetsFeasible(const QList<const Player *> &targets, const Player *Self) const;
-//    virtual void onUse(Room *room, const CardUseStruct &card_use) const;
-//    virtual void use(Room *room, Player *source, QList<Player *> &targets) const;
+//    virtual void onUse(RoomObject *room, const CardUseStruct &card_use) const;
+//    virtual void use(RoomObject *room, Player *source, QList<Player *> &targets) const;
 //    virtual void onEffect(const CardEffectStruct &effect) const;
 //    virtual const Card *validate(CardUseStruct &cardUse) const;
 //    virtual const Card *validateInResponse(Player *user) const;
-//    virtual void extraCost(Room *room, const CardUseStruct &card_use) const;
-//    void onTurnBroken(const char *function_name, Room *room, QVariant &value) const;
+//    virtual void extraCost(RoomObject *room, const CardUseStruct &card_use) const;
+//    void onTurnBroken(const char *function_name, RoomObject *room, QVariant &value) const;
 
 //    // the lua callbacks
 //    LuaFunction filter;
@@ -312,9 +312,9 @@ QSgsLuaPackage *parseLuaPackage(const QString &fileName, bool *ok = nullptr);
 //    // member functions that do not expose to Lua interpreter
 //    void pushSelf(lua_State *L) const;
 
-//    virtual void onUse(Room *room, const CardUseStruct &card_use) const;
+//    virtual void onUse(RoomObject *room, const CardUseStruct &card_use) const;
 //    virtual void onEffect(const CardEffectStruct &effect) const;
-//    virtual void use(Room *room, Player *source, QList<Player *> &targets) const;
+//    virtual void use(RoomObject *room, Player *source, QList<Player *> &targets) const;
 
 //    virtual bool targetsFeasible(const QList<const Player *> &targets, const Player *Self) const;
 //    virtual bool targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const;
@@ -372,9 +372,9 @@ QSgsLuaPackage *parseLuaPackage(const QString &fileName, bool *ok = nullptr);
 //    // member functions that do not expose to Lua interpreter
 //    void pushSelf(lua_State *L) const;
 
-//    virtual void onUse(Room *room, const CardUseStruct &card_use) const;
+//    virtual void onUse(RoomObject *room, const CardUseStruct &card_use) const;
 //    virtual void onEffect(const CardEffectStruct &effect) const;
-//    virtual void use(Room *room, Player *source, QList<Player *> &targets) const;
+//    virtual void use(RoomObject *room, Player *source, QList<Player *> &targets) const;
 //    virtual void onNullified(Player *target) const;
 //    virtual bool isCancelable(const CardEffectStruct &effect) const;
 
@@ -560,9 +560,9 @@ QSgsLuaPackage *parseLuaPackage(const QString &fileName, bool *ok = nullptr);
 //        return player_count;
 //    }
 //    virtual QString getRoles() const;
-//    virtual void assign(QStringList &generals, QStringList &generals2, QStringList &roles, Room *room) const;
+//    virtual void assign(QStringList &generals, QStringList &generals2, QStringList &roles, RoomObject *room) const;
 //    virtual AI::Relation relationTo(const Player *a, const Player *b) const;
-//    virtual void onTagSet(Room *room, const char *key) const;
+//    virtual void onTagSet(RoomObject *room, const char *key) const;
 //    inline virtual bool generalSelection() const
 //    {
 //        return general_selection;
@@ -592,7 +592,7 @@ QSgsLuaPackage *parseLuaPackage(const QString &fileName, bool *ok = nullptr);
 //        return origin->getPriority();
 //    }
 
-//    virtual bool effect(TriggerEvent event, Room* room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
+//    virtual bool effect(TriggerEvent event, RoomObject* room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
 
 //protected:
 //    TriggerSkill *origin;

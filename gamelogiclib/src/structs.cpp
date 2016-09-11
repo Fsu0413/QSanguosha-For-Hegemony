@@ -315,7 +315,7 @@ bool CardUseStruct::isValid(const QString &pattern) const
     return false;
 }
 
-bool CardUseStruct::tryParse(const QVariant &usage, Room *room)
+bool CardUseStruct::tryParse(const QVariant &usage, RoomObject *room)
 {
 //    JsonArray use = usage.value<JsonArray>();
 //    if (use.size() < 2 || !JsonUtils::isString(use[0]) || !use[1].canConvert<JsonArray>())
@@ -332,7 +332,7 @@ bool CardUseStruct::tryParse(const QVariant &usage, Room *room)
     return false;
 }
 
-void CardUseStruct::parse(const QString &str, Room *room)
+void CardUseStruct::parse(const QString &str, RoomObject *room)
 {
 //    QStringList words = str.split("->", QString::KeepEmptyParts);
 //    Q_ASSERT(words.length() == 1 || words.length() == 2);

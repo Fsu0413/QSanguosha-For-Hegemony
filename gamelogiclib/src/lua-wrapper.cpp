@@ -398,7 +398,7 @@ const QVersionNumber &QSgsLuaPackage::version() const
 //    events.append(origin->getTriggerEvents());
 //}
 
-//bool LuaSceneRule::effect(TriggerEvent event, Room* room, Player *player, QVariant &data, Player *ask_who) const
+//bool LuaSceneRule::effect(TriggerEvent event, RoomObject* room, Player *player, QVariant &data, Player *ask_who) const
 //{
 //    return origin->effect(event, room, player, data, ask_who);
 //}

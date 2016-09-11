@@ -363,10 +363,10 @@
 ////    return room;
 ////}
 
-////Room *GameLogicCore::currentRoom()
+////RoomObject *GameLogicCore::currentRoom()
 ////{
 ////    QObject *roomObject = currentRoomObject();
-////    Room *room = qobject_cast<Room *>(roomObject);
+////    RoomObject *room = qobject_cast<RoomObject *>(roomObject);
 ////    Q_ASSERT(room != nullptr);
 ////    return room;
 ////}
@@ -374,7 +374,7 @@
 ////RoomState *GameLogicCore::currentRoomState()
 ////{
 ////    QObject *roomObject = currentRoomObject();
-////    Room *room = qobject_cast<Room *>(roomObject);
+////    RoomObject *room = qobject_cast<RoomObject *>(roomObject);
 ////    if (room != nullptr) {
 ////        return room->getRoomState();
 ////    } else {
@@ -425,7 +425,7 @@
 ////        return nullptr;
 ////    //QObject *room = currentRoomObject();
 ////   // Q_ASSERT(room);
-////    //Room *serverRoom = qobject_cast<Room *>(room);
+////    //RoomObject *serverRoom = qobject_cast<RoomObject *>(room);
 ////   // if (serverRoom != nullptr) {
 ////       // card = serverRoom->getCard(cardId);
 ////   // } else {

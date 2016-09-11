@@ -87,17 +87,17 @@ const CardFace *CardFace::validateInResponse(Player *user) const
     return this;
 }
 
-void CardFace::doPreAction(Room *room, const CardUseStruct &use) const
+void CardFace::doPreAction(RoomObject *room, const CardUseStruct &use) const
 {
 
 }
 
-void CardFace::onUse(Room *room, const CardUseStruct &use) const
+void CardFace::onUse(RoomObject *room, const CardUseStruct &use) const
 {
 
 }
 
-void CardFace::use(Room *room, Player *source, QList<Player *> &targets) const
+void CardFace::use(RoomObject *room, Player *source, QList<Player *> &targets) const
 {
 
 }

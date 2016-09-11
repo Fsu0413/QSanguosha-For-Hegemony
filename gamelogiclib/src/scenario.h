@@ -26,7 +26,6 @@
 #include "package.h"
 #include "enumeration.h"
 
-class Room;
 class ScenarioRule;
 
 class LIBQSGSGAMELOGIC_EXPORT Scenario : public QSgsPackage
@@ -38,9 +37,9 @@ public:
     virtual bool exposeRoles() const;
     virtual int playerCount() const;
     virtual QString getRoles() const;
-    //virtual void assign(QStringList &generals, QStringList &generals2, QStringList &roles, Room *room) const;
+    //virtual void assign(QStringList &generals, QStringList &generals2, QStringList &roles, RoomObject *room) const;
     //virtual AI::Relation relationTo(const Player *a, const Player *b) const;
-    //virtual void onTagSet(Room *room, const QString &key) const;
+    //virtual void onTagSet(RoomObject *room, const QString &key) const;
     virtual bool generalSelection() const;
     inline bool isRandomSeat() const
     {
