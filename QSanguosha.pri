@@ -1,5 +1,6 @@
 
 CONFIG += warn_on c++11
+win32: CONFIG += skip_target_version_ext
 
 DEFINES += QT_NO_CAST_FROM_ASCII
 
