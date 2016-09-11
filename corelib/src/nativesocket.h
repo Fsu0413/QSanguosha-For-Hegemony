@@ -45,7 +45,6 @@ private slots:
     void processNewDatagram();
 
 private:
-    // @todo: use D-pointer to handle this
     Q_DECLARE_PRIVATE(NativeServerSocket)
     NativeServerSocketPrivate *d_ptr;
 
@@ -75,8 +74,6 @@ private slots:
     void raiseError(QAbstractSocket::SocketError socket_error);
 
 private:
-    // @todo: use D-pointer to handle this
-
     Q_DECLARE_PRIVATE(NativeClientSocket)
     NativeClientSocketPrivate *d_ptr;
 

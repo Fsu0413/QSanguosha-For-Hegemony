@@ -52,7 +52,6 @@ public:
     const QString errorString() const;
 
 protected:
-    // @todo: use D-pointer to handle this
     Q_DECLARE_PRIVATE(JsonDocument)
     JsonDocumentPrivate *d_ptr;
 };

@@ -41,7 +41,7 @@ void qShuffle(QList<T> &list)
 // lua interpreter related
 
 // @todo: to be discovered that this grammar is correct or not
-LIBQSGSCORE_EXPORT lua_State * CreateLuaState();
+LIBQSGSCORE_EXPORT lua_State *CreateLuaState();
 
 bool LIBQSGSCORE_EXPORT DoLuaScript(lua_State *L, const char *script);
 
