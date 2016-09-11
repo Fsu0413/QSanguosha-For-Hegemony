@@ -35,12 +35,12 @@ QSgsCoreSettings *QSgsCoreSettings::instance()
 QSgsCoreSettings::QSgsCoreSettings()
     : d(new QSgsCoreSettingsPrivate)
 {
-    QSettings::setPath(QSettings::IniFormat, QSettings::UserScope, QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/QSanguosha/HegemonyV2/");
-    d->settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "Mogara", "QSanguosha-HegemonyV2", this);
+    QSettings::setPath(QSettings::IniFormat, QSettings::UserScope, QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + QStringLiteral("/QSanguosha/HegemonyV2/"));
+    d->settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, QStringLiteral("Mogara"), QStringLiteral("QSanguosha-HegemonyV2"), this);
 
     d->serverPort = d->settings->value(serverPortKey, 9527u).toUInt();
-    d->hostAddress = d->settings->value(hostAddressKey, "server1.mogara.org:4466").toString();
-    d->serverName = d->settings->value(serverNameKey, "QSanguosha\'s Server").toString();
+    d->hostAddress = d->settings->value(hostAddressKey, QStringLiteral("server1.mogara.org:4466")).toString();
+    d->serverName = d->settings->value(serverNameKey, QStringLiteral("QSanguosha\'s Server")).toString();
     d->detectorPort = d->settings->value(detectorPortKey, 9527u).toUInt();
 
     d->m = new QReadWriteLock;

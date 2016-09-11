@@ -38,7 +38,7 @@ bool QSanProtocol::Countdown::tryParse(const QVariant &var)
 
     //compatible with old JSON representation of Countdown
     if (JsonUtils::isString(val[0])) {
-        if (val[0].toString() == "MG_COUNTDOWN")
+        if (val[0].toString() == QStringLiteral("MG_COUNTDOWN"))
             val.removeFirst();
         else
             return false;

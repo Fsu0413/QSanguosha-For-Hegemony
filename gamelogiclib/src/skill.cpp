@@ -169,9 +169,9 @@ ViewAsSkill::ViewAsSkill(const QString &name, QSgsEnum::SkillFrequency frequency
 bool ViewAsSkill::isAvailable(const Player *invoker, QSgsEnum::CardUseReason reason, const QString &pattern) const
 {
     // Make sure TransferSkill is invoked properly
-    if (objectName() != "transfer") {
+    if (objectName() != QStringLiteral("transfer")) {
         // Make sure skill that was temporily invoked and skill that has delayed effect can be invoked properly
-        if (!invoker->hasFlag("TempInvoke_" + objectName()) && !invoker->hasSkill(objectName()) && !invoker->hasDelayedEffect(objectName()))
+        if (!invoker->hasFlag(QStringLiteral("TempInvoke_") + objectName()) && !invoker->hasSkill(objectName()) && !invoker->hasDelayedEffect(objectName()))
             return false;
     }
 
@@ -285,7 +285,7 @@ OneCardViewAsSkill::OneCardViewAsSkill(const QString &name, QSgsEnum::SkillFrequ
 
 bool OneCardViewAsSkill::viewFilter(const QList<Card *> &selected, Card *toSelect, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const
 {
-    return selected.isEmpty() && !toSelect->hasFlag("using") && viewFilter(toSelect, player, reason, pattern);
+    return selected.isEmpty() && !toSelect->hasFlag(QStringLiteral("using")) && viewFilter(toSelect, player, reason, pattern);
 }
 
 Card *OneCardViewAsSkill::viewAs(const QList<Card *> &cards, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const

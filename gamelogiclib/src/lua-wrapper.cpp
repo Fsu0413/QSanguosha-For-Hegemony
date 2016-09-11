@@ -26,9 +26,9 @@
 
 
 QSgsLuaPackage::QSgsLuaPackage(const QString &name, QSgsEnum::PackageType type, const QString &version)
-    :QSgsPackage(name, type)
+    : QSgsPackage(name, type)
 {
-    QStringList v = version.split(".");
+    QStringList v = version.split(QStringLiteral("."));
 
     m_ver = QVersionNumber(v[0].toInt(),v[1].toInt(),v[2].toInt());
 }
@@ -406,7 +406,10 @@ const QVersionNumber &QSgsLuaPackage::version() const
 
 QSgsLuaPackage *parseLuaPackage(const QString &fileName, bool *ok)
 {
-    bool ok_; if (ok == nullptr) ok = &ok_;
+    bool ok_;
+    if (ok == nullptr)
+        ok = &ok_;
+
     *ok = false;
 
     lua_State *l = Sanguosha->luaState();
@@ -418,66 +421,69 @@ QSgsLuaPackage *parseLuaPackage(const QString &fileName, bool *ok)
     error = luaL_loadfile(l, fileName.toUtf8().constData());
 #endif
     if (error) {
-        const char *error_message = lua_tostring(l,-1);
-        lua_pop(l,1);
+        const char *error_message = lua_tostring(l, -1);
+        lua_pop(l, 1);
         //emit this->error(error_message);
         return nullptr;
     }
 
     error = lua_pcall(l, 0, 1, 0);
     if (error) {
-        const char *error_message = lua_tostring(l,-1);
-        lua_pop(l,1);
+        const char *error_message = lua_tostring(l, -1);
+        lua_pop(l, 1);
         // emit this->error(error_message);
         return nullptr;
     }
 
     //check for name.
 
-    lua_pushstring(l,"name");
-    lua_rawget(l,-2);
-    const char *name = lua_tostring(l,-1);
-    lua_pop(l,1);
-    if (QString(name).isEmpty()) {
+    lua_pushstring(l, "name");
+    lua_rawget(l, -2);
+    const char *name = lua_tostring(l, -1);
+    lua_pop(l, 1);
+    if (QString::fromUtf8(name).isEmpty()) {
         //emit this->error("invalid package name for Lua File:" + m_LuaFile);
         return nullptr;
     }
 
     //check for version
 
-    lua_pushstring(l,"version");
-    lua_rawget(l,-2);
-    QString ver_string = QString(lua_tostring(l,-1));
-    lua_pop(l,1);
+    lua_pushstring(l, "version");
+    lua_rawget(l, -2);
+    QString ver_string = QString::fromUtf8(lua_tostring(l, -1));
+    lua_pop(l, 1);
     if (ver_string.isEmpty()) {
         //emit this->error("invalid package version for Lua File:" + m_LuaFile);
         return nullptr;
-    } else if (ver_string.split(".").length() != 3) {
-        //emit this->error("invalid package version for Lua File:" + m_LuaFile + ". The version number must go with a formation like x.x.x");
-        return nullptr;
     } else {
-        foreach (const QString &n, ver_string.split(".")){
-            bool is_ok = false;
-            n.toInt(&is_ok);
-            if (!is_ok){
-                //emit this->error("invalid package version for Lua File:" + m_LuaFile + ". Eveny part of the version must be a number!");
-                return nullptr;
+        QStringList splitedVerString = ver_string.split(QStringLiteral("."));
+        if (splitedVerString.length() != 3) {
+            //emit this->error("invalid package version for Lua File:" + m_LuaFile + ". The version number must go with a formation like x.x.x");
+            return nullptr;
+        } else {
+            foreach (const QString &n, splitedVerString) {
+                bool is_ok = false;
+                n.toInt(&is_ok);
+                if (!is_ok) {
+                    //emit this->error("invalid package version for Lua File:" + m_LuaFile + ". Eveny part of the version must be a number!");
+                    return nullptr;
+                }
             }
         }
     }
 
     //check for type
 
-    lua_pushstring(l,"type");
-    lua_rawget(l,-2);
-    int ty = lua_tonumber(l,-1);
-    lua_pop(l,1);
+    lua_pushstring(l, "type");
+    lua_rawget(l, -2);
+    int ty = lua_tonumber(l, -1);
+    lua_pop(l, 1);
     QSgsEnum::PackageType t = static_cast<QSgsEnum::PackageType>(ty);
     //@to_do(xusine) : check the type is valid.
 
     // then, we need to evaluate the skill and card.
 
-    QSgsLuaPackage *pac = new QSgsLuaPackage(name,t,ver_string);
+    QSgsLuaPackage *pac = new QSgsLuaPackage(QString::fromUtf8(name), t, ver_string);
 
     *ok = true;
 

@@ -162,7 +162,7 @@ QString Card::numberString() const
         return QStringLiteral("10");
     else {
         static const char *numberString = "-A23456789-JQK";
-        return QString(numberString[n]);
+        return QString(QChar::fromLatin1(numberString[n]));
     }
 }
 
@@ -230,7 +230,7 @@ bool Card::isEquipped() const
 
 bool Card::match(const QString &pattern) const
 {
-    QStringList patterns = pattern.split("+");
+    QStringList patterns = pattern.split(QStringLiteral("+"));
     foreach (const QString &ptn, patterns) {
         if (objectName() == ptn /*|| type() == ptn || subtype() == ptn*/)
             return true;
@@ -379,7 +379,7 @@ QString Card::subcardString() const
     foreach (Card *subcard, d->subcards)
         str << QString::number(subcard->id());
 
-    return str.join("+");
+    return str.join(QStringLiteral("+"));
 }
 
 void Card::addSubcards(const QList<Card *> &cards)
@@ -692,7 +692,7 @@ void Card::setFlag(const QString &flag)
         return;
     else if (flag == QStringLiteral("."))
         d->flags.clear();
-    else if (flag.startsWith(symbol_c)) {
+    else if (flag.startsWith(QChar::fromLatin1(symbol_c))) {
         QString copy = flag;
         copy.remove(0, 1); // only remove the first "-", but not all "-"s
         d->flags.removeOne(copy);

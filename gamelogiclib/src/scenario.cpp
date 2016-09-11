@@ -48,13 +48,13 @@ bool Scenario::exposeRoles() const
 
 QString Scenario::getRoles() const
 {
-    QString roles = "Z";
+    QString roles = QString::fromLatin1("Z");
     for (int i = 0; i < m_loyalists.length(); i++)
-        roles.append('C');
+        roles.append(QChar::fromLatin1('C'));
+    for (int i = 0; i < m_renegades.length(); i++)
+        roles.append(QChar::fromLatin1('N'));
     for (int i = 0; i < m_rebels.length(); i++)
-        roles.append('N');
-    for (int i = 0; i < m_rebels.length(); i++)
-        roles.append('F');
+        roles.append(QChar::fromLatin1('F'));
     return roles;
 }
 

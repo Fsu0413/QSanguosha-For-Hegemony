@@ -111,16 +111,16 @@ void NativeClientSocket::init()
 void NativeClientSocket::connectToHost()
 {
     Q_D(NativeClientSocket);
-    QString address = "127.0.0.1";
+    QString address = QStringLiteral("127.0.0.1");
     ushort port = 9527u;
 
-    if (QSgsCoreSettings::hostAddress().contains(QChar(':'))) {
-        QStringList texts = QSgsCoreSettings::hostAddress().split(QChar(':'));
+    if (QSgsCoreSettings::hostAddress().contains(QChar::fromLatin1(':'))) {
+        QStringList texts = QSgsCoreSettings::hostAddress().split(QChar::fromLatin1(':'));
         address = texts.value(0);
         port = texts.value(1).toUShort();
     } else {
         address = QSgsCoreSettings::hostAddress();
-        if (address == "127.0.0.1")
+        if (address == QStringLiteral("127.0.0.1"))
             port = QSgsCoreSettings::serverPort();
     }
 
@@ -185,7 +185,7 @@ QString NativeClientSocket::peerName() const
     Q_D(const NativeClientSocket);
     QString peer_name = d->socket->peerName();
     if (peer_name.isEmpty())
-        peer_name = QString("%1:%2").arg(d->socket->peerAddress().toString()).arg(d->socket->peerPort());
+        peer_name = QStringLiteral("%1:%2").arg(d->socket->peerAddress().toString()).arg(d->socket->peerPort());
 
     return peer_name;
 }

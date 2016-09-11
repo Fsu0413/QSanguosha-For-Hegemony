@@ -408,7 +408,7 @@ bool Player::hasDelayedEffect(const QString &effectName) const
 void Player::setDelayedEffect(const QString &effectName)
 {
     Q_D(Player);
-    if (effectName.startsWith("-")) {
+    if (effectName.startsWith(QStringLiteral("-"))) {
         QString removed = effectName.mid(1);
         d->delayedEffects.removeAll(removed);
     } else
@@ -939,7 +939,7 @@ void Player::setSkillPreshowed(const QString &skill, bool preshowed)
 
 }
 
-void Player::setSkillsPreshowed(const QString &falgs, bool preshowed)
+void Player::setSkillsPreshowed(const QString &flags, bool preshowed)
 {
 
 }

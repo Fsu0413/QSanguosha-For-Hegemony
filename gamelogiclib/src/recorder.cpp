@@ -49,7 +49,7 @@ void Recorder::recordLine(const QByteArray &line)
 
 bool Recorder::save(const QString &filename) const
 {
-    if (filename.endsWith(".qsgs")) {
+    if (filename.endsWith(QStringLiteral(".qsgs"))) {
         QFile file(filename);
         if (file.open(QIODevice::WriteOnly)) {
             file.putChar('\0');
@@ -73,7 +73,7 @@ Replayer::Replayer(QObject *parent, const QString &filename)
     filename(filename), speed(1.0), playing(true)
 {
     QIODevice *device = nullptr;
-    if (filename.endsWith(".qsgs")) {
+    if (filename.endsWith(QStringLiteral(".qsgs"))) {
         QFile *file = new QFile(filename);
         if (file->open(QFile::ReadOnly)) {
             char header;

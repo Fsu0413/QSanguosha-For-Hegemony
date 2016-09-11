@@ -54,18 +54,18 @@ QString QSgsEngine::version() const
 {
     QString version_number = versionNumber().toString();
     QString mod_name = ModName();
-    if (mod_name == "official")
+    if (mod_name == QStringLiteral("official"))
         return version_number;
     else
-        return QString("%1:%2").arg(version_number).arg(mod_name);
+        return QStringLiteral("%1:%2").arg(version_number).arg(mod_name);
 }
 
 QString QSgsEngine::versionName() const
 {
-    return "HegV2";
+    return QStringLiteral("HegV2");
 }
 
 QString QSgsEngine::ModName() const
 {
-    return "official";
+    return QStringLiteral("official");
 }

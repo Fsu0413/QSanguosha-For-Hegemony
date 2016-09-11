@@ -63,7 +63,7 @@ QVariant GetValueFromLuaState(lua_State *L, const char *table_name, const char *
             for (lua_pushnil(L); lua_next(L, t); lua_pop(L, 1)) {
                 const char *key = lua_tostring(L, -2);
                 const char *value = lua_tostring(L, -1);
-                map[key] = value;
+                map[QString::fromUtf8(key)] = QString::fromUtf8(value);
             }
             data = map;
         }

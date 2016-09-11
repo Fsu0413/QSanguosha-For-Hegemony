@@ -27,8 +27,9 @@ ExpPattern::ExpPattern(const QString &exp)
 
 bool ExpPattern::match(const Player *player, const Card *card) const
 {
-    foreach (const QString &one_exp, this->exp.split("#"))
-        if (this->matchOne(player, card, one_exp)) return true;
+    QStringList splited = exp.split(QStringLiteral("#"));
+    foreach (const QString &oneExp, splited)
+        if (this->matchOne(player, card, oneExp)) return true;
 
     return false;
 }
