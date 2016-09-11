@@ -409,12 +409,18 @@ QList<SkillInvokeStruct> MasochismSkill::triggerable(QSgsEnum::TriggerEvent trig
 
 bool MasochismSkill::cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillInvokeStruct> invoke, Player *player, QVariant &data) const
 {
-    return cost(triggerEvent, room, invoke, player, data.value<DamageStruct>());
+    DamageStruct d = data.value<DamageStruct>();
+    bool c = cost(triggerEvent, room, invoke, player, d);
+    data = QVariant::fromValue(d);
+    return c;
 }
 
 bool MasochismSkill::effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillInvokeStruct> invoke, Player *player, QVariant &data) const
 {
-    return effect(triggerEvent, room, invoke, player, data.value<DamageStruct>());
+    DamageStruct d = data.value<DamageStruct>();
+    bool e = effect(triggerEvent, room, invoke, player, d);
+    data = QVariant::fromValue(d);
+    return e;
 }
 
 void MasochismSkill::record(QSgsEnum::TriggerEvent, RoomObject *, Player *, const DamageStruct &) const
