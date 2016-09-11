@@ -2,6 +2,8 @@
 #ifndef LIBQSGSCORE_PCH_H
 #define LIBQSGSCORE_PCH_H
 
+#include <QtGlobal>
+
 #ifdef Q_CC_MSVC
 #pragma execution_character_set("utf-8")
 #endif
