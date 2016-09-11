@@ -2,6 +2,10 @@
 #ifndef LIBQSGSCORE_PCH_H
 #define LIBQSGSCORE_PCH_H
 
+#ifdef Q_CC_MSVC
+#pragma execution_character_set("utf-8")
+#endif
+
 #if 0
 // for header generation
 class _EXPORT QSgsCoreGlobal

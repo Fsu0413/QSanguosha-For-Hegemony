@@ -1,7 +1,7 @@
 
 CONFIG += warn_on c++11
 
-#DEFINES += QT_NO_CAST_FROM_ASCII
+DEFINES += QT_NO_CAST_FROM_ASCII
 
 unix {
     # Note that if Qt is compiled without pkgconfig, the bundled lua is used unconditionally
