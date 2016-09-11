@@ -378,7 +378,7 @@ void TriggerSkill::setGlobal(bool global)
     d->global = global;
 }
 
-void TriggerSkill::record(QSgsEnum::TriggerEvent, RoomObject *, Player *, QVariant &) const
+void TriggerSkill::record(QSgsEnum::TriggerEvent, RoomObject *, Player *, const QVariant &) const
 {
     // Apperantly, this function should be a no-op.
 }
@@ -390,6 +390,44 @@ bool TriggerSkill::cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Q
     return false;
 }
 
+
+MasochismSkill::MasochismSkill(const QString &name, QSgsEnum::SkillFrequency frequency, QSgsEnum::SkillPlace place)
+    : TriggerSkill(name, frequency, place)
+{
+    addTriggerEvent(QSgsEnum::TriggerEvent::Damaged);
+}
+
+void MasochismSkill::record(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, const QVariant &data) const
+{
+    record(triggerEvent, room, player, data.value<DamageStruct>());
+}
+
+QList<SkillInvokeStruct> MasochismSkill::triggerable(QSgsEnum::TriggerEvent triggerEvent, const RoomObject *room, const Player *player, const QVariant &data) const
+{
+    return triggerable(triggerEvent, room, player, data.value<DamageStruct>());
+}
+
+bool MasochismSkill::cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillInvokeStruct> invoke, Player *player, QVariant &data) const
+{
+    return cost(triggerEvent, room, invoke, player, data.value<DamageStruct>());
+}
+
+bool MasochismSkill::effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillInvokeStruct> invoke, Player *player, QVariant &data) const
+{
+    return effect(triggerEvent, room, invoke, player, data.value<DamageStruct>());
+}
+
+void MasochismSkill::record(QSgsEnum::TriggerEvent, RoomObject *, Player *, const DamageStruct &) const
+{
+    // Apperantly, this function should be a no-op.
+}
+
+bool MasochismSkill::cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillInvokeStruct> invoke, Player *player, DamageStruct &damage) const
+{
+    // Apperantly, the function of TriggerSkill is a default realization. i.e. it can't be aware of data
+    QVariant data;
+    return TriggerSkill::cost(triggerEvent, room, invoke, player, data);
+}
 
 //TriggerSkill::~TriggerSkill()
 //{

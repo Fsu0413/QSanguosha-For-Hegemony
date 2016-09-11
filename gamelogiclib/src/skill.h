@@ -152,7 +152,7 @@ public:
     bool isGlobal() const;
     void setGlobal(bool global);
 
-    virtual void record(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, QVariant &data) const;
+    virtual void record(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, const QVariant &data) const;
     virtual QList<SkillInvokeStruct> triggerable(QSgsEnum::TriggerEvent triggerEvent, const RoomObject *room, const Player *player, const QVariant &data) const = 0;
     virtual bool cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillInvokeStruct> invoke, Player *player, QVariant &data) const;
     virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillInvokeStruct> invoke, Player *player, QVariant &data) const = 0;
@@ -182,11 +182,17 @@ class LIBQSGSGAMELOGIC_EXPORT MasochismSkill : public TriggerSkill
     Q_OBJECT
 
 public:
-    MasochismSkill(const QString &name);
+    explicit MasochismSkill(const QString &name, QSgsEnum::SkillFrequency frequency = QSgsEnum::SkillFrequency::NotFrequent, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both);
 
-    virtual bool cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
-    virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
-    virtual void onDamaged(Player *target, const DamageStruct &damage) const = 0;
+    virtual void record(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, const QVariant &data) const final override;
+    virtual QList<SkillInvokeStruct> triggerable(QSgsEnum::TriggerEvent triggerEvent, const RoomObject *room, const Player *player, const QVariant &data) const final override;
+    virtual bool cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillInvokeStruct> invoke, Player *player, QVariant &data) const final override;
+    virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillInvokeStruct> invoke, Player *player, QVariant &data) const final override;
+
+    virtual void record(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, const DamageStruct &damage) const;
+    virtual QList<SkillInvokeStruct> triggerable(QSgsEnum::TriggerEvent triggerEvent, const RoomObject *room, const Player *player, const DamageStruct &damage) const = 0;
+    virtual bool cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillInvokeStruct> invoke, Player *player, DamageStruct &damage) const;
+    virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillInvokeStruct> invoke, Player *player, DamageStruct &damage) const = 0;
 };
 
 class LIBQSGSGAMELOGIC_EXPORT PhaseChangeSkill : public TriggerSkill
