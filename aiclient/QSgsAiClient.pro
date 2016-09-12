@@ -40,7 +40,7 @@ CONFIG += precompiled_header
 
 PRECOMPILED_HEADER = src/pch.h
 
-DESTDIR = $$OUT_PWD/../inst/bin
+DESTDIR = $$OUT_PWD/../dist/bin
 
 target.path = /bin/
 INSTALLS += target

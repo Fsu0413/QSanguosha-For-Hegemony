@@ -44,6 +44,15 @@ CONFIG(bundledlua) {
     message("Using bundled lua 5.3.3")
 }
 
+CONFIG(bundledlua) {
+    INCLUDEPATH += ../lua/src
+    LIBS += -llua
+} else {
+    QMAKE_CFLAGS += $$QSANGUOSHA_LUA_CFLAGS
+    QMAKE_CXXFLAGS += $$QSANGUOSHA_LUA_CFLAGS
+    LIBS += $$QSANGUOSHA_LUA_LIB
+}
+
 unix: !android: !mac: QMAKE_LFLAGS += -Wl,--rpath=../lib
 
 !win32-msvc* {
@@ -53,8 +62,8 @@ unix: !android: !mac: QMAKE_LFLAGS += -Wl,--rpath=../lib
     else:QMAKE_LFLAGS += -Wl,--no-undefined
 }
 
-LIBS += -L$$OUT_PWD/../inst/lib
-INCLUDEPATH += $$OUT_PWD/../include
+LIBS += -L$$OUT_PWD/../dist/lib
+INCLUDEPATH += $$OUT_PWD/../dist/include
 
 !winrt: !ios { # !macos?
     win32: dlltarget.path = /bin/

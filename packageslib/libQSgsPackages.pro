@@ -17,8 +17,8 @@ winrt|ios {
 
     HEADERS += libqsgspackagesglobal.h
 
-    DESTDIR = $$OUT_PWD/../inst/lib
-    DLLDESTDIR = $$OUT_PWD/../inst/bin
+    DESTDIR = $$OUT_PWD/../dist/lib
+    DLLDESTDIR = $$OUT_PWD/../dist/bin
 
 
 } else {

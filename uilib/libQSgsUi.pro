@@ -18,8 +18,8 @@ HEADERS += \
     testlink.h \
     libqsgsuiglobal.h
 
-DESTDIR = $$OUT_PWD/../inst/lib
-DLLDESTDIR = $$OUT_PWD/../inst/bin
+DESTDIR = $$OUT_PWD/../dist/lib
+DLLDESTDIR = $$OUT_PWD/../dist/bin
 
 SOURCES += \
     testlink.cpp

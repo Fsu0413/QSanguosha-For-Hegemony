@@ -3,6 +3,7 @@ include(../QSanguosha.pri)
 CONFIG(systemlua): TEMPLATE = aux
 else {
 CONFIG -= qt
+LIBS -= -llua
 
 TEMPLATE = lib
 winrt|ios: CONFIG += staticlib
@@ -88,7 +89,7 @@ SOURCES += \
     src/lzio.c
 
 
-DESTDIR = $$OUT_PWD/../inst/lib
-DLLDESTDIR = $$OUT_PWD/../inst/bin
+DESTDIR = $$OUT_PWD/../dist/lib
+DLLDESTDIR = $$OUT_PWD/../dist/bin
 
 }

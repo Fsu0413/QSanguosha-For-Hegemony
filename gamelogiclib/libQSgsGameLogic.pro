@@ -12,15 +12,6 @@ QT += network
 
 DEFINES += LIBQSGGAMELOGIC_BUILDING_LIBQSGSGAMELOGIC
 
-CONFIG(bundledlua) {
-    INCLUDEPATH += ../lua/src
-    LIBS += -llua
-} else {
-    QMAKE_CFLAGS += $$QSANGUOSHA_LUA_CFLAGS
-    QMAKE_CXXFLAGS += $$QSANGUOSHA_LUA_CFLAGS
-    LIBS += $$QSANGUOSHA_LUA_LIBS
-}
-
 CONFIG += precompiled_header
 
 PRECOMPILED_HEADER = src/libqsgsgamelogicglobal.h
@@ -65,22 +56,22 @@ SOURCES += \
     src/exppattern.cpp \
     cardfaces/base.cpp
 
-DESTDIR = $$OUT_PWD/../inst/lib
-DLLDESTDIR = $$OUT_PWD/../inst/bin
+DESTDIR = $$OUT_PWD/../dist/lib
+DLLDESTDIR = $$OUT_PWD/../dist/bin
 
 LIBS += -lQSgsCore
 
-generateHeaders.target = ../include/$$TARGET/
+generateHeaders.target = ../dist/include/$$TARGET/
 contains(QMAKE_HOST.os, "Windows") {
-    mkdirGenerateHeaders.commands = if not exist $$system_path(../include/$$TARGET/) md $$system_path(../include/$$TARGET/)
+    mkdirGenerateHeaders.commands = if not exist $$system_path($$generateHeaders.target) md $$system_path($$generateHeaders.target)
     generateHeaders.commands = cscript $$system_path($$PWD/../tools/AutoGenerateHeader.vbs) -o $$system_path($$generateHeaders.target) -f $$system_path($$PWD/src/)
 } else {
-    mkdirGenerateHeaders.commands = mkdir -p ../include/$$TARGET/
+    mkdirGenerateHeaders.commands = mkdir -p $$generateHeaders.target
     generateHeaders.commands = $$PWD/../tools/AutoGenerateHeader.sh -o $$generateHeaders.target -f $$PWD/src/
 }
 generateHeaders.depends = mkdirGenerateHeaders
 
-generateHeadersCardfaces.target = ../include/$$TARGET/CardFaces/
+generateHeadersCardfaces.target = ../dist/include/$$TARGET/CardFaces/
 contains(QMAKE_HOST.os, "Windows") {
     mkdirGenerateHeadersCardfaces.commands = if not exist $$system_path($$generateHeadersCardfaces.target) md $$system_path($$generateHeadersCardfaces.target)
     generateHeadersCardfaces.commands = cscript $$system_path($$PWD/../tools/AutoGenerateHeader.vbs) -o $$system_path($$generateHeadersCardfaces.target) -f $$system_path($$PWD/cardfaces/)
@@ -92,4 +83,4 @@ mkdirGenerateHeadersCardfaces.depends = generateHeaders
 generateHeadersCardfaces.depends = mkdirGenerateHeadersCardfaces
 
 QMAKE_EXTRA_TARGETS += mkdirGenerateHeaders generateHeaders generateHeadersCardfaces mkdirGenerateHeadersCardfaces
-PRE_TARGETDEPS += ../include/$$TARGET/ ../include/$$TARGET/CardFaces/
+POST_TARGETDEPS += $$generateHeaders.target $$generateHeadersCardfaces.target

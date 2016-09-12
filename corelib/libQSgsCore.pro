@@ -12,15 +12,6 @@ QT += network
 
 DEFINES += LIBQSGSCORE_BUILDING_LIBQSGSCORE
 
-CONFIG(bundledlua) {
-    INCLUDEPATH += ../lua/src
-    LIBS += -llua
-} else {
-    QMAKE_CFLAGS += $$QSANGUOSHA_LUA_CFLAGS
-    QMAKE_CXXFLAGS += $$QSANGUOSHA_LUA_CFLAGS
-    LIBS += $$QSANGUOSHA_LUA_LIB
-}
-
 CONFIG += precompiled_header
 
 PRECOMPILED_HEADER = src/libqsgscoreglobal.h
@@ -43,21 +34,21 @@ SOURCES += \
     src/util.cpp \
     src/settings.cpp
 
-DESTDIR = $$OUT_PWD/../inst/lib
-DLLDESTDIR = $$OUT_PWD/../inst/bin
+DESTDIR = $$OUT_PWD/../dist/lib
+DLLDESTDIR = $$OUT_PWD/../dist/bin
 
 SWIGFILES += swig/qsgscore.i
 
-generateHeaders.target = ../include/$$TARGET/
+generateHeaders.target = ../dist/include/$$TARGET/
 contains(QMAKE_HOST.os, "Windows") {
-    mkdirGenerateHeaders.commands = if not exist $$system_path(../include/$$TARGET/) md $$system_path(../include/$$TARGET/)
+    mkdirGenerateHeaders.commands = if not exist $$system_path($$generateHeaders.target) md $$system_path($$generateHeaders.target)
     generateHeaders.commands = cscript $$system_path($$PWD/../tools/AutoGenerateHeader.vbs) -o $$system_path($$generateHeaders.target) -f $$system_path($$PWD/src/)
 } else {
-    mkdirGenerateHeaders.commands = mkdir -p ../include/$$TARGET/
+    mkdirGenerateHeaders.commands = mkdir -p $$generateHeaders.target
     generateHeaders.commands = $$PWD/../tools/AutoGenerateHeader.sh -o $$generateHeaders.target -f $$PWD/src/
 }
 generateHeaders.depends = mkdirGenerateHeaders
 
 QMAKE_EXTRA_TARGETS += mkdirGenerateHeaders generateHeaders
-PRE_TARGETDEPS += ../include/$$TARGET/
+POST_TARGETDEPS += $$generateHeaders.target
 
