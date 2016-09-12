@@ -106,6 +106,14 @@ struct LIBQSGSGAMELOGIC_EXPORT CardUseStruct
 struct LIBQSGSGAMELOGIC_EXPORT SkillInvokeStruct
 {
     // Skill, player, skillowner, target, card
+    // use to describe ProactiveSkill
+
+};
+
+struct LIBQSGSGAMELOGIC_EXPORT SkillTriggerStruct
+{
+    // Skill, player, skillowner, and other sth.
+    // like SkillInvokeDetail in TouhouSatsu, but we use a more suitable name here
 
 };
 

@@ -383,7 +383,7 @@ void TriggerSkill::record(QSgsEnum::TriggerEvent, RoomObject *, Player *, const 
     // Apperantly, this function should be a no-op.
 }
 
-bool TriggerSkill::cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillInvokeStruct> invoke, Player *player, QVariant &data) const
+bool TriggerSkill::cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, QVariant &data) const
 {
     // if compulsory then return true
     // else askForConfirm
@@ -402,12 +402,12 @@ void MasochismSkill::record(QSgsEnum::TriggerEvent triggerEvent, RoomObject *roo
     record(triggerEvent, room, player, data.value<DamageStruct>());
 }
 
-QList<SkillInvokeStruct> MasochismSkill::triggerable(QSgsEnum::TriggerEvent triggerEvent, const RoomObject *room, const Player *player, const QVariant &data) const
+QList<SkillTriggerStruct> MasochismSkill::triggerable(QSgsEnum::TriggerEvent triggerEvent, const RoomObject *room, const Player *player, const QVariant &data) const
 {
     return triggerable(triggerEvent, room, player, data.value<DamageStruct>());
 }
 
-bool MasochismSkill::cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillInvokeStruct> invoke, Player *player, QVariant &data) const
+bool MasochismSkill::cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, QVariant &data) const
 {
     DamageStruct d = data.value<DamageStruct>();
     bool c = cost(triggerEvent, room, invoke, player, d);
@@ -415,7 +415,7 @@ bool MasochismSkill::cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room,
     return c;
 }
 
-bool MasochismSkill::effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillInvokeStruct> invoke, Player *player, QVariant &data) const
+bool MasochismSkill::effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, QVariant &data) const
 {
     DamageStruct d = data.value<DamageStruct>();
     bool e = effect(triggerEvent, room, invoke, player, d);
@@ -428,7 +428,7 @@ void MasochismSkill::record(QSgsEnum::TriggerEvent, RoomObject *, Player *, cons
     // Apperantly, this function should be a no-op.
 }
 
-bool MasochismSkill::cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillInvokeStruct> invoke, Player *player, DamageStruct &damage) const
+bool MasochismSkill::cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, DamageStruct &damage) const
 {
     // Apperantly, the function of TriggerSkill is a default realization. i.e. it can't be aware of data
     QVariant data;
