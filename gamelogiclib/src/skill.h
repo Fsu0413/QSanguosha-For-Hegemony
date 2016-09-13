@@ -200,10 +200,7 @@ class LIBQSGSGAMELOGIC_EXPORT PhaseChangeSkill : public TriggerSkill
     Q_OBJECT
 
 public:
-    PhaseChangeSkill(const QString &name);
-
-    virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
-    virtual bool onPhaseChange(Player *target) const = 0;
+    explicit PhaseChangeSkill(const QString &name, QSgsEnum::SkillFrequency frequency = QSgsEnum::SkillFrequency::NotFrequent, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both);
 };
 
 class LIBQSGSGAMELOGIC_EXPORT DrawCardsSkill : public TriggerSkill
@@ -211,21 +208,17 @@ class LIBQSGSGAMELOGIC_EXPORT DrawCardsSkill : public TriggerSkill
     Q_OBJECT
 
 public:
-    DrawCardsSkill(const QString &name);
+    explicit DrawCardsSkill(const QString &name, QSgsEnum::SkillFrequency frequency = QSgsEnum::SkillFrequency::NotFrequent, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both);
 
-    virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
-    virtual int getDrawNum(Player *player, int n) const = 0;
-};
+    virtual void record(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, const QVariant &data) const final override;
+    virtual QList<SkillTriggerStruct> triggerable(QSgsEnum::TriggerEvent triggerEvent, const RoomObject *room, const Player *player, const QVariant &data) const final override;
+    virtual bool cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, QVariant &data) const final override;
+    virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, QVariant &data) const final override;
 
-class LIBQSGSGAMELOGIC_EXPORT GameStartSkill : public TriggerSkill
-{
-    Q_OBJECT
-
-public:
-    GameStartSkill(const QString &name);
-
-    virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
-    virtual void onGameStart(Player *player) const = 0;
+    virtual void record(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, int n) const;
+    virtual QList<SkillTriggerStruct> triggerable(QSgsEnum::TriggerEvent triggerEvent, const RoomObject *room, const Player *player, int n) const = 0;
+    virtual bool cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, int &n) const;
+    virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, int &n) const = 0;
 };
 
 class LIBQSGSGAMELOGIC_EXPORT BattleArraySkill : public TriggerSkill
@@ -347,22 +340,12 @@ private:
     QString m_name;
 };
 
-class LIBQSGSGAMELOGIC_EXPORT DetachEffectSkill : public TriggerSkill
+class LIBQSGSGAMELOGIC_EXPORT EquipSkill : public TriggerSkill
 {
     Q_OBJECT
-
-public:
-    DetachEffectSkill(const QString &skillname, const QString &pilename = QString());
-
-    virtual QStringList triggerable(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, QVariant &data, Player * &ask_who) const;
-    virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
-    virtual void onSkillDetached(RoomObject *room, Player *player) const;
-
-private:
-    QString m_name, m_pileName;
 };
 
-class LIBQSGSGAMELOGIC_EXPORT WeaponSkill : public TriggerSkill
+class LIBQSGSGAMELOGIC_EXPORT WeaponSkill : public EquipSkill
 {
     Q_OBJECT
 
@@ -373,7 +356,7 @@ public:
     virtual bool triggerable(const Player *target) const;
 };
 
-class LIBQSGSGAMELOGIC_EXPORT ArmorSkill : public TriggerSkill
+class LIBQSGSGAMELOGIC_EXPORT ArmorSkill : public EquipSkill
 {
     Q_OBJECT
 
@@ -384,7 +367,7 @@ public:
     virtual bool triggerable(const Player *target) const;
 };
 
-class LIBQSGSGAMELOGIC_EXPORT TreasureSkill : public TriggerSkill
+class LIBQSGSGAMELOGIC_EXPORT TreasureSkill : public EquipSkill
 {
     Q_OBJECT
 

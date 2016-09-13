@@ -144,7 +144,7 @@ bool Skill::canPreshow() const
 void Skill::setCanPreshow(bool c)
 {
     Q_D(Skill);
-    if ((!inherits("TriggerSkill") || inherits("EquipSkill") && c)) {
+    if ((!inherits("TriggerSkill") || inherits("EquipSkill")) && c) {
         qWarning() << objectName() << QStringLiteral("is not a TriggerSkill or is an EquipSkill. It should not be able to preshow");
         Q_ASSERT_X(false, __FILE__ QT_STRINGIFY(__LINE__), "INVALID CANPRESHOW SET");
     }
@@ -410,17 +410,17 @@ QList<SkillTriggerStruct> MasochismSkill::triggerable(QSgsEnum::TriggerEvent tri
 bool MasochismSkill::cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, QVariant &data) const
 {
     DamageStruct d = data.value<DamageStruct>();
-    bool c = cost(triggerEvent, room, invoke, player, d);
+    bool r = cost(triggerEvent, room, invoke, player, d);
     data = QVariant::fromValue(d);
-    return c;
+    return r;
 }
 
 bool MasochismSkill::effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, QVariant &data) const
 {
     DamageStruct d = data.value<DamageStruct>();
-    bool e = effect(triggerEvent, room, invoke, player, d);
+    bool r = effect(triggerEvent, room, invoke, player, d);
     data = QVariant::fromValue(d);
-    return e;
+    return r;
 }
 
 void MasochismSkill::record(QSgsEnum::TriggerEvent, RoomObject *, Player *, const DamageStruct &) const
@@ -434,150 +434,6 @@ bool MasochismSkill::cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room,
     QVariant data;
     return TriggerSkill::cost(triggerEvent, room, invoke, player, data);
 }
-
-//TriggerSkill::~TriggerSkill()
-//{
-
-//}
-
-
-//OneCardViewAsSkill::OneCardViewAsSkill(const QString &name)
-//    : ViewAsSkill(name), m_filterPattern(QString())
-//{
-//}
-
-//bool OneCardViewAsSkill::viewFilter(const QList<Card *> &selected, const Card *to_select) const
-//{
-//    return selected.isEmpty() && !to_select->hasFlag("using") && viewFilter(to_select);
-//}
-
-//bool OneCardViewAsSkill::viewFilter(const Card *to_select) const
-//{
-//    if (!inherits("FilterSkill") && !m_filterPattern.isEmpty()) {
-//        QString pat = m_filterPattern;
-//        if (pat.endsWith("!")) {
-//            if (Self->isJilei(to_select)) return false;
-//            pat.chop(1);
-//        } else if (m_responseOrUse && pat.contains("hand")) {
-//            QStringList handlist;
-//            handlist.append("hand");
-//            foreach (const QString &pile, Self->getPileNames()) {
-//                if (pile.startsWith("&") || pile == "wooden_ox")
-//                    handlist.append(pile);
-//            }
-//            pat.replace("hand", handlist.join(","));
-//        }
-//        ExpPattern pattern(pat);
-//        return pattern.match(Self, to_select);
-//    }
-//    return false;
-//}
-
-//const Card *OneCardViewAsSkill::viewAs(const QList<Card *> &cards) const
-//{
-//    if (cards.length() != 1)
-//        return nullptr;
-//    else
-//        return viewAs(cards.first());
-//}
-
-//FilterSkill::FilterSkill(const QString &name)
-//    : OneCardViewAsSkill(name)
-//{
-//    m_frequency = Compulsory;
-//}
-
-//TriggerSkill::TriggerSkill(const QString &name)
-//    : Skill(name), m_viewAsSkill(nullptr), m_global(false), current_priority(0.0)
-//{
-//    m_priority.clear();
-//}
-
-//const ViewAsSkill *TriggerSkill::viewAsSkill() const
-//{
-//    return m_viewAsSkill;
-//}
-
-//QList<TriggerEvent> TriggerSkill::triggerEvents() const
-//{
-//    return m_events;
-//}
-
-//int TriggerSkill::m_priority() const
-//{
-//    return 3;
-//}
-
-//double TriggerSkill::getDynamicPriority(TriggerEvent e) const
-//{
-//    if (m_priority.keys().contains(e))
-//        return m_priority.key(e);
-//    else
-//        return this->m_priority();
-//}
-
-///*!
-//    You are expected to return a QMap<ServerPlayer *, QStringList> in TriggerSkill::triggerable.
-//    And the QStringList of QMap is expected to include some items as the examples below:
-//    \list 1
-//    \li Skill name, such as: "yiji", "fankui", etc.
-//    \li Skill name combines someone's object name who is the owner of the skill, such as: "sgs1'songwei", "sgs10'baonue", etc.
-//    \note must use a single quote mark to concatenate
-//    \li Skill name combines multitargets' object names.
-//    If you use this kind of type, it means the skill's trigger order of targets should be according to the order you write, such as: "tieqi->sgs4+sgs8+sgs1+sgs2"
-//    \note must use a "->" to concatenate skill name to targets and "+" to concatenate targets' object names
-//    \endlist
-//    */
-
-//QMap<Player *, QStringList> TriggerSkill::triggerable(TriggerEvent triggerEvent, RoomObject *room, ServerPlayer *player, QVariant &data) const
-//{
-//    QMap<Player *, QStringList> skill_lists;
-//    if (objectName() == "game_rule") return skill_lists;
-//    ServerPlayer *ask_who = player;
-//    QStringList skill_list = triggerable(triggerEvent, room, player, data, ask_who);
-//    if (!skill_list.isEmpty())
-//        skill_lists.insert(ask_who, skill_list);
-//    return skill_lists;
-//}
-
-//bool TriggerSkill::triggerable(const ServerPlayer *target) const
-//{
-//    return target != nullptr && target->isAlive() && target->hasSkill(objectName());
-//}
-
-//void TriggerSkill::insertPriority(TriggerEvent e, double value)
-//{
-//    m_priority.insert(e, value);
-//}
-
-//void TriggerSkill::record(TriggerEvent, RoomObject *, ServerPlayer *, QVariant &) const
-//{
-
-//}
-
-//QStringList TriggerSkill::triggerable(TriggerEvent, RoomObject *, ServerPlayer *target, QVariant &, ServerPlayer* &) const
-//{
-//    if (triggerable(target))
-//        return QStringList(objectName());
-//    return QStringList();
-//}
-
-//bool TriggerSkill::cost(TriggerEvent, RoomObject *, ServerPlayer *, QVariant &, ServerPlayer *) const
-//{
-//    return true;
-//}
-
-//bool TriggerSkill::effect(TriggerEvent, RoomObject *, ServerPlayer *, QVariant &, ServerPlayer *) const
-//{
-//    return false;
-//}
-
-//TriggerSkill::~TriggerSkill()
-//{
-//    if (m_viewAsSkill && !m_viewAsSkill->inherits("LuaViewAsSkill"))
-//        delete m_viewAsSkill;
-//    m_events.clear();
-//}
 
 //ScenarioRule::ScenarioRule(Scenario *scenario)
 //    :TriggerSkill(scenario->objectName())
@@ -595,48 +451,57 @@ bool MasochismSkill::cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room,
 //    return true;
 //}
 
-//MasochismSkill::MasochismSkill(const QString &name)
-//    : TriggerSkill(name)
-//{
-//    m_events << Damaged;
-//}
 
-//bool MasochismSkill::cost(TriggerEvent triggerEvent, RoomObject *room, ServerPlayer *player, QVariant &data, ServerPlayer *ask_who) const
-//{
-//    return TriggerSkill::cost(triggerEvent, room, player, data, ask_who);
-//}
+PhaseChangeSkill::PhaseChangeSkill(const QString &name, QSgsEnum::SkillFrequency frequency, QSgsEnum::SkillPlace place)
+    : TriggerSkill(name, frequency, place)
+{
+    addTriggerEvent(QSgsEnum::TriggerEvent::EventPhaseStart);
+}
 
-//bool MasochismSkill::effect(TriggerEvent, RoomObject *, ServerPlayer *player, QVariant &data, ServerPlayer *) const
-//{
-//    DamageStruct damage = data.value<DamageStruct>();
-//    onDamaged(player, damage);
+DrawCardsSkill::DrawCardsSkill(const QString &name, QSgsEnum::SkillFrequency frequency, QSgsEnum::SkillPlace place)
+    : TriggerSkill(name, frequency, place)
+{
+    addTriggerEvent(QSgsEnum::TriggerEvent::DrawNCards);
+}
 
-//    return false;
-//}
+void DrawCardsSkill::record(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, const QVariant &data) const
+{
+    record(triggerEvent, room, player, data.toInt());
+}
 
-//PhaseChangeSkill::PhaseChangeSkill(const QString &name)
-//    : TriggerSkill(name)
-//{
-//    m_events << EventPhaseStart;
-//}
+QList<SkillTriggerStruct> DrawCardsSkill::triggerable(QSgsEnum::TriggerEvent triggerEvent, const RoomObject *room, const Player *player, const QVariant &data) const
+{
+    return triggerable(triggerEvent, room, player, data.toInt());
+}
 
-//bool PhaseChangeSkill::effect(TriggerEvent, RoomObject *, ServerPlayer *player, QVariant &, ServerPlayer *) const
-//{
-//    return onPhaseChange(player);
-//}
+bool DrawCardsSkill::cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, QVariant &data) const
+{
+    int n = data.toInt();
+    bool r = cost(triggerEvent, room, invoke, player, n);
+    data = n;
+    return r;
+}
 
-//DrawCardsSkill::DrawCardsSkill(const QString &name)
-//    : TriggerSkill(name)
-//{
-//    m_events << DrawNCards;
-//}
+bool DrawCardsSkill::effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, QVariant &data) const
+{
+    int n = data.toInt();
+    bool r = effect(triggerEvent, room, invoke, player, n);
+    data = n;
+    return r;
+}
 
-//bool DrawCardsSkill::effect(TriggerEvent, RoomObject *, ServerPlayer *player, QVariant &data, ServerPlayer *) const
-//{
-//    int n = data.toInt();
-//    data = getDrawNum(player, n);
-//    return false;
-//}
+void DrawCardsSkill::record(QSgsEnum::TriggerEvent, RoomObject *, Player *, int) const
+{
+    // Apperantly, this function should be a no-op.
+}
+
+bool DrawCardsSkill::cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, int &n) const
+{
+    // Apperantly, the function of TriggerSkill is a default realization. i.e. it can't be aware of data
+    QVariant data;
+    return TriggerSkill::cost(triggerEvent, room, invoke, player, data);
+}
+
 
 //GameStartSkill::GameStartSkill(const QString &name)
 //    : TriggerSkill(name)
@@ -924,3 +789,4 @@ bool MasochismSkill::cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room,
 //        return false;
 //    return target->hasTreasure(objectName());
 //}
+
