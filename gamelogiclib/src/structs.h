@@ -118,6 +118,11 @@ struct LIBQSGSGAMELOGIC_EXPORT CardUseStruct
     static CardUseStruct fromJson(const QJsonValue &value);
 };
 
+// To: Slob, Xusine, Lights, DJ
+// PLEASE DO NOT MODIFY SkillInvokeStruct AND SkillTriggerStruct
+// reserved for proactive skill and trigger order
+// the homework of dev QQ qun does not include these 2 struct
+// @todo_Fs: create a way to access these struct
 struct LIBQSGSGAMELOGIC_EXPORT SkillInvokeStruct
 {
     // Skill, player, skillowner, target, card
