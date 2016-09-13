@@ -32,81 +32,110 @@ struct LIBQSGSGAMELOGIC_EXPORT DamageStruct
 {
 
     DamageStruct();
-//    DamageStruct(const Card *card, Player *from, Player *to, int damage = 1, Nature nature = Normal);
-//    DamageStruct(const QString &reason, Player *from, Player *to, int damage = 1, Nature nature = Normal);
+    DamageStruct(const Card *card, Player *from, Player *to, int damage = 1, QSgsEnum::DamageNature nature = QSgsEnum::DamageNature::Normal);
+    DamageStruct(const QString &reason, Player *from, Player *to, int damage = 1, QSgsEnum::DamageNature nature = QSgsEnum::DamageNature::Normal);
 
-//    Player *from;
-//    Player *to;
-//    const Card *card;
-//    int damage;
-//    Nature nature;
-//    bool chain;
-//    bool transfer;
-//    bool by_user;
-//    QString reason;
-//    QString transfer_reason;
-//    bool prevented;
+    Player *from;
+    Player *to;
+    const Card *card;
+    int damage;
+    QSgsEnum::DamageNature nature;
+    bool chain;
+    bool transfer;
+    bool byUser;
+    QString reason;
+    QString transferReason;
+    bool prevented;
 
-    QString getReason() const;
+    QJsonValue toJson() const;
+
+    static DamageStruct fromJson(const QJsonValue &value);
+
 };
 
 struct LIBQSGSGAMELOGIC_EXPORT CardEffectStruct
 {
     CardEffectStruct();
 
-//    const Card *card;
+    const Card *card;
 
-//    Player *from;
-//    Player *to;
+    Player *from;
+    Player *to;
 
-//    bool multiple; // helper to judge whether the card has multiple targets
-//    // does not make sense if the card inherits SkillCard
-//    bool nullptrified;
+    bool multiple; // helper to judge whether the card has multiple targets
+    // does not make sense if the card inherits SkillCard
+    bool nullptrified;
+
+    QJsonValue toJson() const;
+
+    static CardEffectStruct fromJson(const QJsonValue &value);
 };
 
 struct LIBQSGSGAMELOGIC_EXPORT SlashEffectStruct
 {
     SlashEffectStruct();
 
-//    int jink_num;
+    int jinkNum;
 
-//    const Card *slash;
-//    const Card *jink;
+    const Card *slash;
+    const Card *jink;
 
-//    Player *from;
-//    Player *to;
+    Player *from;
+    Player *to;
 
-//    int drank;
+    int drank;
 
-//    DamageStruct::Nature nature;
+    QSgsEnum::DamageNature nature;
 
-//    bool nullptrified;
+    bool nullptrified;
+
+    QJsonValue toJson() const;
+
+    static SlashEffectStruct fromJson(const QJsonValue &value);
 };
 
 struct LIBQSGSGAMELOGIC_EXPORT CardUseStruct
 {
 
     CardUseStruct();
-//    CardUseStruct(const Card *card, Player *from, QList<Player *> to, bool isOwnerUse = true);
-//    CardUseStruct(const Card *card, Player *from, Player *target, bool isOwnerUse = true);
-    bool isValid(const QString &pattern) const;
-    void parse(const QString &str, RoomObject *room);
-    bool tryParse(const QVariant &usage, RoomObject *room);
+    CardUseStruct(const Card *card, Player *from, QList<Player *> to, bool isOwnerUse = true);
+    CardUseStruct(const Card *card, Player *from, Player *target, bool isOwnerUse = true);
+//    bool isValid(const QString &pattern) const;
+//    void parse(const QString &str, RoomObject *room);
+//    bool tryParse(const QVariant &usage, RoomObject *room);
 
-//    const Card *card;
-//    Player *from;
-//    QList<Player *> to;
-//    bool m_isOwnerUse;
-//    bool m_addHistory;
-//    bool m_isHandcard;
-//    QStringList nullptrified_list;
-    QSgsEnum::CardUseReason m_reason;
+    const Card *card;
+    Player *from;
+    QList<Player *> to;
+    bool isOwnerUse;
+    bool addHistory;
+    bool isHandcard;
+    QStringList nullptrifiedList;
+    QSgsEnum::CardUseReason reason;
+
+    QJsonValue toJson() const;
+
+    static CardUseStruct fromJson(const QJsonValue &value);
 };
 
 struct LIBQSGSGAMELOGIC_EXPORT SkillInvokeStruct
 {
     // Skill, player, skillowner, target, card
     // use to describe ProactiveSkill
+
+    SkillInvokeStruct();
+
+    QString skillName;
+
+    Player *invoker;
+    Player *owner;
+
+    QList<Player *> targets;
+    QList<Card *> cards;
+
+    QJsonValue toJson() const;
+
+    static SkillInvokeStruct fromJson(const QJsonValue &value);
 
 };
 
@@ -115,6 +144,21 @@ struct LIBQSGSGAMELOGIC_EXPORT SkillTriggerStruct
     // Skill, player, skillowner, and other sth.
     // like SkillInvokeDetail in TouhouSatsu, but we use a more suitable name here
 
+
+    SkillTriggerStruct();
+
+    QString skill; // the skill
+    Player *owner; // skill owner. 2 structs with the same skill and skill owner are treated as of a same skill.
+    Player *invoker; // skill invoker. When invoking skill, we sort firstly according to the priority, then the seat of invoker, at last weather it is a skill of an equip.
+    QList<Player *> targets; // skill targets.
+    bool isCompulsory; // judge the skill is compulsory or not. It is set in the skill's triggerable
+    bool triggered; // judge whether the skill is triggered
+    Player *preferredTarget; // the preferred target of a certain skill
+    QVariantMap tag; // used to add a tag to the struct. useful for skills like Tieqi and Liegong to save a QVariantList for assisting to assign targets
+
+    QJsonValue toJson() const;
+
+    static SkillTriggerStruct fromJson(const QJsonValue &value);
 };
 
 class LIBQSGSGAMELOGIC_EXPORT CardMovement
@@ -283,25 +327,37 @@ struct LIBQSGSGAMELOGIC_EXPORT DyingStruct
 {
     DyingStruct();
 
-//    Player *who; // who is ask for help
-//    DamageStruct *damage; // if it is nullptr that means the dying is caused by losing hp
+    Player *who; // who is ask for help
+    DamageStruct *damage; // if it is nullptr that means the dying is caused by losing hp
+
+    QJsonValue toJson() const;
+
+    static DyingStruct fromJson(const QJsonValue &value);
 };
 
 struct LIBQSGSGAMELOGIC_EXPORT DeathStruct
 {
     DeathStruct();
 
-//    Player *who; // who is dead
-//    DamageStruct *damage; // if it is nullptr that means the dying is caused by losing hp
+    Player *who; // who is dead
+    DamageStruct *damage; // if it is nullptr that means the dying is caused by losing hp
+
+    QJsonValue toJson() const;
+
+    static DeathStruct fromJson(const QJsonValue &value);
 };
 
 struct LIBQSGSGAMELOGIC_EXPORT RecoverStruct
 {
     RecoverStruct();
 
-//    int recover;
-//    Player *who;
-//    const Card *card;
+    int recover;
+    Player *who;
+    const Card *card;
+
+    QJsonValue toJson() const;
+
+    static RecoverStruct fromJson(const QJsonValue &value);
 };
 
 struct LIBQSGSGAMELOGIC_EXPORT PindianStruct
