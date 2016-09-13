@@ -408,3 +408,93 @@
 //{
 //    return "treasure";
 //}
+
+QSgsEnum::CardType BasicCard::typeId() const
+{
+    return QSgsEnum::CardType::Basic;
+}
+
+TrickCard::TrickCard(const QString &name)
+    : CardFace(name)
+{
+
+}
+
+QSgsEnum::CardType TrickCard::typeId() const
+{
+    return QSgsEnum::CardType::Trick;
+}
+
+bool TrickCard::isCancelable(const CardEffectStruct &effect) const
+{
+    return false;
+}
+
+EquipCard::EquipCard(const QString &name)
+    : CardFace(name)
+{
+
+}
+
+QSgsEnum::CardType EquipCard::typeId() const
+{
+    return QSgsEnum::CardType::Equip;
+}
+
+bool EquipCard::isAvailable(const Player *player) const
+{
+    return false;
+}
+
+void EquipCard::onUse(RoomObject *room, const CardUseStruct &card_use) const
+{
+
+}
+
+void EquipCard::use(RoomObject *room, Player *source, QList<Player *> &targets) const
+{
+
+}
+
+QSgsEnum::EquipLocation Weapon::location() const
+{
+    return QSgsEnum::EquipLocation::Weapon;
+}
+
+QSgsEnum::EquipLocation Armor::location() const
+{
+    return QSgsEnum::EquipLocation::Armor;
+}
+
+OffensiveHorse::OffensiveHorse(const QString &name, int correct)
+    : Horse(name, correct)
+{
+
+}
+
+QSgsEnum::EquipLocation OffensiveHorse::location() const
+{
+    return QSgsEnum::EquipLocation::OffensiveHorse;
+}
+
+DefensiveHorse::DefensiveHorse(const QString &name, int correct)
+    : Horse(name, correct)
+{
+
+}
+
+QSgsEnum::EquipLocation DefensiveHorse::location() const
+{
+    return QSgsEnum::EquipLocation::DefensiveHorse;
+}
+
+QSgsEnum::EquipLocation Treasure::location() const
+{
+    return QSgsEnum::EquipLocation::Treasure;
+}
+
+Horse::Horse(const QString &name, int correct)
+    : EquipCard(name), m_correct(correct)
+{
+
+}
