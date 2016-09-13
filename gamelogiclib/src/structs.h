@@ -130,13 +130,13 @@ struct LIBQSGSGAMELOGIC_EXPORT SkillInvokeStruct
 
     SkillInvokeStruct();
 
-    QString skillName;
+//    QString skillName;
 
-    Player *invoker;
-    Player *owner;
+//    Player *invoker;
+//    Player *owner;
 
-    QList<Player *> targets;
-    QList<Card *> cards;
+//    QList<Player *> targets;
+//    QList<Card *> cards;
 
     QJsonValue toJson() const;
 
@@ -152,14 +152,14 @@ struct LIBQSGSGAMELOGIC_EXPORT SkillTriggerStruct
 
     SkillTriggerStruct();
 
-    QString skill; // the skill
-    Player *owner; // skill owner. 2 structs with the same skill and skill owner are treated as of a same skill.
-    Player *invoker; // skill invoker. When invoking skill, we sort firstly according to the priority, then the seat of invoker, at last weather it is a skill of an equip.
-    QList<Player *> targets; // skill targets.
-    bool isCompulsory; // judge the skill is compulsory or not. It is set in the skill's triggerable
-    bool triggered; // judge whether the skill is triggered
-    Player *preferredTarget; // the preferred target of a certain skill
-    QVariantMap tag; // used to add a tag to the struct. useful for skills like Tieqi and Liegong to save a QVariantList for assisting to assign targets
+//    QString skill; // the skill
+//    Player *owner; // skill owner. 2 structs with the same skill and skill owner are treated as of a same skill.
+//    Player *invoker; // skill invoker. When invoking skill, we sort firstly according to the priority, then the seat of invoker, at last weather it is a skill of an equip.
+//    QList<Player *> targets; // skill targets.
+//    bool isCompulsory; // judge the skill is compulsory or not. It is set in the skill's triggerable
+//    bool triggered; // judge whether the skill is triggered
+//    Player *preferredTarget; // the preferred target of a certain skill
+//    QVariantMap tag; // used to add a tag to the struct. useful for skills like Tieqi and Liegong to save a QVariantList for assisting to assign targets
 
     QJsonValue toJson() const;
 

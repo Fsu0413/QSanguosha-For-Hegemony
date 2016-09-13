@@ -416,7 +416,7 @@ AskForMoveCardsStruct::AskForMoveCardsStruct()
 }
 
 SkillInvokeStruct::SkillInvokeStruct()
-    :invoker(nullptr), owner(nullptr), skillName(QString())
+    //:invoker(nullptr), owner(nullptr), skillName(QString())
 {
 }
 
@@ -431,7 +431,7 @@ SkillInvokeStruct SkillInvokeStruct::fromJson(const QJsonValue &value)
 }
 
 SkillTriggerStruct::SkillTriggerStruct()
-    :invoker(nullptr), owner(nullptr), preferredTarget(nullptr), skill(QString())
+    //:invoker(nullptr), owner(nullptr), preferredTarget(nullptr), skill(QString())
 {
 
 }
