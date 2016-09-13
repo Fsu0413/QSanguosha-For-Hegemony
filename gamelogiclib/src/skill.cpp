@@ -21,7 +21,7 @@
 #include "skill.h"
 #include "player.h"
 #include "scenario.h"
-
+#include "roomobject.h"
 #include "card.h"
 
 class SkillPrivate
@@ -502,18 +502,74 @@ bool DrawCardsSkill::cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room,
     return TriggerSkill::cost(triggerEvent, room, invoke, player, data);
 }
 
+class FakeMoveSkillPrivate
+{
+public:
+    QString origSkillName;
+};
 
-//GameStartSkill::GameStartSkill(const QString &name)
-//    : TriggerSkill(name)
-//{
-//    m_events << GameStart;
-//}
+FakeMoveSkill::FakeMoveSkill(const QString &originalSkillName, QSgsEnum::SkillPlace place)
+    : TriggerSkill(originalSkillName + QStringLiteral("-FakeMove"), QSgsEnum::SkillFrequency::Compulsory, place), d_ptr_fakeMoveSkill(new FakeMoveSkillPrivate)
+{
+    Q_D(FakeMoveSkill);
+    d->origSkillName = originalSkillName;
+    setVisible(false);
+    setPriority(10);
+    addTriggerEvent(QSgsEnum::TriggerEvent::BeforeCardsMove);
+    addTriggerEvent(QSgsEnum::TriggerEvent::CardsMoveOneTime);
+}
 
-//bool GameStartSkill::effect(TriggerEvent, RoomObject *, ServerPlayer *player, QVariant &, ServerPlayer *) const
-//{
-//    onGameStart(player);
-//    return false;
-//}
+FakeMoveSkill::~FakeMoveSkill()
+{
+    Q_D(FakeMoveSkill);
+    delete d;
+}
+
+QList<SkillTriggerStruct> FakeMoveSkill::triggerable(QSgsEnum::TriggerEvent, const RoomObject *room, const Player *, const QVariant &) const
+{
+    Q_D(const FakeMoveSkill);
+    foreach (const Player *p, room->players()) {
+        if (p->isAlive() && p->hasFlag(d->origSkillName + QStringLiteral("_InTempMoving")) && p->hasSkill(this, true))
+            return QList<SkillTriggerStruct>(); // @Todo_Fs: return a meaningful SkillTriggerStruct
+    }
+
+    return QList<SkillTriggerStruct>();
+}
+
+bool FakeMoveSkill::cost(QSgsEnum::TriggerEvent, RoomObject *, QSharedPointer<SkillTriggerStruct>, Player *, QVariant &) const
+{
+    return true;
+}
+
+bool FakeMoveSkill::effect(QSgsEnum::TriggerEvent, RoomObject *, QSharedPointer<SkillTriggerStruct>, Player *, QVariant &) const
+{
+    return true;
+}
+
+
+EquipSkill::EquipSkill(const QString &name, QSgsEnum::SkillFrequency frequency)
+    : TriggerSkill(name, frequency, QSgsEnum::SkillPlace::None)
+{
+
+}
+
+WeaponSkill::WeaponSkill(const QString &name, QSgsEnum::SkillFrequency frequency)
+    : EquipSkill(name, frequency)
+{
+
+}
+
+ArmorSkill::ArmorSkill(const QString &name, QSgsEnum::SkillFrequency frequency)
+    : EquipSkill(name, frequency)
+{
+
+}
+
+TreasureSkill::TreasureSkill(const QString &name, QSgsEnum::SkillFrequency frequency)
+    : EquipSkill(name, frequency)
+{
+
+}
 
 //BattleArraySkill::BattleArraySkill(const QString &name, const QSgsEnum::ArrayType type)
 //    : TriggerSkill(name), m_arrayType(type)

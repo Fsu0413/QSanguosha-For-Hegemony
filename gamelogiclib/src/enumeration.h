@@ -123,6 +123,7 @@ enum class SkillFrequency
 
 enum class SkillPlace
 {
+    None = 0, // Used for acquire-only and equipment skills
     Head = 1,
     Deputy = 2,
     Both = 3

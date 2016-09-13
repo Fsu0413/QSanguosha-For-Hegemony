@@ -57,6 +57,7 @@ public:
 
 protected:
     explicit Skill(const QString &name, QSgsEnum::SkillFrequency frequency = QSgsEnum::SkillFrequency::NotFrequent, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both);
+
     Q_DECLARE_PRIVATE(Skill)
     SkillPrivate *d_ptr;
 };
@@ -68,7 +69,6 @@ class LIBQSGSGAMELOGIC_EXPORT ViewAsSkill : public Skill
     Q_OBJECT
 
 public:
-    explicit ViewAsSkill(const QString &name, QSgsEnum::SkillFrequency frequency = QSgsEnum::SkillFrequency::NotFrequent, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both);
     virtual ~ViewAsSkill() override;
 
     virtual bool viewFilter(const QList<Card *> &selected, Card *to_select, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const = 0;
@@ -86,6 +86,8 @@ public:
     void setResponsePattern(const QString &pattern);
 
 protected:
+    explicit ViewAsSkill(const QString &name, QSgsEnum::SkillFrequency frequency = QSgsEnum::SkillFrequency::NotFrequent, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both);
+
     Q_DECLARE_PRIVATE_D(d_ptr_viewAsSkill, ViewAsSkill)
     ViewAsSkillPrivate *d_ptr_viewAsSkill;
 };
@@ -95,12 +97,13 @@ class LIBQSGSGAMELOGIC_EXPORT ZeroCardViewAsSkill : public ViewAsSkill
     Q_OBJECT
 
 public:
-    explicit ZeroCardViewAsSkill(const QString &name, QSgsEnum::SkillFrequency frequency = QSgsEnum::SkillFrequency::NotFrequent, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both);
-
-    virtual bool viewFilter(const QList<Card *> &selected, Card *toSelect, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const final override;
-    virtual Card *viewAs(const QList<Card *> &cards, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const final override;
+    bool viewFilter(const QList<Card *> &selected, Card *toSelect, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const final override;
+    Card *viewAs(const QList<Card *> &cards, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const final override;
 
     virtual Card *viewAs(const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const = 0;
+
+protected:
+    explicit ZeroCardViewAsSkill(const QString &name, QSgsEnum::SkillFrequency frequency = QSgsEnum::SkillFrequency::NotFrequent, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both);
 };
 
 class OneCardViewAsSkillPrivate;
@@ -110,16 +113,17 @@ class LIBQSGSGAMELOGIC_EXPORT OneCardViewAsSkill : public ViewAsSkill
     Q_OBJECT
 
 public:
-    explicit OneCardViewAsSkill(const QString &name, QSgsEnum::SkillFrequency frequency = QSgsEnum::SkillFrequency::NotFrequent, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both);
     virtual ~OneCardViewAsSkill() override;
 
-    virtual bool viewFilter(const QList<Card *> &selected, Card *toSelect, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const final override;
-    virtual Card *viewAs(const QList<Card *> &cards, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const final override;
+    bool viewFilter(const QList<Card *> &selected, Card *toSelect, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const final override;
+    Card *viewAs(const QList<Card *> &cards, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const final override;
 
     virtual bool viewFilter(Card *card, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const;
     virtual Card *viewAs(Card *originalCard, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const = 0;
 
 protected:
+    explicit OneCardViewAsSkill(const QString &name, QSgsEnum::SkillFrequency frequency = QSgsEnum::SkillFrequency::NotFrequent, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both);
+
     Q_DECLARE_PRIVATE_D(d_ptr_oneCardViewAsSkill, OneCardViewAsSkill)
     OneCardViewAsSkillPrivate *d_ptr_oneCardViewAsSkill;
 };
@@ -182,17 +186,18 @@ class LIBQSGSGAMELOGIC_EXPORT MasochismSkill : public TriggerSkill
     Q_OBJECT
 
 public:
-    explicit MasochismSkill(const QString &name, QSgsEnum::SkillFrequency frequency = QSgsEnum::SkillFrequency::NotFrequent, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both);
-
-    virtual void record(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, const QVariant &data) const final override;
-    virtual QList<SkillTriggerStruct> triggerable(QSgsEnum::TriggerEvent triggerEvent, const RoomObject *room, const Player *player, const QVariant &data) const final override;
-    virtual bool cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, QVariant &data) const final override;
-    virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, QVariant &data) const final override;
+    void record(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, const QVariant &data) const final override;
+    QList<SkillTriggerStruct> triggerable(QSgsEnum::TriggerEvent triggerEvent, const RoomObject *room, const Player *player, const QVariant &data) const final override;
+    bool cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, QVariant &data) const final override;
+    bool effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, QVariant &data) const final override;
 
     virtual void record(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, const DamageStruct &damage) const;
     virtual QList<SkillTriggerStruct> triggerable(QSgsEnum::TriggerEvent triggerEvent, const RoomObject *room, const Player *player, const DamageStruct &damage) const = 0;
     virtual bool cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, DamageStruct &damage) const;
     virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, DamageStruct &damage) const = 0;
+
+protected:
+    explicit MasochismSkill(const QString &name, QSgsEnum::SkillFrequency frequency = QSgsEnum::SkillFrequency::NotFrequent, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both);
 };
 
 class LIBQSGSGAMELOGIC_EXPORT PhaseChangeSkill : public TriggerSkill
@@ -208,17 +213,77 @@ class LIBQSGSGAMELOGIC_EXPORT DrawCardsSkill : public TriggerSkill
     Q_OBJECT
 
 public:
-    explicit DrawCardsSkill(const QString &name, QSgsEnum::SkillFrequency frequency = QSgsEnum::SkillFrequency::NotFrequent, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both);
-
-    virtual void record(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, const QVariant &data) const final override;
-    virtual QList<SkillTriggerStruct> triggerable(QSgsEnum::TriggerEvent triggerEvent, const RoomObject *room, const Player *player, const QVariant &data) const final override;
-    virtual bool cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, QVariant &data) const final override;
-    virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, QVariant &data) const final override;
+    void record(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, const QVariant &data) const final override;
+    QList<SkillTriggerStruct> triggerable(QSgsEnum::TriggerEvent triggerEvent, const RoomObject *room, const Player *player, const QVariant &data) const final override;
+    bool cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, QVariant &data) const final override;
+    bool effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, QVariant &data) const final override;
 
     virtual void record(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, int n) const;
     virtual QList<SkillTriggerStruct> triggerable(QSgsEnum::TriggerEvent triggerEvent, const RoomObject *room, const Player *player, int n) const = 0;
     virtual bool cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, int &n) const;
     virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, int &n) const = 0;
+
+protected:
+    explicit DrawCardsSkill(const QString &name, QSgsEnum::SkillFrequency frequency = QSgsEnum::SkillFrequency::NotFrequent, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both);
+};
+
+
+// a nasty way for 'fake moves', usually used in the process of multi-card chosen. IT IS A FINAL CLASS NOW
+class FakeMoveSkillPrivate;
+class LIBQSGSGAMELOGIC_EXPORT FakeMoveSkill final: public TriggerSkill
+{
+    Q_OBJECT
+
+public:
+    explicit FakeMoveSkill(const QString &originalSkillName, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both); // frequency is limited to Compulsory
+    ~FakeMoveSkill() final override;
+
+    QList<SkillTriggerStruct> triggerable(QSgsEnum::TriggerEvent triggerEvent, const RoomObject *room, const Player *player, const QVariant &data) const final override;
+    bool cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, QVariant &data) const final override;
+    bool effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, QVariant &data) const final override;
+
+private:
+    Q_DECLARE_PRIVATE_D(d_ptr_fakeMoveSkill, FakeMoveSkill)
+    FakeMoveSkillPrivate *d_ptr_fakeMoveSkill;
+};
+
+class LIBQSGSGAMELOGIC_EXPORT EquipSkill : public TriggerSkill
+{
+    Q_OBJECT
+
+protected:
+    explicit EquipSkill(const QString &name, QSgsEnum::SkillFrequency frequency = QSgsEnum::SkillFrequency::NotFrequent);
+};
+
+class LIBQSGSGAMELOGIC_EXPORT WeaponSkill : public EquipSkill
+{
+    Q_OBJECT
+
+protected:
+    explicit WeaponSkill(const QString &name, QSgsEnum::SkillFrequency frequency = QSgsEnum::SkillFrequency::NotFrequent);
+};
+
+class LIBQSGSGAMELOGIC_EXPORT ArmorSkill : public EquipSkill
+{
+    Q_OBJECT
+
+protected:
+    explicit ArmorSkill(const QString &name, QSgsEnum::SkillFrequency frequency = QSgsEnum::SkillFrequency::NotFrequent);
+};
+
+class LIBQSGSGAMELOGIC_EXPORT TreasureSkill : public EquipSkill
+{
+    Q_OBJECT
+
+protected:
+    explicit TreasureSkill(const QString &name, QSgsEnum::SkillFrequency frequency = QSgsEnum::SkillFrequency::NotFrequent);
+};
+
+class LIBQSGSGAMELOGIC_EXPORT ProactiveSkill : public Skill
+{
+    Q_OBJECT
+
+
 };
 
 class LIBQSGSGAMELOGIC_EXPORT BattleArraySkill : public TriggerSkill
@@ -289,14 +354,10 @@ class LIBQSGSGAMELOGIC_EXPORT TargetModSkill : public Skill
 
 public:
     TargetModSkill(const QString &name);
-    virtual QString pattern() const;
 
     virtual int residueNum(const Player *from, Card *card) const;
     virtual int distanceLimit(const Player *from, Card *card) const;
     virtual int extraTargetNum(const Player *from, Card *card) const;
-
-protected:
-    QString m_pattern;
 };
 
 class LIBQSGSGAMELOGIC_EXPORT SlashNoDistanceLimitSkill : public TargetModSkill
@@ -324,59 +385,6 @@ public:
 };
 
 
-// a nasty way for 'fake moves', usually used in the process of multi-card chosen
-class LIBQSGSGAMELOGIC_EXPORT FakeMoveSkill : public TriggerSkill
-{
-    Q_OBJECT
-
-public:
-    FakeMoveSkill(const QString &skillname);
-
-    virtual int priority() const;
-    virtual QStringList triggerable(QSgsEnum::TriggerEvent, RoomObject *, Player *target, QVariant &, Player * &ask_who) const;
-    virtual bool effect(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, Player *player, QVariant &data, Player *ask_who = nullptr) const;
-
-private:
-    QString m_name;
-};
-
-class LIBQSGSGAMELOGIC_EXPORT EquipSkill : public TriggerSkill
-{
-    Q_OBJECT
-};
-
-class LIBQSGSGAMELOGIC_EXPORT WeaponSkill : public EquipSkill
-{
-    Q_OBJECT
-
-public:
-    WeaponSkill(const QString &name);
-
-    virtual int priority() const;
-    virtual bool triggerable(const Player *target) const;
-};
-
-class LIBQSGSGAMELOGIC_EXPORT ArmorSkill : public EquipSkill
-{
-    Q_OBJECT
-
-public:
-    ArmorSkill(const QString &name);
-
-    virtual int priority() const;
-    virtual bool triggerable(const Player *target) const;
-};
-
-class LIBQSGSGAMELOGIC_EXPORT TreasureSkill : public EquipSkill
-{
-    Q_OBJECT
-
-public:
-    TreasureSkill(const QString &name);
-
-    virtual int priority() const;
-    virtual bool triggerable(const Player *target) const;
-};
 
 #endif
 
