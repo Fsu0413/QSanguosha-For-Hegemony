@@ -24,11 +24,10 @@
 #include "libqsgsgamelogicglobal.h"
 #include "enumeration.h"
 #include "structs.h"
-#include "player.h"
 
 class Card;
 class RoomObject;
-
+class Player;
 class SkillPrivate;
 
 class LIBQSGSGAMELOGIC_EXPORT Skill : public QObject
@@ -90,6 +89,46 @@ protected:
 
     Q_DECLARE_PRIVATE_D(d_ptr_viewAsSkill, ViewAsSkill)
     ViewAsSkillPrivate *d_ptr_viewAsSkill;
+};
+
+// In this form ProactiveSkill generates a generic skill cardface
+// One can override ViewAs which generates other cards
+class LIBQSGSGAMELOGIC_EXPORT ProactiveSkill : public ViewAsSkill
+{
+    Q_OBJECT
+
+public:
+    // default is zero-card
+    virtual bool cardFilter(const QList<Card *> &selected, Card *toSelect, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const;
+    virtual bool cardFeasible(const QList<Card *> &selected, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const;
+
+    // default is an other player
+    virtual bool playerFilter(const QList<Player *> &selected, Player *toSelect, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern, int *maxVotes = nullptr) const;
+    virtual bool playerFeasible(const QList<Player *> &selected, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern, int *maxVotes = nullptr) const;
+
+    // default for cost is no-op
+    virtual void cost(const SkillInvokeStruct &invoke) const;
+    virtual void effect(const SkillInvokeStruct &invoke) const = 0;
+
+protected:
+    explicit ProactiveSkill(const QString &name, QSgsEnum::SkillFrequency frequency = QSgsEnum::SkillFrequency::NotFrequent, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both);
+
+    virtual bool viewFilter(const QList<Card *> &selected, Card *to_select, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const override;
+    virtual Card *viewAs(const QList<Card *> &cards, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const override;
+};
+
+// Note: The effect of BattleArraySkill is designed in other skills, this skill only do summon friends
+class LIBQSGSGAMELOGIC_EXPORT BattleArraySkill final: public ProactiveSkill
+{
+    Q_OBJECT
+
+public:
+    explicit BattleArraySkill(const QString &name, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both);
+
+    bool playerFilter(const QList<Player *> &selected, Player *toSelect, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern, int *maxVotes) const final override;
+    bool playerFeasible(const QList<Player *> &selected, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern, int *maxVotes) const final override;
+
+    void effect(const SkillInvokeStruct &invoke) const final override;
 };
 
 class LIBQSGSGAMELOGIC_EXPORT ZeroCardViewAsSkill : public ViewAsSkill
@@ -279,43 +318,36 @@ protected:
     explicit TreasureSkill(const QString &name, QSgsEnum::SkillFrequency frequency = QSgsEnum::SkillFrequency::NotFrequent);
 };
 
-class LIBQSGSGAMELOGIC_EXPORT ProactiveSkill : public Skill
-{
-    Q_OBJECT
+//class LIBQSGSGAMELOGIC_EXPORT BattleArraySkill : public TriggerSkill
+//{
+//    Q_OBJECT
 
+//public:
 
-};
+//    BattleArraySkill(const QString &name, const QSgsEnum::ArrayType type);
+//    virtual bool triggerable(const Player *player) const;
 
-class LIBQSGSGAMELOGIC_EXPORT BattleArraySkill : public TriggerSkill
-{
-    Q_OBJECT
+//    virtual void summonFriends(Player *player) const;
 
-public:
+//    inline QSgsEnum::ArrayType getArrayType() const
+//    {
+//        return m_arrayType;
+//    }
+//private:
+//    QSgsEnum::ArrayType m_arrayType;
+//};
 
-    BattleArraySkill(const QString &name, const QSgsEnum::ArrayType type);
-    virtual bool triggerable(const Player *player) const;
+//class LIBQSGSGAMELOGIC_EXPORT ArraySummonSkill : public ZeroCardViewAsSkill
+//{
+//    Q_OBJECT
 
-    virtual void summonFriends(Player *player) const;
+//public:
 
-    inline QSgsEnum::ArrayType getArrayType() const
-    {
-        return m_arrayType;
-    }
-private:
-    QSgsEnum::ArrayType m_arrayType;
-};
+//    ArraySummonSkill(const QString &name);
 
-class LIBQSGSGAMELOGIC_EXPORT ArraySummonSkill : public ZeroCardViewAsSkill
-{
-    Q_OBJECT
-
-public:
-
-    ArraySummonSkill(const QString &name);
-
-    Card *viewAs() const;
-    virtual bool isEnabledAtPlay(const Player *player) const;
-};
+//    Card *viewAs() const;
+//    virtual bool isEnabledAtPlay(const Player *player) const;
+//};
 
 class LIBQSGSGAMELOGIC_EXPORT ProhibitSkill : public Skill
 {

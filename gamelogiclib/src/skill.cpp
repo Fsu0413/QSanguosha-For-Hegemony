@@ -194,13 +194,13 @@ bool ViewAsSkill::isAvailable(const Player *invoker, QSgsEnum::CardUseReason rea
     return false;
 }
 
-bool ViewAsSkill::isEnabledAtPlay(const Player *player) const
+bool ViewAsSkill::isEnabledAtPlay(const Player *) const
 {
     Q_D(const ViewAsSkill);
     return d->responsePattern.isEmpty();
 }
 
-bool ViewAsSkill::isEnabledAtResponse(const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const
+bool ViewAsSkill::isEnabledAtResponse(const Player *, QSgsEnum::CardUseReason, const QString &pattern) const
 {
     Q_D(const ViewAsSkill);
     if (!d->responsePattern.isEmpty()) {
@@ -211,7 +211,7 @@ bool ViewAsSkill::isEnabledAtResponse(const Player *player, QSgsEnum::CardUseRea
     return false;
 }
 
-bool ViewAsSkill::isEnabledAtNullification(const Player *player) const
+bool ViewAsSkill::isEnabledAtNullification(const Player *) const
 {
     return false;
 }
@@ -258,13 +258,71 @@ void ViewAsSkill::setResponsePattern(const QString &pattern)
 }
 
 
+ProactiveSkill::ProactiveSkill(const QString &name, QSgsEnum::SkillFrequency frequency, QSgsEnum::SkillPlace place)
+    : ViewAsSkill(name, frequency, place)
+{
+
+}
+
+bool ProactiveSkill::cardFilter(const QList<Card *> &, Card *, const Player *, QSgsEnum::CardUseReason, const QString &) const
+{
+    return false;
+}
+
+bool ProactiveSkill::cardFeasible(const QList<Card *> &, const Player *, QSgsEnum::CardUseReason, const QString &) const
+{
+    return true;
+}
+
+bool ProactiveSkill::playerFilter(const QList<Player *> &selected, Player *toSelect, const Player *player, QSgsEnum::CardUseReason, const QString &, int *) const
+{
+    return selected.isEmpty() && toSelect != player;
+}
+
+bool ProactiveSkill::playerFeasible(const QList<Player *> &selected, const Player *, QSgsEnum::CardUseReason, const QString &, int *) const
+{
+    return !selected.isEmpty();
+}
+
+void ProactiveSkill::cost(const SkillInvokeStruct &) const
+{
+    // no-op
+}
+
+
+bool ProactiveSkill::viewFilter(const QList<Card *> &selected, Card *to_select, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const
+{
+    return cardFilter(selected, to_select, player, reason, pattern);
+}
+
+Card *ProactiveSkill::viewAs(const QList<Card *> &cards, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const
+{
+    // @todo_Fs: generate a Card using SkillCardFace
+    return nullptr;
+}
+
+bool BattleArraySkill::playerFilter(const QList<Player *> &, Player *, const Player *, QSgsEnum::CardUseReason, const QString &, int *) const
+{
+    return false;
+}
+
+bool BattleArraySkill::playerFeasible(const QList<Player *> &, const Player *, QSgsEnum::CardUseReason, const QString &, int *) const
+{
+    return true;
+}
+
+void BattleArraySkill::effect(const SkillInvokeStruct &invoke) const
+{
+    // @todo_Fs: SkillInvokeStruct and array summon
+}
+
 ZeroCardViewAsSkill::ZeroCardViewAsSkill(const QString &name, QSgsEnum::SkillFrequency frequency, QSgsEnum::SkillPlace place)
     : ViewAsSkill(name, frequency, place)
 {
 
 }
 
-bool ZeroCardViewAsSkill::viewFilter(const QList<Card *> &selected, Card *toSelect, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const
+bool ZeroCardViewAsSkill::viewFilter(const QList<Card *> &, Card *, const Player *, QSgsEnum::CardUseReason , const QString &) const
 {
     return false;
 }
@@ -428,7 +486,7 @@ void MasochismSkill::record(QSgsEnum::TriggerEvent, RoomObject *, Player *, cons
     // Apperantly, this function should be a no-op.
 }
 
-bool MasochismSkill::cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, DamageStruct &damage) const
+bool MasochismSkill::cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, DamageStruct &) const
 {
     // Apperantly, the function of TriggerSkill is a default realization. i.e. it can't be aware of data
     QVariant data;
@@ -495,7 +553,7 @@ void DrawCardsSkill::record(QSgsEnum::TriggerEvent, RoomObject *, Player *, int)
     // Apperantly, this function should be a no-op.
 }
 
-bool DrawCardsSkill::cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, int &n) const
+bool DrawCardsSkill::cost(QSgsEnum::TriggerEvent triggerEvent, RoomObject *room, QSharedPointer<SkillTriggerStruct> invoke, Player *player, int &) const
 {
     // Apperantly, the function of TriggerSkill is a default realization. i.e. it can't be aware of data
     QVariant data;
@@ -845,4 +903,3 @@ TreasureSkill::TreasureSkill(const QString &name, QSgsEnum::SkillFrequency frequ
 //        return false;
 //    return target->hasTreasure(objectName());
 //}
-
