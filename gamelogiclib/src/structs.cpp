@@ -19,6 +19,9 @@
     *********************************************************************/
 
 #include "structs.h"
+#include "player.h"
+#include "card.h"
+
 //#include "json.h"
 //#include "exppattern.h"
 //#include "room.h"
@@ -156,12 +159,75 @@ DamageStruct::DamageStruct(const QString &reason, Player *from, Player *to, int 
 
 QJsonValue DamageStruct::toJson() const
 {
-    return QJsonValue();
+    QJsonValue v;
+    if (to == nullptr)
+        return v;
+
+    if (damage == 0)
+        return v;
+
+    QJsonObject ob;
+    ob.insert(QStringLiteral("structType"), QStringLiteral("DamageStruct"));
+
+    if (from != nullptr)
+        ob.insert(QStringLiteral("from"), from->objectName());
+    else
+        ob.insert(QStringLiteral("from"), QString());
+    ob.insert(QStringLiteral("to"), to->objectName());
+    if (card != nullptr)
+        ob.insert(QStringLiteral("card"), card->id()); // seems like a virtual card must have unique IDs....@todo_Fs
+    else
+        ob.insert(QStringLiteral("card"), 0);
+    ob.insert(QStringLiteral("damage"), damage);
+    ob.insert(QStringLiteral("nature"), static_cast<int>(nature));
+    ob.insert(QStringLiteral("chain"), chain);
+    ob.insert(QStringLiteral("transfer"), transfer);
+    ob.insert(QStringLiteral("byUser"), byUser);
+    ob.insert(QStringLiteral("reason"), reason);
+    ob.insert(QStringLiteral("transferReason"), transferReason);
+    ob.insert(QStringLiteral("prevented"), prevented);
+
+    return ob;
 }
 
 DamageStruct DamageStruct::fromJson(const QJsonValue &value)
 {
-    return DamageStruct();
+    DamageStruct r;
+    if (!value.isObject())
+        return r;
+
+    QJsonObject ob = value.toObject();
+    if (ob.value(QStringLiteral("structType")) != QStringLiteral("DamageStruct"))
+        return r;
+
+    QString strTo = ob.value(QStringLiteral("to")).toString();
+    if (strTo.isNull() || strTo.isEmpty())
+        return r;
+
+    int intDamage = ob.value(QStringLiteral("damage")).toInt();
+    if (intDamage == 0)
+        return r;
+
+    QString strFrom = ob.value(QStringLiteral("from")).toString();
+    if (!strFrom.isNull() && !strFrom.isEmpty())
+        r.from = nullptr; // @todo_Fs: RoomObject?? // roomObject->getPlayer(strFrom);
+
+    r.to = nullptr; // @todo_Fs: RoomObject?? // roomObject->getPlayer(strTo);
+
+    int intCard = ob.value(QStringLiteral("card")).toInt();
+    if (intCard != 0)
+        r.card = nullptr; // @todo_Fs: RoomObject??  // roomObject->getCard(intCard);
+
+    r.damage = intDamage;
+    r.nature = static_cast<QSgsEnum::DamageNature>(ob.value(QStringLiteral("nature")).toInt());
+    r.chain = ob.value(QStringLiteral("chain")).toBool();
+    r.transfer = ob.value(QStringLiteral("transfer")).toBool();
+    r.byUser = ob.value(QStringLiteral("byUser")).toBool();
+    r.reason = ob.value(QStringLiteral("reason")).toString();
+    r.transferReason = ob.value(QStringLiteral("transferReason")).toString();
+    r.prevented = ob.value(QStringLiteral("prevented")).toBool();
+
+    return r;
 }
 
 CardEffectStruct::CardEffectStruct()
