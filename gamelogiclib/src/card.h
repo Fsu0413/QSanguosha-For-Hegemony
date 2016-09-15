@@ -101,6 +101,7 @@ public:
 
     const QStringList &flags() const;
 
+    const CardFace *cardFace() const;
     const QString &cardFaceName() const;
 
     // static functions

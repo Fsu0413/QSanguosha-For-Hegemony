@@ -675,280 +675,98 @@ TreasureSkill::TreasureSkill(const QString &name, QSgsEnum::SkillFrequency frequ
 
 }
 
-//BattleArraySkill::BattleArraySkill(const QString &name, const QSgsEnum::ArrayType type)
-//    : TriggerSkill(name), m_arrayType(type)
-//{
-//    if (!inherits("LuaBattleArraySkill")) //extremely dirty hack!!!
-//        m_viewAsSkill = new ArraySummonSkill(objectName());
-//}
+ProhibitSkill::ProhibitSkill(const QString &name, QSgsEnum::SkillPlace place)
+    : Skill(name, QSgsEnum::SkillFrequency::Compulsory, place)
+{
 
-//bool BattleArraySkill::triggerable(const ServerPlayer *player) const
-//{
-//    return TriggerSkill::triggerable(player) && player->aliveCount() >= 4;
-//}
+}
 
-//void BattleArraySkill::summonFriends(ServerPlayer *player) const
-//{
-//    player->summonFriends(m_arrayType);
-//}
+DistanceSkill::DistanceSkill(const QString &name, QSgsEnum::SkillPlace place)
+    : Skill(name, QSgsEnum::SkillFrequency::Compulsory, place)
+{
 
-//ArraySummonSkill::ArraySummonSkill(const QString &name)
-//    : ZeroCardViewAsSkill(name)
-//{
+}
 
-//}
+MaxCardsSkill::MaxCardsSkill(const QString &name, QSgsEnum::SkillPlace place)
+    : Skill(name, QSgsEnum::SkillFrequency::Compulsory, place)
+{
 
-//const Card *ArraySummonSkill::viewAs() const
-//{
-//    QString name = objectName();
-//    name[0] = name[0].toUpper();
-//    name += "Summon";
-//    Card *card = Sanguosha->cloneSkillCard(name);
-//    card->setShowSkill(objectName());
-//    return card;
-//}
+}
 
-//using namespace HegemonyMode;
-//bool ArraySummonSkill::isEnabledAtPlay(const Player *player) const
-//{
-//    if (player->getAliveSiblings().length() < 3) return false;
-//    if (player->hasFlag("Global_SummonFailed")) return false;
-//    const BattleArraySkill *skill = qobject_cast<const BattleArraySkill *>(Sanguosha->getTriggerSkill(objectName()));
-//    if (skill) {
-//        ArrayType type = skill->getArrayType();
-//        switch (type) {
-//            case Siege: {
-//                if (player->willBeFriendWith(player->nextAlive())
-//                    && player->willBeFriendWith(player->lastAlive()))
-//                    return false;
-//                if (!player->willBeFriendWith(player->nextAlive())) {
-//                    if (!player->nextAlive(2)->hasShownOneGeneral() && player->nextAlive()->hasShownOneGeneral())
-//                        return true;
-//                }
-//                if (!player->willBeFriendWith(player->lastAlive()))
-//                    return !player->lastAlive(2)->hasShownOneGeneral() && player->lastAlive()->hasShownOneGeneral();
-//                break;
-//            }
-//            case Formation: {
-//                int n = player->aliveCount(false);
-//                int asked = n;
-//                for (int i = 1; i < n; ++i) {
-//                    Player *target = player->nextAlive(i);
-//                    if (player->isFriendWith(target))
-//                        continue;
-//                    else if (!target->hasShownOneGeneral())
-//                        return true;
-//                    else {
-//                        asked = i;
-//                        break;
-//                    }
-//                }
-//                n -= asked;
-//                for (int i = 1; i < n; ++i) {
-//                    Player *target = player->lastAlive(i);
-//                    if (player->isFriendWith(target))
-//                        continue;
-//                    else return !target->hasShownOneGeneral();
-//                }
-//                break;
-//            }
-//        }
-//    }
-//    return false;
-//}
+int MaxCardsSkill::extra(const Player *) const
+{
+    return 0;
+}
 
-//int MaxCardsSkill::getExtra(const ServerPlayer *) const
-//{
-//    return 0;
-//}
+int MaxCardsSkill::fixed(const Player *) const
+{
+    return -1;
+}
 
-//int MaxCardsSkill::getFixed(const ServerPlayer *) const
-//{
-//    return -1;
-//}
+TargetModSkill::TargetModSkill(const QString &name, QSgsEnum::SkillPlace place)
+    : Skill(name, QSgsEnum::SkillFrequency::Compulsory, place)
+{
 
-//ProhibitSkill::ProhibitSkill(const QString &name)
-//    : Skill(name, Skill::Compulsory)
-//{
-//}
+}
 
-//DistanceSkill::DistanceSkill(const QString &name)
-//    : Skill(name, Skill::Compulsory)
-//{
-//}
+int TargetModSkill::residueNum(const Player *, Card *) const
+{
+    return 0;
+}
 
-//MaxCardsSkill::MaxCardsSkill(const QString &name)
-//    : Skill(name, Skill::Compulsory)
-//{
-//}
+int TargetModSkill::distanceLimit(const Player *, Card *) const
+{
+    return 0;
+}
 
-//TargetModSkill::TargetModSkill(const QString &name)
-//    : Skill(name, Skill::Compulsory)
-//{
-//    pattern = "Slash";
-//}
+int TargetModSkill::extraTargetNum(const Player *, Card *) const
+{
+    return 0;
+}
 
-//QString TargetModSkill::pattern() const
-//{
-//    return pattern;
-//}
+class SlashNoDistanceLimitSkillPrivate
+{
+public:
+    QString origSkillName;
+};
 
-//int TargetModSkill::residueNum(const Player *, Card *) const
-//{
-//    return 0;
-//}
+SlashNoDistanceLimitSkill::SlashNoDistanceLimitSkill(const QString &originalSkillName, QSgsEnum::SkillPlace place)
+    : TargetModSkill(originalSkillName + QStringLiteral("-SlashNdl"), place), d_ptr_slashNoDistanceLimitSkill(new SlashNoDistanceLimitSkillPrivate)
+{
+    Q_D(SlashNoDistanceLimitSkill);
+    d->origSkillName = originalSkillName;
+    setVisible(false);
+}
 
-//int TargetModSkill::distanceLimit(const Player *, Card *) const
-//{
-//    return 0;
-//}
+SlashNoDistanceLimitSkill::~SlashNoDistanceLimitSkill()
+{
+    Q_D(SlashNoDistanceLimitSkill);
+    delete d;
+}
 
-//int TargetModSkill::extraTargetNum(const Player *, Card *) const
-//{
-//    return 0;
-//}
+int SlashNoDistanceLimitSkill::distanceLimit(const Player *, Card *card) const
+{
+    Q_D(const SlashNoDistanceLimitSkill);
+    if (card->cardFace()->isKindOf("Slash") && card->skillName() == d->origSkillName)
+        return 1000;
 
-//SlashNoDistanceLimitSkill::SlashNoDistanceLimitSkill(const QString &skill_name)
-//    : TargetModSkill(QString("#%1-slash-ndl").arg(skill_name)), name(skill_name)
-//{
-//}
+    return 0;
+}
 
-//int SlashNoDistanceLimitSkill::distanceLimit(const Player *from, const Card *card) const
-//{
-//    if (from->hasSkill(name) && card->getSkillName() == name)
-//        return 1000;
-//    else
-//        return 0;
-//}
+AttackRangeSkill::AttackRangeSkill(const QString &name, QSgsEnum::SkillPlace place)
+    : Skill(name, QSgsEnum::SkillFrequency::Compulsory, place)
+{
 
-//QString SlashNoDistanceLimitSkill::getName() const
-//{
-//    return name;
-//}
+}
 
-//void SlashNoDistanceLimitSkill::setName(const QString &value)
-//{
-//    name = value;
-//}
+int AttackRangeSkill::extra(const Player *, bool) const
+{
+    return 0;
+}
 
-//AttackRangeSkill::AttackRangeSkill(const QString &name) : Skill(name, Skill::Compulsory)
-//{
-
-//}
-
-//int AttackRangeSkill::extra(const Player *, bool) const
-//{
-//    return 0;
-//}
-
-//int AttackRangeSkill::fixed(const Player *, bool) const
-//{
-//    return -1;
-//}
-
-//FakeMoveSkill::FakeMoveSkill(const QString &name)
-//    : TriggerSkill(QString("#%1-fake-move").arg(name)), name(name)
-//{
-//    m_events << BeforeCardsMove << CardsMoveOneTime;
-//}
-
-//int FakeMoveSkill::m_priority() const
-//{
-//    return 10;
-//}
-
-//QStringList FakeMoveSkill::triggerable(TriggerEvent, RoomObject *, ServerPlayer *target, QVariant &, ServerPlayer * &) const
-//{
-//    return (target != nullptr) ? QStringList(objectName()) : QStringList();
-//}
-
-//bool FakeMoveSkill::effect(TriggerEvent, RoomObject *room, ServerPlayer *, QVariant &, ServerPlayer *) const
-//{
-//    QString flag = QString("%1_InTempMoving").arg(name);
-
-//    foreach(ServerPlayer *p, room->getAllPlayers())
-//        if (p->hasFlag(flag)) return true;
-
-//    return false;
-//}
-
-//DetachEffectSkill::DetachEffectSkill(const QString &skillname, const QString &pilename)
-//    : TriggerSkill(QString("#%1-clear").arg(skillname)), name(skillname), pile_name(pilename)
-//{
-//    m_events << EventLoseSkill;
-//}
-
-//QStringList DetachEffectSkill::triggerable(TriggerEvent, RoomObject *, ServerPlayer *target, QVariant &data, ServerPlayer * &) const
-//{
-//    if (target && data.toString() == name)
-//        return QStringList(objectName());
-//    return QStringList();
-//}
-
-//bool DetachEffectSkill::effect(TriggerEvent, RoomObject *room, ServerPlayer *player, QVariant &, ServerPlayer *) const
-//{
-//    if (!pile_name.isEmpty())
-//        player->clearOnePrivatePile(pile_name);
-//    else
-//        onSkillDetached(room, player);
-
-//    return false;
-//}
-
-//void DetachEffectSkill::onSkillDetached(RoomObject *, ServerPlayer *) const
-//{
-//}
-
-//WeaponSkill::WeaponSkill(const QString &name)
-//    : TriggerSkill(name)
-//{
-//}
-
-//int WeaponSkill::m_priority() const
-//{
-//    return 2;
-//}
-
-//bool WeaponSkill::triggerable(const ServerPlayer *target) const
-//{
-//    if (target == nullptr) return false;
-//    if (target->getMark("Equips_nullptrified_to_Yourself") > 0) return false;
-//    return target->hasWeapon(objectName());
-//}
-
-//ArmorSkill::ArmorSkill(const QString &name)
-//    : TriggerSkill(name)
-//{
-//}
-
-//int ArmorSkill::m_priority() const
-//{
-//    return 2;
-//}
-
-//bool ArmorSkill::triggerable(const ServerPlayer *target) const
-//{
-//    if (target == nullptr)
-//        return false;
-//    return target->hasArmorEffect(objectName());
-//}
-
-//TreasureSkill::TreasureSkill(const QString &name)
-//    : TriggerSkill(name)
-//{
-//}
-
-//int TreasureSkill::m_priority() const
-//{
-//    return 2;
-//}
-
-//bool TreasureSkill::triggerable(const ServerPlayer *target) const
-//{
-//    if (target == nullptr)
-//        return false;
-//    return target->hasTreasure(objectName());
-//}
-
+int AttackRangeSkill::fixed(const Player *, bool) const
+{
+    return -1;
+}
 
 #include "skill.moc"

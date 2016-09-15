@@ -622,6 +622,12 @@ const QStringList &Card::flags() const
     return d->flags;
 }
 
+const CardFace *Card::cardFace() const
+{
+    Q_D(const Card);
+    return d->cardFace;
+}
+
 void Card::addSubcard(int cardId)
 {
     if (cardId < 0)

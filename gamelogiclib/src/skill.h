@@ -118,7 +118,7 @@ protected:
 };
 
 // Note: The effect of BattleArraySkill is designed in other skills, this skill only do summon friends
-class LIBQSGSGAMELOGIC_EXPORT BattleArraySkill final: public ProactiveSkill
+class LIBQSGSGAMELOGIC_EXPORT BattleArraySkill final : public ProactiveSkill
 {
     Q_OBJECT
 
@@ -269,7 +269,7 @@ protected:
 
 // a nasty way for 'fake moves', usually used in the process of multi-card chosen. IT IS A FINAL CLASS NOW
 class FakeMoveSkillPrivate;
-class LIBQSGSGAMELOGIC_EXPORT FakeMoveSkill final: public TriggerSkill
+class LIBQSGSGAMELOGIC_EXPORT FakeMoveSkill final : public TriggerSkill
 {
     Q_OBJECT
 
@@ -318,45 +318,15 @@ protected:
     explicit TreasureSkill(const QString &name, QSgsEnum::SkillFrequency frequency = QSgsEnum::SkillFrequency::NotFrequent);
 };
 
-//class LIBQSGSGAMELOGIC_EXPORT BattleArraySkill : public TriggerSkill
-//{
-//    Q_OBJECT
-
-//public:
-
-//    BattleArraySkill(const QString &name, const QSgsEnum::ArrayType type);
-//    virtual bool triggerable(const Player *player) const;
-
-//    virtual void summonFriends(Player *player) const;
-
-//    inline QSgsEnum::ArrayType getArrayType() const
-//    {
-//        return m_arrayType;
-//    }
-//private:
-//    QSgsEnum::ArrayType m_arrayType;
-//};
-
-//class LIBQSGSGAMELOGIC_EXPORT ArraySummonSkill : public ZeroCardViewAsSkill
-//{
-//    Q_OBJECT
-
-//public:
-
-//    ArraySummonSkill(const QString &name);
-
-//    Card *viewAs() const;
-//    virtual bool isEnabledAtPlay(const Player *player) const;
-//};
-
 class LIBQSGSGAMELOGIC_EXPORT ProhibitSkill : public Skill
 {
     Q_OBJECT
 
 public:
-    ProhibitSkill(const QString &name);
-
     virtual bool isProhibited(const Player *from, const Player *to, Card *card) const = 0;
+
+protected:
+    explicit ProhibitSkill(const QString &name, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both); // frequency is limited to Compulsory
 };
 
 class LIBQSGSGAMELOGIC_EXPORT DistanceSkill : public Skill
@@ -364,9 +334,10 @@ class LIBQSGSGAMELOGIC_EXPORT DistanceSkill : public Skill
     Q_OBJECT
 
 public:
-    DistanceSkill(const QString &name);
+    virtual int correct(const Player *from, const Player *to) const = 0;
 
-    virtual int getCorrect(const Player *from, const Player *to) const = 0;
+protected:
+    explicit DistanceSkill(const QString &name, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both); // frequency is limited to Compulsory
 };
 
 class LIBQSGSGAMELOGIC_EXPORT MaxCardsSkill : public Skill
@@ -374,10 +345,11 @@ class LIBQSGSGAMELOGIC_EXPORT MaxCardsSkill : public Skill
     Q_OBJECT
 
 public:
-    MaxCardsSkill(const QString &name);
+    virtual int extra(const Player *target) const;
+    virtual int fixed(const Player *target) const;
 
-    virtual int getExtra(const Player *target/*, MaxCardsType::MaxCardsCount type = MaxCardsType::Max*/) const;
-    virtual int getFixed(const Player *target/*, MaxCardsType::MaxCardsCount type = MaxCardsType::Max*/) const;
+protected:
+    explicit MaxCardsSkill(const QString &name, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both); // frequency is limited to Compulsory
 };
 
 class LIBQSGSGAMELOGIC_EXPORT TargetModSkill : public Skill
@@ -385,24 +357,28 @@ class LIBQSGSGAMELOGIC_EXPORT TargetModSkill : public Skill
     Q_OBJECT
 
 public:
-    TargetModSkill(const QString &name);
-
     virtual int residueNum(const Player *from, Card *card) const;
     virtual int distanceLimit(const Player *from, Card *card) const;
     virtual int extraTargetNum(const Player *from, Card *card) const;
+
+protected:
+    explicit TargetModSkill(const QString &name, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both); // frequency is limited to Compulsory
 };
 
-class LIBQSGSGAMELOGIC_EXPORT SlashNoDistanceLimitSkill : public TargetModSkill
+class SlashNoDistanceLimitSkillPrivate;
+class LIBQSGSGAMELOGIC_EXPORT SlashNoDistanceLimitSkill final : public TargetModSkill
 {
     Q_OBJECT
 
 public:
-    SlashNoDistanceLimitSkill(const QString &skill_name);
+    explicit SlashNoDistanceLimitSkill(const QString &originalSkillName, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both); // frequency is limited to Compulsory
+    ~SlashNoDistanceLimitSkill() final override;
 
-    virtual int distanceLimit(const Player *from, Card *card) const;
+    int distanceLimit(const Player *from, Card *card) const final override;
 
-protected:
-    QString m_name;
+private:
+    Q_DECLARE_PRIVATE_D(d_ptr_slashNoDistanceLimitSkill, SlashNoDistanceLimitSkill)
+    SlashNoDistanceLimitSkillPrivate *d_ptr_slashNoDistanceLimitSkill;
 };
 
 class LIBQSGSGAMELOGIC_EXPORT AttackRangeSkill : public Skill
@@ -410,10 +386,11 @@ class LIBQSGSGAMELOGIC_EXPORT AttackRangeSkill : public Skill
     Q_OBJECT
 
 public:
-    AttackRangeSkill(const QString &name);
+    virtual int extra(const Player *target, bool include_weapon = true) const;
+    virtual int fixed(const Player *target, bool include_weapon = true) const;
 
-    virtual int extra(const Player *target, bool include_weapon) const;
-    virtual int fixed(const Player *target, bool include_weapon) const;
+protected:
+    explicit AttackRangeSkill(const QString &name, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both); // frequency is limited to Compulsory
 };
 
 
