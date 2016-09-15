@@ -59,9 +59,9 @@ system("swig -version") {
 TEMPLATE = subdirs
 
 SUBDIRS += libQSgsCore libQSgsPackages libQSgsClient libQSgsUi libQSgsAi libQSgsGameLogic \
-           QSanguosha QSgsAiClient QSgsServer QSgsRoom lua
+           QSanguosha QSgsAiClient QSgsServer QSgsRoom lua Cardirector
 
-libQSgsCore.depends = lua
+libQSgsCore.depends = lua Cardirector
 libQSgsGameLogic.depends = libQSgsCore
 libQSgsPackages.depends = libQSgsGameLogic
 libQSgsClient.depends = libQSgsCore
