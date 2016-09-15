@@ -498,3 +498,23 @@ Horse::Horse(const QString &name, int correct)
 {
 
 }
+
+void DelayedTrick::onNullified(Player *target) const
+{
+
+}
+
+void DelayedTrick::onUse(RoomObject *room, const CardUseStruct &card_use) const
+{
+
+}
+
+void DelayedTrick::use(RoomObject *room, Player *source, QList<Player *> &targets) const
+{
+
+}
+
+void DelayedTrick::onEffect(const CardEffectStruct &effect) const
+{
+
+}
