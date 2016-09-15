@@ -103,8 +103,8 @@ public:
     virtual bool cardFeasible(const QList<Card *> &selected, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const;
 
     // default is an other player
-    virtual bool playerFilter(const QList<Player *> &selected, Player *toSelect, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern, int *maxVotes = nullptr) const;
-    virtual bool playerFeasible(const QList<Player *> &selected, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern, int *maxVotes = nullptr) const;
+    virtual bool playerFilter(const QList<const Player *> &selected, const Player *toSelect, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern, int *maxVotes = nullptr) const;
+    virtual bool playerFeasible(const QList<const Player *> &selected, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const;
 
     // default for cost is no-op
     virtual void cost(const SkillInvokeStruct &invoke) const;
@@ -125,8 +125,8 @@ class LIBQSGSGAMELOGIC_EXPORT BattleArraySkill final: public ProactiveSkill
 public:
     explicit BattleArraySkill(const QString &name, QSgsEnum::SkillPlace place = QSgsEnum::SkillPlace::Both);
 
-    bool playerFilter(const QList<Player *> &selected, Player *toSelect, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern, int *maxVotes) const final override;
-    bool playerFeasible(const QList<Player *> &selected, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern, int *maxVotes) const final override;
+    bool playerFilter(const QList<const Player *> &selected, const Player *toSelect, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern, int *maxVotes) const final override;
+    bool playerFeasible(const QList<const Player *> &selected, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const final override;
 
     void effect(const SkillInvokeStruct &invoke) const final override;
 };

@@ -34,11 +34,8 @@ public:
     virtual QString package() const;
 
     // card target selection
-    virtual bool targetFixed() const;
-    virtual bool targetsFeasible(const QList<const Player *> &targets, const Player *self) const;
-    // @todo: the following two functions should be merged into one.
-    virtual bool targetFilter(const QList<const Player *> &targets, const Player *toSelect, const Player *self) const;
-    virtual bool targetFilter(const QList<const Player *> &targets, const Player *toSelect, const Player *self, int &maxVotes) const;
+    virtual bool targetsFeasible(const QList<const Player *> &targets, const Player *self, QSgsEnum::CardUseReason reason, const QString &pattern) const;
+    virtual bool targetFilter(const QList<const Player *> &targets, const Player *toSelect, const Player *self, QSgsEnum::CardUseReason reason, const QString &pattern, int *maxVotes = nullptr) const;
     virtual bool isAvailable(const Player *player) const;
 
     virtual const CardFace *validate(CardUseStruct &cardUse) const;
@@ -53,11 +50,11 @@ public:
     virtual QStringList checkTargetModSkillShow(const CardUseStruct & /* use */) const;
 
     virtual void onNullified(Player *target) const;
-    bool isKindOf(const char *cardType) const; // for YanXiao and LuaCard? Should we make Yanxiao as "move cards out of game"?
+    virtual bool isKindOf(const char *cardType) const; // for YanXiao and LuaCard? Should we make Yanxiao as "move cards out of game"?
 
 
 protected:
-    explicit CardFace(const QString &name, QSgsEnum::CardHandlingMethod handlingMethod = QSgsEnum::CardHandlingMethod::Use, bool targetFixed = false, bool willThrow = false, bool hasPreact = false);
+    explicit CardFace(const QString &name, QSgsEnum::CardHandlingMethod handlingMethod = QSgsEnum::CardHandlingMethod::Use, bool willThrow = false, bool hasPreact = false);
 
     Q_DECLARE_PRIVATE(CardFace)
     CardFacePrivate *d_ptr;

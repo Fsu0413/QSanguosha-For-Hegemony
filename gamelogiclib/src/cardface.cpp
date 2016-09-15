@@ -5,12 +5,21 @@ class CardFacePrivate
 {
 public:
     QSgsEnum::CardHandlingMethod handlingMethod;
-    bool targetFixed;
     bool willThrow;
     bool hasPreact;
 
 };
 
+CardFace::CardFace(const QString &name, QSgsEnum::CardHandlingMethod handlingMethod, bool willThrow, bool hasPreact)
+    : d_ptr(new CardFacePrivate)
+{
+    setObjectName(name);
+    Q_D(CardFace);
+    d->handlingMethod = handlingMethod;
+    d->willThrow = willThrow;
+    d->hasPreact = hasPreact;
+
+}
 
 CardFace::~CardFace()
 {
@@ -46,29 +55,22 @@ QString CardFace::package() const
     return QString();
 }
 
-bool CardFace::targetFixed() const
+bool CardFace::targetsFeasible(const QList<const Player *> &targets, const Player *, QSgsEnum::CardUseReason, const QString &) const
 {
-    Q_D(const CardFace);
-    return d->targetFixed;
+    return !targets.isEmpty();
 }
 
-bool CardFace::targetsFeasible(const QList<const Player *> &targets, const Player *self) const
+bool CardFace::targetFilter(const QList<const Player *> &targets, const Player *toSelect, const Player *self, QSgsEnum::CardUseReason, const QString &, int *maxVotes) const
 {
-    return false;
-}
+    int maxVotes_ = 0;
+    if (maxVotes == nullptr)
+        maxVotes = &maxVotes_;
 
-bool CardFace::targetFilter(const QList<const Player *> &targets, const Player *toSelect, const Player *self) const
-{
-    return targets.length() == 0;
-}
-
-bool CardFace::targetFilter(const QList<const Player *> &targets, const Player *toSelect, const Player *self, int &maxVotes) const
-{
-    bool result = this->targetFilter(targets, toSelect, self);
+    bool result = targets.isEmpty() && toSelect != self;
     if (result)
-        maxVotes = 1;
+        *maxVotes = 1;
     else
-        maxVotes = 0;
+        *maxVotes = 0;
     return result;
 }
 
@@ -125,20 +127,6 @@ void CardFace::onNullified(Player *target) const
 
 bool CardFace::isKindOf(const char *cardType) const
 {
-//    Q_ASSERT(cardType);
-//    return inherits(cardType);
-    // @Todo: use a new mechanism to deal with this
-    return false;
+    return inherits(cardType);
 }
 
-CardFace::CardFace(const QString &name, QSgsEnum::CardHandlingMethod handlingMethod, bool targetFixed, bool willThrow, bool hasPreact)
-    :d_ptr(new CardFacePrivate)
-{
-    setObjectName(name);
-    Q_D(CardFace);
-    d->handlingMethod = handlingMethod;
-    d->targetFixed = targetFixed;
-    d->willThrow = willThrow;
-    d->hasPreact = hasPreact;
-
-}

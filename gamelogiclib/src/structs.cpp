@@ -482,19 +482,19 @@ AskForMoveCardsStruct::AskForMoveCardsStruct()
 }
 
 SkillInvokeStruct::SkillInvokeStruct()
-    //:invoker(nullptr), owner(nullptr), skillName(QString())
+    : skill(nullptr), invoker(nullptr)
 {
 }
 
-QJsonValue SkillInvokeStruct::toJson() const
-{
-    return QJsonValue();
-}
+//QJsonValue SkillInvokeStruct::toJson() const
+//{
+//    return QJsonValue();
+//}
 
-SkillInvokeStruct SkillInvokeStruct::fromJson(const QJsonValue &value)
-{
-    return SkillInvokeStruct();
-}
+//SkillInvokeStruct SkillInvokeStruct::fromJson(const QJsonValue &value)
+//{
+//    return SkillInvokeStruct();
+//}
 
 SkillTriggerStruct::SkillTriggerStruct()
     //:invoker(nullptr), owner(nullptr), preferredTarget(nullptr), skill(QString())

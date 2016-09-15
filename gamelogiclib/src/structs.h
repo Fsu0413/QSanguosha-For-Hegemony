@@ -26,6 +26,7 @@
 
 class Player;
 class Card;
+class Skill;
 class RoomObject;
 
 struct LIBQSGSGAMELOGIC_EXPORT DamageStruct
@@ -125,22 +126,19 @@ struct LIBQSGSGAMELOGIC_EXPORT CardUseStruct
 // @todo_Fs: create a way to access these struct
 struct LIBQSGSGAMELOGIC_EXPORT SkillInvokeStruct
 {
-    // Skill, player, skillowner, target, card
+    // Skill, player, target, card
     // use to describe ProactiveSkill
 
     SkillInvokeStruct();
 
-//    QString skillName;
+    const Skill *skill;
+    Player *invoker;
+    QList<Player *> targets;
+    QList<Card *> cards;
 
-//    Player *invoker;
-//    Player *owner;
+//    QJsonValue toJson() const;
 
-//    QList<Player *> targets;
-//    QList<Card *> cards;
-
-    QJsonValue toJson() const;
-
-    static SkillInvokeStruct fromJson(const QJsonValue &value);
+//    static SkillInvokeStruct fromJson(const QJsonValue &value);
 
 };
 

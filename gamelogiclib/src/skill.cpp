@@ -23,6 +23,7 @@
 #include "scenario.h"
 #include "roomobject.h"
 #include "card.h"
+#include "cardface.h"
 
 class SkillPrivate
 {
@@ -257,11 +258,53 @@ void ViewAsSkill::setResponsePattern(const QString &pattern)
     d->responsePattern = p;
 }
 
+class SkillCardFace : public CardFace
+{
+    Q_OBJECT
+
+public:
+    SkillCardFace(ProactiveSkill *skill)
+        : CardFace(QString())
+    {
+        setParent(skill);
+    }
+
+    QSgsEnum::CardType typeId() const final override
+    {
+        return QSgsEnum::CardType::Skill; // Warning: Special operations for UI and AI, possablly....
+    }
+
+    bool targetsFeasible(const QList<const Player *> &targets, const Player *self, QSgsEnum::CardUseReason reason, const QString &pattern) const final override
+    {
+        const ProactiveSkill *skill = qobject_cast<ProactiveSkill *>(parent());
+        if (skill)
+            return skill->playerFeasible(targets, self, reason, pattern);
+
+        return false;
+    }
+    bool targetFilter(const QList<const Player *> &targets, const Player *toSelect, const Player *self, QSgsEnum::CardUseReason reason, const QString &pattern, int *maxVotes) const final override
+    {
+        const ProactiveSkill *skill = qobject_cast<ProactiveSkill *>(parent());
+        if (skill)
+            return skill->playerFilter(targets, toSelect, self, reason, pattern, maxVotes);
+
+        return false;
+    }
+
+    bool isAvailable(const Player *player) const final override
+    {
+        const ProactiveSkill *skill = qobject_cast<ProactiveSkill *>(parent());
+        if (skill)
+            return skill->isAvailable(player, QSgsEnum::CardUseReason::Play, QString());
+
+        return false;
+    }
+};
 
 ProactiveSkill::ProactiveSkill(const QString &name, QSgsEnum::SkillFrequency frequency, QSgsEnum::SkillPlace place)
     : ViewAsSkill(name, frequency, place)
 {
-
+    new SkillCardFace(this);
 }
 
 bool ProactiveSkill::cardFilter(const QList<Card *> &, Card *, const Player *, QSgsEnum::CardUseReason, const QString &) const
@@ -274,12 +317,12 @@ bool ProactiveSkill::cardFeasible(const QList<Card *> &, const Player *, QSgsEnu
     return true;
 }
 
-bool ProactiveSkill::playerFilter(const QList<Player *> &selected, Player *toSelect, const Player *player, QSgsEnum::CardUseReason, const QString &, int *) const
+bool ProactiveSkill::playerFilter(const QList<const Player *> &selected, const Player *toSelect, const Player *player, QSgsEnum::CardUseReason, const QString &, int *) const
 {
     return selected.isEmpty() && toSelect != player;
 }
 
-bool ProactiveSkill::playerFeasible(const QList<Player *> &selected, const Player *, QSgsEnum::CardUseReason, const QString &, int *) const
+bool ProactiveSkill::playerFeasible(const QList<const Player *> &selected, const Player *, QSgsEnum::CardUseReason, const QString &) const
 {
     return !selected.isEmpty();
 }
@@ -289,7 +332,6 @@ void ProactiveSkill::cost(const SkillInvokeStruct &) const
     // no-op
 }
 
-
 bool ProactiveSkill::viewFilter(const QList<Card *> &selected, Card *to_select, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const
 {
     return cardFilter(selected, to_select, player, reason, pattern);
@@ -297,16 +339,20 @@ bool ProactiveSkill::viewFilter(const QList<Card *> &selected, Card *to_select, 
 
 Card *ProactiveSkill::viewAs(const QList<Card *> &cards, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const
 {
-    // @todo_Fs: generate a Card using SkillCardFace
+    if (cardFeasible(cards, player, reason, pattern)) {
+        Card *card = new Card(nullptr, findChild<SkillCardFace *>());
+        card->addSubcards(cards);
+        return card;
+    }
     return nullptr;
 }
 
-bool BattleArraySkill::playerFilter(const QList<Player *> &, Player *, const Player *, QSgsEnum::CardUseReason, const QString &, int *) const
+bool BattleArraySkill::playerFilter(const QList<const Player *> &, const Player *, const Player *, QSgsEnum::CardUseReason, const QString &, int *) const
 {
     return false;
 }
 
-bool BattleArraySkill::playerFeasible(const QList<Player *> &, const Player *, QSgsEnum::CardUseReason, const QString &, int *) const
+bool BattleArraySkill::playerFeasible(const QList<const Player *> &, const Player *, QSgsEnum::CardUseReason, const QString &) const
 {
     return true;
 }
@@ -903,3 +949,6 @@ TreasureSkill::TreasureSkill(const QString &name, QSgsEnum::SkillFrequency frequ
 //        return false;
 //    return target->hasTreasure(objectName());
 //}
+
+
+#include "skill.moc"
