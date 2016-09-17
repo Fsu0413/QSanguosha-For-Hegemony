@@ -39,11 +39,11 @@ public:
     const General *general(const QString &generalName) const;
     const QHash<QString, const CardFace *> &cardFaces() const;
     const CardFace *cardFace(const QString &cardFaceName) const;
-    const QList<Card *> cards() const;
+    const QList<Card *> &cards() const;
     const QHash<QString, const Skill *> skills() const;
     const Skill *skill(const QString &skillName) const;
-    const QMultiMap<QString, QString> relatedSkills() const;
-    const QStringList relatedSkills(const QString &mainSkill) const;
+    const QMultiMap<const Skill *, const Skill *> &relatedSkills() const;
+    QList<const Skill *> relatedSkills(const Skill *mainSkill) const;
     const QString &name() const;
 
     virtual const QVersionNumber &version() const = 0;
@@ -54,6 +54,9 @@ protected:
 
     Q_DECLARE_PRIVATE(QSgsPackage)
     QSgsPackagePrivate *d_ptr;
+
+private:
+    Q_DISABLE_COPY(QSgsPackage)
 };
 
 Q_DECLARE_INTERFACE(QSgsPackage, "org.qsanguosha.Hegemony.QSgsPackage")
