@@ -187,7 +187,7 @@ QJsonValue DamageStruct::toJson() const
     return ob;
 }
 
-DamageStruct DamageStruct::fromJson(const QJsonValue &value)
+DamageStruct DamageStruct::fromJson(const QJsonValue &value, RoomObject *room)
 {
     DamageStruct r;
     if (!value.isObject())
@@ -255,7 +255,7 @@ QJsonValue CardEffectStruct::toJson() const
     return ob;
 }
 
-CardEffectStruct CardEffectStruct::fromJson(const QJsonValue &value)
+CardEffectStruct CardEffectStruct::fromJson(const QJsonValue &value, RoomObject *room)
 {
     CardEffectStruct r;
 
@@ -320,7 +320,7 @@ QJsonValue SlashEffectStruct::toJson() const
     return ob;
 }
 
-SlashEffectStruct SlashEffectStruct::fromJson(const QJsonValue &value)
+SlashEffectStruct SlashEffectStruct::fromJson(const QJsonValue &value, RoomObject *room)
 {
     SlashEffectStruct r;
 
@@ -380,7 +380,7 @@ QJsonValue DyingStruct::toJson() const
     return ob;
 }
 
-DyingStruct DyingStruct::fromJson(const QJsonValue &value)
+DyingStruct DyingStruct::fromJson(const QJsonValue &value, RoomObject *room)
 {
     DyingStruct r;
 
@@ -403,7 +403,7 @@ DyingStruct DyingStruct::fromJson(const QJsonValue &value)
 
     r.damage = new DamageStruct();      //todo_Fs:replace it with other pointer
     ob[QStringLiteral("structType")] = QStringLiteral("DamageStruct");
-    *(r.damage) = DamageStruct::fromJson(ob);
+    *(r.damage) = DamageStruct::fromJson(ob, room);
 
     return r;
 }
@@ -432,7 +432,7 @@ QJsonValue DeathStruct::toJson() const
     return ob;
 }
 
-DeathStruct DeathStruct::fromJson(const QJsonValue &value)
+DeathStruct DeathStruct::fromJson(const QJsonValue &value, RoomObject *room)
 {
     DeathStruct r;
 
@@ -455,7 +455,7 @@ DeathStruct DeathStruct::fromJson(const QJsonValue &value)
 
     r.damage = new DamageStruct();                                      //todo_Fs:replace it with other pointer
     ob[QStringLiteral("structType")] = QStringLiteral("DamageStruct");
-    *(r.damage) = DamageStruct::fromJson(ob);
+    *(r.damage) = DamageStruct::fromJson(ob, room);
 
     return r;
 }
@@ -485,7 +485,7 @@ QJsonValue RecoverStruct::toJson() const
 
 }
 
-RecoverStruct RecoverStruct::fromJson(const QJsonValue &value)
+RecoverStruct RecoverStruct::fromJson(const QJsonValue &value, RoomObject *room)
 {
     RecoverStruct r;
 
@@ -607,7 +607,7 @@ QJsonValue CardUseStruct::toJson() const
     return ob;
 }
 
-CardUseStruct CardUseStruct::fromJson(const QJsonValue &value)
+CardUseStruct CardUseStruct::fromJson(const QJsonValue &value, RoomObject *room)
 {
     CardUseStruct r;
 
@@ -782,7 +782,7 @@ QJsonValue SkillTriggerStruct::toJson() const
     return QJsonValue();
 }
 
-SkillTriggerStruct SkillTriggerStruct::fromJson(const QJsonValue &value)
+SkillTriggerStruct SkillTriggerStruct::fromJson(const QJsonValue &value, RoomObject *room)
 {
     return SkillTriggerStruct();
 }

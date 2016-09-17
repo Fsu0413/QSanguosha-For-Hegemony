@@ -50,7 +50,7 @@ struct LIBQSGSGAMELOGIC_EXPORT DamageStruct
 
     QJsonValue toJson() const;
 
-    static DamageStruct fromJson(const QJsonValue &value);
+    static DamageStruct fromJson(const QJsonValue &value, RoomObject *room);
 
 };
 
@@ -69,7 +69,7 @@ struct LIBQSGSGAMELOGIC_EXPORT CardEffectStruct
 
     QJsonValue toJson() const;
 
-    static CardEffectStruct fromJson(const QJsonValue &value);
+    static CardEffectStruct fromJson(const QJsonValue &value, RoomObject *room);
 };
 
 struct LIBQSGSGAMELOGIC_EXPORT SlashEffectStruct
@@ -92,7 +92,7 @@ struct LIBQSGSGAMELOGIC_EXPORT SlashEffectStruct
 
     QJsonValue toJson() const;
 
-    static SlashEffectStruct fromJson(const QJsonValue &value);
+    static SlashEffectStruct fromJson(const QJsonValue &value, RoomObject *room);
 };
 
 struct LIBQSGSGAMELOGIC_EXPORT CardUseStruct
@@ -116,7 +116,7 @@ struct LIBQSGSGAMELOGIC_EXPORT CardUseStruct
 
     QJsonValue toJson() const;
 
-    static CardUseStruct fromJson(const QJsonValue &value);
+    static CardUseStruct fromJson(const QJsonValue &value, RoomObject *room);
 };
 
 // To: Slob, Xusine, Lights, DJ
@@ -161,7 +161,7 @@ struct LIBQSGSGAMELOGIC_EXPORT SkillTriggerStruct
 
     QJsonValue toJson() const;
 
-    static SkillTriggerStruct fromJson(const QJsonValue &value);
+    static SkillTriggerStruct fromJson(const QJsonValue &value, RoomObject *room);
 };
 
 class LIBQSGSGAMELOGIC_EXPORT CardMovement
@@ -335,7 +335,7 @@ struct LIBQSGSGAMELOGIC_EXPORT DyingStruct
 
     QJsonValue toJson() const;
 
-    static DyingStruct fromJson(const QJsonValue &value);
+    static DyingStruct fromJson(const QJsonValue &value, RoomObject *room);
 };
 
 struct LIBQSGSGAMELOGIC_EXPORT DeathStruct
@@ -347,7 +347,7 @@ struct LIBQSGSGAMELOGIC_EXPORT DeathStruct
 
     QJsonValue toJson() const;
 
-    static DeathStruct fromJson(const QJsonValue &value);
+    static DeathStruct fromJson(const QJsonValue &value, RoomObject *room);
 };
 
 struct LIBQSGSGAMELOGIC_EXPORT RecoverStruct
@@ -360,7 +360,7 @@ struct LIBQSGSGAMELOGIC_EXPORT RecoverStruct
 
     QJsonValue toJson() const;
 
-    static RecoverStruct fromJson(const QJsonValue &value);
+    static RecoverStruct fromJson(const QJsonValue &value, RoomObject *room);
 };
 
 struct LIBQSGSGAMELOGIC_EXPORT PindianStruct
