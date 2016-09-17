@@ -160,10 +160,7 @@ DamageStruct::DamageStruct(const QString &reason, Player *from, Player *to, int 
 QJsonValue DamageStruct::toJson() const
 {
     QJsonValue v;
-    if (to == nullptr)
-        return v;
-
-    if (damage == 0)
+    if (to == nullptr || damage <= 0)
         return v;
 
     QJsonObject ob;
@@ -239,13 +236,17 @@ QJsonValue CardEffectStruct::toJson() const
 {
     QJsonValue v;
 
-    if (to == nullptr)
+    if (to == nullptr || card == nullptr)
         return v;
 
     QJsonObject ob;
 
     ob.insert(QStringLiteral("structType"), QStringLiteral("CardEffectStruct"));
-    ob.insert(QStringLiteral("from"), from->objectName());
+    if (from != nullptr)
+        ob.insert(QStringLiteral("from"), from->objectName());
+    else
+        ob.insert(QStringLiteral("from"), QString());
+
     ob.insert(QStringLiteral("to"), to->objectName());
     ob.insert(QStringLiteral("card"), card->id());
     ob.insert(QStringLiteral("multiple"), multiple);
@@ -262,15 +263,25 @@ CardEffectStruct CardEffectStruct::fromJson(const QJsonValue &value)
         return r;
 
     QJsonObject ob = value.toObject();
-
     if (ob.value(QStringLiteral("structType")).toString() != QStringLiteral("CardEffectStruct"))
         return r;
+
+    QString strTo = ob.value(QStringLiteral("to")).toString();
+    if (strTo.isNull() || strTo.isEmpty())
+        return r;
+
+    int intCard = ob.value(QStringLiteral("card")).toInt();             //find card by its id
+    if (intCard == 0)
+        return r;
+
+    r.card = nullptr;   //todo_Fs:RoomObject->getCard
+    r.to = nullptr; //todo_Fs:RoomObject->getPlayer
     r.multiple = ob.value(QStringLiteral("multiple")).toBool();
     r.nullptrified = ob.value(QStringLiteral("nullptrified")).toBool();
 
     QString strFrom = ob.value(QStringLiteral("from")).toString();      //find player by objectName
-    QString strTo = ob.value(QStringLiteral("to")).toString();
-    int intCard = ob.value(QStringLiteral("card")).toInt();             //find card by its id
+    if (!strFrom.isEmpty() && !strFrom.isNull())
+        r.from = nullptr;   //todo_Fs:RoomObject->getPlayer
 
     return r;
 }
@@ -282,17 +293,29 @@ SlashEffectStruct::SlashEffectStruct()
 
 QJsonValue SlashEffectStruct::toJson() const
 {
+    QJsonValue v;
+
+    if (slash == nullptr || to == nullptr)
+        return v;
+
     QJsonObject ob;
 
     ob.insert(QStringLiteral("structType"), QStringLiteral("SlashEffectStruct"));
     ob.insert(QStringLiteral("jinkNum"), jinkNum);
     ob.insert(QStringLiteral("slash"), slash->id());
-    ob.insert(QStringLiteral("jink"), jink->id());
-    ob.insert(QStringLiteral("from"), from->objectName());
     ob.insert(QStringLiteral("to"), to->objectName());
     ob.insert(QStringLiteral("drank"), drank);
     ob.insert(QStringLiteral("nature"), static_cast<int>(nature));
     ob.insert(QStringLiteral("nullptrified"), nullptrified);
+
+    if (jink != nullptr)
+        ob.insert(QStringLiteral("jink"), jink->id());
+    else
+        ob.insert(QStringLiteral("jink"), 0);
+    if (from != nullptr)
+        ob.insert(QStringLiteral("from"), from->objectName());
+    else
+        ob.insert(QStringLiteral("from"), QString());
 
     return ob;
 }
@@ -308,10 +331,22 @@ SlashEffectStruct SlashEffectStruct::fromJson(const QJsonValue &value)
     if (ob.value(QStringLiteral("structType")).toString() != QStringLiteral("SlashEffectStruct"))
         return r;
 
-    QString strFrom = ob.value(QStringLiteral("from")).toString();
     QString strTo = ob.value(QStringLiteral("to")).toString();
+    if (strTo.isEmpty() || strTo.isNull())
+        return r;
     int intSlash = ob.value(QStringLiteral("slash")).toInt();
+    if (intSlash == 0)
+        return r;
+
+    r.slash = nullptr;  //todo_Fs:RoomObject->getCard
+    r.to = nullptr;     //todo_Fs:RoomObject->getPlayer
+
+    QString strFrom = ob.value(QStringLiteral("from")).toString();
+    if (!strFrom.isNull() && !strFrom.isEmpty())
+        r.from = nullptr;   //todo_Fs:RoomObject->getPlayer
     int intJink = ob.value(QStringLiteral("jink")).toInt();
+    if (intJink != 0)
+        r.jink = nullptr;   //todo_Fs:RoomObject->getCard
 
     r.drank = ob.value(QStringLiteral("drank")).toInt();
     r.jinkNum = ob.value(QStringLiteral("jinkNum")).toInt();
@@ -328,15 +363,18 @@ DyingStruct::DyingStruct()
 
 QJsonValue DyingStruct::toJson() const
 {
+    QJsonValue v;
     QJsonObject ob;
 
-    if (damage != nullptr)
-    {
+    if (who == nullptr)
+        return v;
+
+    if (damage != nullptr){
         ob = damage->toJson().toObject();
         ob[QStringLiteral("structType")] = QStringLiteral("DyingStruct");
-    }
-    else
+    }else{
         ob.insert(QStringLiteral("structType"), QStringLiteral("DyingStruct"));
+    }
 
     ob.insert(QStringLiteral("who"), who->objectName());
     return ob;
@@ -354,12 +392,16 @@ DyingStruct DyingStruct::fromJson(const QJsonValue &value)
     if (ob.value(QStringLiteral("structType")).toString() != QStringLiteral("DyingStruct"))
         return r;
 
-    QString strWho = ob.value(QStringLiteral("who")).toString();        //find player by objectName
+    QString strWho = ob.value(QStringLiteral("who")).toString();
+    if (strWho.isNull() || strWho.isEmpty())
+        return r;
+    else
+        r.who = nullptr;        //todo_Fs:RoomObject->getPlayer
 
     if (ob.size() == 2)
         return r;
 
-    r.damage = new DamageStruct();      //todo_Fs:add some codes to deal with memory allocation failure
+    r.damage = new DamageStruct();      //todo_Fs:replace it with other pointer
     ob[QStringLiteral("structType")] = QStringLiteral("DamageStruct");
     *(r.damage) = DamageStruct::fromJson(ob);
 
@@ -373,15 +415,18 @@ DeathStruct::DeathStruct()
 
 QJsonValue DeathStruct::toJson() const
 {
+    QJsonValue v;
     QJsonObject ob;
 
-    if (damage != nullptr)
-    {
+    if (who == nullptr)
+        return v;
+
+    if (damage != nullptr){
         ob = damage->toJson().toObject();
         ob[QStringLiteral("structType")] = QStringLiteral("DeathStruct");
-    }
-    else
+    }else{
         ob.insert(QStringLiteral("structType"), QStringLiteral("DeathStruct"));
+    }
 
     ob.insert(QStringLiteral("who"), who->objectName());
     return ob;
@@ -399,12 +444,16 @@ DeathStruct DeathStruct::fromJson(const QJsonValue &value)
     if (ob.value(QStringLiteral("structType")).toString() != QStringLiteral("DeathStruct"))
         return r;
 
-    QString strWho = ob.value(QStringLiteral("who")).toString();        //find player by objectName
+    QString strWho = ob.value(QStringLiteral("who")).toString();
+    if (strWho.isNull() || strWho.isEmpty())
+        return r;
+    else
+        r.who = nullptr;                //todo_Fs:RoomObject->getPlayer
 
     if (ob.size() == 2)
         return r;
 
-    r.damage = new DamageStruct();                                      //when it comes to failure, fs should add some codes to deal it.
+    r.damage = new DamageStruct();                                      //todo_Fs:replace it with other pointer
     ob[QStringLiteral("structType")] = QStringLiteral("DamageStruct");
     *(r.damage) = DamageStruct::fromJson(ob);
 
@@ -418,13 +467,19 @@ RecoverStruct::RecoverStruct()
 
 QJsonValue RecoverStruct::toJson() const
 {
+    QJsonValue v;
     QJsonObject ob;
+
+    if (who == nullptr || recover <= 0)
+        return v;
 
     ob.insert(QStringLiteral("structType"), QStringLiteral("RecoverStruct"));
     ob.insert(QStringLiteral("who"), who->objectName());
     ob.insert(QStringLiteral("recover"), recover);
     if (card != nullptr)
         ob.insert(QStringLiteral("card"), card->id());
+    else
+        ob.insert(QStringLiteral("card"), 0);
 
     return ob;
 
@@ -442,9 +497,21 @@ RecoverStruct RecoverStruct::fromJson(const QJsonValue &value)
         return r;
 
     QString strWho = ob.value(QStringLiteral("who")).toString();
-    int intCard = ob.value(QStringLiteral("card")).toInt();
+    if (strWho.isNull() || strWho.isEmpty())
+        return r;
 
-    r.recover = ob.value(QStringLiteral("recover")).toInt();
+    int intRecover = ob.value(QStringLiteral("recover")).toInt();
+    if (intRecover == 0)
+        return r;
+
+    r.who = nullptr;        //todo_Fs:RoomObject->getPlayer
+    r.recover = intRecover;
+
+    int intCard = ob.value(QStringLiteral("card")).toInt();
+    if (intCard == 0)
+        r.card = nullptr;
+    else
+        r.card = nullptr;   //todo_Fs:RoomObject->getCard
 
     return r;
 }
@@ -512,18 +579,71 @@ CardUseStruct::CardUseStruct()
 
 QJsonValue CardUseStruct::toJson() const
 {
-    QJsonArray arr;
+    QJsonValue v;
+    QJsonObject ob;
 
-    arr.append(QStringLiteral("CardUseStruct"));
-    arr.append(card->id());
-    arr.append(from->objectName());
+    if (to.isEmpty() || card == nullptr)
+        return v;
 
-    return arr;
+    ob.insert(QStringLiteral("structType"), QStringLiteral("CardUseStruct"));
+
+    QStringList listTo;
+    for (int i = 0; i < to.size(); i++)
+        listTo << to.at(i)->objectName();
+    ob.insert(QStringLiteral("to"), listTo.join(QStringLiteral(",")));
+
+    ob.insert(QStringLiteral("card"), card->id());
+    ob.insert(QStringLiteral("isOwnerUse"), isOwnerUse);
+    ob.insert(QStringLiteral("addHistory"), addHistory);
+    ob.insert(QStringLiteral("isHandcard"), isHandcard);
+    ob.insert(QStringLiteral("nullptrifiedList"), nullptrifiedList.join(QStringLiteral(",")));
+    ob.insert(QStringLiteral("reason"), static_cast<int>(reason));
+
+    if (from != nullptr)
+        ob.insert(QStringLiteral("from"), from->objectName());
+    else
+        ob.insert(QStringLiteral("from"), QString());
+
+    return ob;
 }
 
 CardUseStruct CardUseStruct::fromJson(const QJsonValue &value)
 {
-    return CardUseStruct();
+    CardUseStruct r;
+
+    if (!value.isObject())
+        return r;
+
+    QJsonObject ob = value.toObject();
+    if (ob.value(QStringLiteral("structType")).toString() != QStringLiteral("CardUseStruct"))
+        return r;
+
+    int intCard = ob.value(QStringLiteral("card")).toInt();
+    if (intCard == 0)
+        return r;
+
+    QStringList listTo = ob.value(QStringLiteral("to")).toString().split(QStringLiteral(","));
+    if (listTo.isEmpty())
+        return r;
+
+    r.card = nullptr;   //todo_Fs:RoomObject->getCard
+    for (int i = 0; i < listTo.size(); i++)
+        r.to.append(nullptr); //todo_Fs:RoomObject->getPlayer
+
+    QString strFrom = ob.value(QStringLiteral("from")).toString();
+    if (strFrom.isNull() || strFrom.isEmpty())
+        r.from = nullptr;
+    else
+        r.from = nullptr;   //todo_Fs:RoomObject->getPlayer
+
+    r.addHistory = ob.value(QStringLiteral("addHistory")).toBool();
+    r.isOwnerUse = ob.value(QStringLiteral("isOwnerUse")).toBool();
+    r.isHandcard = ob.value(QStringLiteral("isHandcard")).toBool();
+    r.reason = static_cast<QSgsEnum::CardUseReason>(ob.value(QStringLiteral("reason")).toInt());
+    r.nullptrifiedList = ob.value(QStringLiteral("nullptrifiedList")).toString().split(QStringLiteral(","));    //todo_Fs:further handling?
+
+    return r;
+
 }
 
 CardUseStruct::CardUseStruct(const Card *card, Player *from, QList<Player *> to, bool isOwnerUse)
