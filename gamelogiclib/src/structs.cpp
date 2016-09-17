@@ -197,7 +197,7 @@ DamageStruct DamageStruct::fromJson(const QJsonValue &value)
         return r;
 
     QJsonObject ob = value.toObject();
-    if (ob.value(QStringLiteral("structType")) != QStringLiteral("DamageStruct"))
+    if (ob.value(QStringLiteral("structType")).toString() != QStringLiteral("DamageStruct"))
         return r;
 
     QString strTo = ob.value(QStringLiteral("to")).toString();
@@ -263,7 +263,7 @@ CardEffectStruct CardEffectStruct::fromJson(const QJsonValue &value)
 
     QJsonObject ob = value.toObject();
 
-    if (ob.value(QStringLiteral("structType")) != QStringLiteral("CardEffectStruct"))
+    if (ob.value(QStringLiteral("structType")).toString() != QStringLiteral("CardEffectStruct"))
         return r;
     r.multiple = ob.value(QStringLiteral("multiple")).toBool();
     r.nullptrified = ob.value(QStringLiteral("nullptrified")).toBool();
