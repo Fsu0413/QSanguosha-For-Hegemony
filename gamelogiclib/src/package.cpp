@@ -31,7 +31,7 @@ public:
 
     QList<Card *> cards;
     QHash<QString, const Skill *> skills;
-    QMultiMap<QString, QString> relatedSkills;
+    QMultiMap<const Skill *, const Skill *> relatedSkills;
 
     QString name;
     QSgsEnum::PackageType type;
@@ -76,7 +76,7 @@ const CardFace *QSgsPackage::cardFace(const QString &cardFaceName) const
     return d->cardFaces.value(cardFaceName, nullptr);
 }
 
-const QList<Card *> QSgsPackage::cards() const
+const QList<Card *> &QSgsPackage::cards() const
 {
     Q_D(const QSgsPackage);
     return d->cards;
@@ -94,13 +94,13 @@ const Skill *QSgsPackage::skill(const QString &skillName) const
     return d->skills.value(skillName, nullptr);
 }
 
-const QMultiMap<QString, QString> QSgsPackage::relatedSkills() const
+const QMultiMap<const Skill *, const Skill *> &QSgsPackage::relatedSkills() const
 {
     Q_D(const QSgsPackage);
     return d->relatedSkills;
 }
 
-const QStringList QSgsPackage::relatedSkills(const QString &mainSkill) const
+QList<const Skill *> QSgsPackage::relatedSkills(const Skill *mainSkill) const
 {
     Q_D(const QSgsPackage);
     return d->relatedSkills.values(mainSkill);

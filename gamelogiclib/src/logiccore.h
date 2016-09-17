@@ -20,7 +20,7 @@ public:
     static GameLogicCore *instance();
     ~GameLogicCore();
     
-    void addPackage(QSgsPackage *package);
+    bool addPackage(QSgsPackage *package);
     QList<const QSgsPackage *> packages() const;
 
     const General *general(const QString &name) const;

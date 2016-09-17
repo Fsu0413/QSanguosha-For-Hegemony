@@ -1,5 +1,6 @@
 
 #include "logiccore.h"
+#include "package.h"
 
 class GameLogicCorePrivate
 {
@@ -33,12 +34,61 @@ GameLogicCore::GameLogicCore()
 GameLogicCore::~GameLogicCore()
 {
     Q_D(GameLogicCore);
+    foreach (const QSgsPackage *package, d->packages)
+        delete package;
+
     delete d;
 }
 
-void GameLogicCore::addPackage(QSgsPackage *package)
+bool GameLogicCore::addPackage(QSgsPackage *package)
 {
-    // @todo_Fs
+    if (package == nullptr)
+        return false;
+
+    Q_D(GameLogicCore);
+
+    // sanity check
+    if (d->packages.contains(package->name())) {
+        qDebug() << QStringLiteral("Duplicate package") << package->name();
+        return false;
+    }
+
+    for (auto i = package->cardFaces().cbegin(), e = package->cardFaces().cend(); i != e; ++i) {
+        if (d->cardFaces.contains(i.key())) {
+            qDebug() << QStringLiteral("Duplicate cardFace %1 when adding package %2").arg(i.key()).arg(package->name());
+            return false;
+        }
+    }
+
+    for (auto i = package->generals().cbegin(), e = package->generals().cend(); i != e; ++i) {
+        if (d->generals.contains(i.key())) {
+            qDebug() << QStringLiteral("Duplicate general %1 when adding package %2").arg(i.key()).arg(package->name());
+            return false;
+        }
+    }
+
+    for (auto i = package->skills().cbegin(), e = package->skills().cend(); i != e; ++i) {
+        if (d->skills.contains(i.key())) {
+            qDebug() << QStringLiteral("Duplicate skill %1 when adding package %2").arg(i.key()).arg(package->name());
+            return false;
+        }
+    }
+
+    d->packages[package->name()] = package;
+
+    for (auto i = package->cardFaces().cbegin(), e = package->cardFaces().cend(); i != e; ++i)
+        d->cardFaces[i.key()] = i.value();
+
+    for (auto i = package->generals().cbegin(), e = package->generals().cend(); i != e; ++i)
+        d->generals[i.key()] = i.value();
+
+    for (auto i = package->skills().cbegin(), e = package->skills().cend(); i != e; ++i)
+        d->skills[i.key()] = i.value();
+
+    for (auto i = package->relatedSkills().cbegin(), e = package->relatedSkills().cend(); i != e; ++i)
+        d->relatedSkills.insertMulti(i.key(), i.value());
+
+    return true;
 }
 
 QList<const QSgsPackage *> GameLogicCore::packages() const

@@ -23,16 +23,15 @@
 
 #include "libqsgsgamelogicglobal.h"
 #include "package.h"
-#include "cardfaces/base.h"
-
 
 struct lua_State;
 typedef int LuaFunction;
 
-
-
-class LIBQSGSGAMELOGIC_EXPORT QSgsLuaPackage : public QSgsPackage
+class LIBQSGSGAMELOGIC_EXPORT QSgsLuaPackage final : public QObject, public QSgsPackage
 {
+    Q_OBJECT
+    Q_INTERFACES(QSgsPackage)
+
 public:
     explicit QSgsLuaPackage(const QString &name, QSgsEnum::PackageType type, const QString &version);
 
@@ -42,7 +41,7 @@ public:
     bool insertRelatedSkill(const QString &main_skill_name, const QString &related);
     bool createCardByFaceName(const QString &face_name, QSgsEnum::CardSuit suit, int number);
 
-    const QVersionNumber &version() const override;
+    const QVersionNumber &version() const final override;
 
 private:
     QVersionNumber m_ver;

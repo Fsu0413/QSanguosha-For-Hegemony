@@ -322,7 +322,7 @@ SlashEffectStruct SlashEffectStruct::fromJson(const QJsonValue &value)
 }
 
 DyingStruct::DyingStruct()
-  : who(nullptr), damage(nullptr)
+    : who(nullptr), damage(nullptr)
 {
 }
 
@@ -367,7 +367,7 @@ DyingStruct DyingStruct::fromJson(const QJsonValue &value)
 }
 
 DeathStruct::DeathStruct()
-  : who(nullptr), damage(nullptr)
+    : who(nullptr), damage(nullptr)
 {
 }
 
