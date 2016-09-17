@@ -72,19 +72,29 @@ public:
 
     QMap<QSgsEnum::CardHandlingMethod, QStringList> cardLimitation;
 
-    QStringList disableShow;
     // head and/or deputy, reason
     // example: "hd,Blade"
+    QStringList disableShow;
 
     bool scenarioRoleShown;
 };
 
-bool (Player::*Player::isSuperposed)() const = &Player::faceUp;
-void (Player::*Player::setSuperposed)(bool superposed) = &Player::setFaceUp;
-
-Player::Player(QObject *parent) : d_ptr(new PlayerPrivate)
+Player::Player(QObject *parent)
+    : QObject(parent), d_ptr(new PlayerPrivate)
 {
+    Q_D(Player);
+    d->general = d->general2 = d->actualGeneral1 = d->actualGeneral2 = nullptr;
+    d->owner = d->roleShown = d->alive = d->general1Showed = d->general2Showed = d->faceUp = d->chained = d->removed = d->scenarioRoleShown = false;
+    d->gender = QSgsEnum::GeneralGender::Neuter;
+    d->hp = d->maxHp = d->seat = 0;
+    d->phase = QSgsEnum::PlayerPhase::NoPhase;
+    d->weapon = d->armor = d->defensiveHorse = d->offensiveHorse = d->treasure = nullptr;
+}
 
+Player::~Player()
+{
+    Q_D(Player);
+    delete d;
 }
 
 int Player::hp() const
@@ -155,18 +165,43 @@ bool Player::isNeuter() const
 
 void Player::setDisableShow(const QString &flags, const QString &reason)
 {
+    if (flags != QStringLiteral("h") || flags != QStringLiteral("d") || flags != QStringLiteral("hd"))
+        return;
 
+    removeDisableShow(reason);
+    QString s = QStringLiteral("%1,%2").arg(flags).arg(reason);
+    Q_D(Player);
+    d->disableShow << s;
 }
 
 void Player::removeDisableShow(const QString &reason)
 {
-
+    Q_D(Player);
+    foreach (const QString &s, d->disableShow) {
+        QString r = s.split(QStringLiteral(",")).last();
+        if (r == reason)
+            d->disableShow.removeAll(s);
+    }
 }
 
-const QStringList &Player::disableShow(bool head) const
+bool Player::disableShow(bool head, QStringList *reasons) const
 {
+    QStringList reasons_;
+    if (reasons == nullptr)
+        reasons = &reasons_;
+    else
+        reasons->clear();
+
     Q_D(const Player);
-    return d->disableShow;
+    foreach (const QString &s, d->disableShow) {
+        QStringList l = s.split(QStringLiteral(","));
+        if (head && l.first().contains(QStringLiteral("h")))
+            *reasons << l.last();
+        else if (!head && l.first().contains(QStringLiteral("d")))
+            *reasons << l.last();
+    }
+
+    return !reasons->isEmpty();
 }
 
 const QString &Player::kingdom() const
