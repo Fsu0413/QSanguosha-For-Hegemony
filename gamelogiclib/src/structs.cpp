@@ -237,12 +237,37 @@ CardEffectStruct::CardEffectStruct()
 
 QJsonValue CardEffectStruct::toJson() const
 {
-    return QJsonValue();
+    QJsonObject ob;
+
+    ob.insert(QStringLiteral("structType"), QStringLiteral("CardEffectStruct"));
+    ob.insert(QStringLiteral("from"), from->objectName());
+    ob.insert(QStringLiteral("to"), to->objectName());
+    ob.insert(QStringLiteral("card"), card->id());
+    ob.insert(QStringLiteral("multiple"), multiple);
+    ob.insert(QStringLiteral("nullptrified"), nullptrified);
+
+    return ob;
 }
 
 CardEffectStruct CardEffectStruct::fromJson(const QJsonValue &value)
 {
-    return CardEffectStruct();
+    CardEffectStruct r;
+
+    if (!value.isObject())
+        return r;
+
+    QJsonObject ob = value.toObject();
+
+    if (ob.value(QStringLiteral("structType")) != QStringLiteral("CardEffectStruct"))
+        return r;
+    r.multiple = ob.value(QStringLiteral("multiple")).toBool();
+    r.nullptrified = ob.value(QStringLiteral("nullptrified")).toBool();
+
+    QString strFrom = ob.value(QStringLiteral("from")).toString();      //find player by objectName
+    QString strTo = ob.value(QStringLiteral("to")).toString();
+    int intCard = ob.value(QStringLiteral("card")).toInt();             //find card by its id
+
+    return r;
 }
 
 SlashEffectStruct::SlashEffectStruct()
