@@ -25,7 +25,7 @@ class PlayerPrivate
 {
 public:
     QMap<QString, int> marks;
-    QMap<QString, QList<int> > piles;
+    QMap<QString, QList<Card *> > piles;
     QMap<QString, QStringList> pileOpen;
     QSet<QString> headAcquiredSkills;
     QSet<QString> deputyAcquiredSkills;
@@ -450,7 +450,7 @@ void Player::setDelayedEffect(const QString &effectName)
         d->delayedEffects << effectName;
 }
 
-bool Player::hasEquip(Card *card) const
+bool Player::hasEquip(const Card *card) const
 {
     return false;
 }
@@ -670,9 +670,14 @@ int Player::getCardCount(bool include_equip) const
     return 0;
 }
 
-QList<int> Player::pile(const QString &pile_name) const
+QList<Card *> Player::pile(const QString &pile_name)
 {
-    return QList<int>();
+    return QList<Card *>();
+}
+
+QList<const Card *> Player::pile(const QString &pile_name) const
+{
+    return QList<const Card *>();
 }
 
 QStringList Player::pileNames() const
@@ -680,7 +685,7 @@ QStringList Player::pileNames() const
     return QStringList();
 }
 
-QString Player::pileName(int card_id) const
+QString Player::pileName(const Card *card) const
 {
     return QString();
 }

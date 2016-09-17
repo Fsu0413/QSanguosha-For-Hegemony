@@ -38,7 +38,7 @@ public:
 
     // note that if this card is created in QSgsLogicCore, the roomObject variable should be nullptr
     // virtual cards should always have their corresponding roomObject
-    Card(RoomObject *roomObject, const CardFace *cardFace, QSgsEnum::CardSuit suit = QSgsEnum::CardSuit::Tbd, int number = -1, bool canRecast = false, bool transferable = false, int id = -1);
+    Card(RoomObject *roomObject, const CardFace *cardFace, int id, QSgsEnum::CardSuit suit = QSgsEnum::CardSuit::Tbd, int number = -1, bool canRecast = false, bool transferable = false);
     // This dtor is not virtual!!!!
     ~Card();
 

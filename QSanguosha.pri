@@ -134,4 +134,4 @@ swig.variable_out = SOURCES
 
 QMAKE_EXTRA_COMPILERS += swig
 
-
+CONFIG(lib): CONFIG(staticlib): DEFINES += QSANGUOSHA_STATICLIB

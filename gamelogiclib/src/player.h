@@ -115,7 +115,7 @@ public:
     bool hasDelayedEffect(const QString &effectName) const;
     void setDelayedEffect(const QString &effectName);
 
-    bool hasEquip(Card *card) const;
+    bool hasEquip(const Card *card) const;
     bool hasEquip() const;
 
     QList<const Card *> judgingArea() const;
@@ -170,9 +170,10 @@ public:
     bool canSlash(const Player *other, bool distance_limit = true, int rangefix = 0) const;
     int getCardCount(bool include_equip) const;
 
-    QList<int> pile(const QString &pile_name) const;
+    QList<Card *> pile(const QString &pile_name);
+    QList<const Card *> pile(const QString &pile_name) const;
     QStringList pileNames() const;
-    QString pileName(int card_id) const;
+    QString pileName(const Card *card) const;
 
     QList<int> handPile() const;
     QStringList handPileList(bool view_as_skill = true) const;

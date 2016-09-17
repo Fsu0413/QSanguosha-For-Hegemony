@@ -61,6 +61,8 @@ private:
 
 Q_DECLARE_INTERFACE(QSgsPackage, "org.qsanguosha.Hegemony.QSgsPackage")
 
+QStringList cppPackages();
+QSgsPackage *loadCppPackage(const QString &packageName);
 
 #endif
 

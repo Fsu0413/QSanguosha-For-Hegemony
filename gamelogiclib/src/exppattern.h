@@ -22,9 +22,8 @@
 #define _EXPPATTERN_H
 
 #include "libqsgsgamelogicglobal.h"
-#include "package.h"
-#include "card.h"
-#include "player.h"
+class Player;
+class Card;
 
 class LIBQSGSGAMELOGIC_EXPORT ExpPattern
 {
