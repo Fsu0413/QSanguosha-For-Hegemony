@@ -277,12 +277,43 @@ SlashEffectStruct::SlashEffectStruct()
 
 QJsonValue SlashEffectStruct::toJson() const
 {
-    return QJsonValue();
+    QJsonObject ob;
+
+    ob.insert(QStringLiteral("structType"), QStringLiteral("SlashEffectStruct"));
+    ob.insert(QStringLiteral("jinkNum"), jinkNum);
+    ob.insert(QStringLiteral("slash"), slash->id());
+    ob.insert(QStringLiteral("jink"), jink->id());
+    ob.insert(QStringLiteral("from"), from->objectName());
+    ob.insert(QStringLiteral("to"), to->objectName());
+    ob.insert(QStringLiteral("drank"), drank);
+    ob.insert(QStringLiteral("nature"), static_cast<int>(nature));
+    ob.insert(QStringLiteral("nullptrified"), nullptrified);
+
+    return ob;
 }
 
 SlashEffectStruct SlashEffectStruct::fromJson(const QJsonValue &value)
 {
-    return SlashEffectStruct();
+    SlashEffectStruct r;
+
+    if (!value.isObject())
+        return r;
+
+    QJsonObject ob = value.toObject();
+    if (ob.value(QStringLiteral("structType")) != QStringLiteral("SlashEffectStruct"))
+        return r;
+
+    QString strFrom = ob.value(QStringLiteral("from")).toString();
+    QString strTo = ob.value(QStringLiteral("to")).toString();
+    int intSlash = ob.value(QStringLiteral("slash")).toInt();
+    int intJink = ob.value(QStringLiteral("jink")).toInt();
+
+    r.drank = ob.value(QStringLiteral("drank")).toInt();
+    r.jinkNum = ob.value(QStringLiteral("jinkNum")).toInt();
+    r.nullptrified = ob.value(QStringLiteral("nullptrified")).toBool();
+    r.nature = static_cast<QSgsEnum::DamageNature>(ob.value(QStringLiteral("nature")).toInt());
+
+    return r;
 }
 
 DyingStruct::DyingStruct()
@@ -292,12 +323,42 @@ DyingStruct::DyingStruct()
 
 QJsonValue DyingStruct::toJson() const
 {
-    return QJsonValue();
+    QJsonObject ob;
+
+    if (damage != nullptr)
+    {
+        ob = damage->toJson().toObject();
+        ob[QStringLiteral("structType")] = QStringLiteral("DyingStruct");
+    }
+    else
+        ob.insert(QStringLiteral("structType"), QStringLiteral("DyingStruct"));
+
+    ob.insert(QStringLiteral("who"), who->objectName());
+    return ob;
 }
 
 DyingStruct DyingStruct::fromJson(const QJsonValue &value)
 {
-    return DyingStruct();
+    DyingStruct r;
+
+    if (!value.isObject())
+        return r;
+
+    QJsonObject ob = value.toObject();
+
+    if (ob.value(QStringLiteral("structType")) != QStringLiteral("DyingStruct"))
+        return r;
+
+    QString strWho = ob.value(QStringLiteral("who")).toString();        //find player by objectName
+
+    if (ob.size() == 2)
+        return r;
+
+    r.damage = new DamageStruct();                                      //when it comes to failure, fs should add some codes to deal it.
+    ob[QStringLiteral("structType")] = QStringLiteral("DamageStruct");
+    *(r.damage) = DamageStruct::fromJson(ob);
+
+    return r;
 }
 
 DeathStruct::DeathStruct()
@@ -307,7 +368,42 @@ DeathStruct::DeathStruct()
 
 QJsonValue DeathStruct::toJson() const
 {
-    return QJsonValue();
+    QJsonObject ob;
+
+    if (damage != nullptr)
+    {
+        ob = damage->toJson().toObject();
+        ob[QStringLiteral("structType")] = QStringLiteral("DeathStruct");
+    }
+    else
+        ob.insert(QStringLiteral("structType"), QStringLiteral("DeathStruct"));
+
+    ob.insert(QStringLiteral("who"), who->objectName());
+    return ob;
+}
+
+DeathStruct DeathStruct::fromJson(const QJsonValue &value)
+{
+    DeathStruct r;
+
+    if (!value.isObject())
+        return r;
+
+    QJsonObject ob = value.toObject();
+
+    if (ob.value(QStringLiteral("structType")) != QStringLiteral("DeathStruct"))
+        return r;
+
+    QString strWho = ob.value(QStringLiteral("who")).toString();        //find player by objectName
+
+    if (ob.size() == 2)
+        return r;
+
+    r.damage = new DamageStruct();                                      //when it comes to failure, fs should add some codes to deal it.
+    ob[QStringLiteral("structType")] = QStringLiteral("DamageStruct");
+    *(r.damage) = DamageStruct::fromJson(ob);
+
+    return r;
 }
 
 RecoverStruct::RecoverStruct()
@@ -317,12 +413,35 @@ RecoverStruct::RecoverStruct()
 
 QJsonValue RecoverStruct::toJson() const
 {
-    return QJsonValue();
+    QJsonObject ob;
+
+    ob.insert(QStringLiteral("structType"), QStringLiteral("RecoverStruct"));
+    ob.insert(QStringLiteral("who"), who->objectName());
+    ob.insert(QStringLiteral("recover"), recover);
+    if (card != nullptr)
+        ob.insert(QStringLiteral("card"), card->id());
+
+    return ob;
+
 }
 
 RecoverStruct RecoverStruct::fromJson(const QJsonValue &value)
 {
-    return RecoverStruct();
+    RecoverStruct r;
+
+    if (!value.isObject())
+        return r;
+
+    QJsonObject ob = value.toObject();
+    if (ob.value(QStringLiteral("structType")) != QStringLiteral("RecoverStruct"))
+        return r;
+
+    QString strWho = ob.value(QStringLiteral("who")).toString();
+    int intCard = ob.value(QStringLiteral("card")).toInt();
+
+    r.recover = ob.value(QStringLiteral("recover")).toInt();
+
+    return r;
 }
 
 PindianStruct::PindianStruct()
@@ -388,7 +507,13 @@ CardUseStruct::CardUseStruct()
 
 QJsonValue CardUseStruct::toJson() const
 {
-    return QJsonValue();
+    QJsonArray arr;
+
+    arr.append(QStringLiteral("CardUseStruct"));
+    arr.append(card->id());
+    arr.append(from->objectName());
+
+    return arr;
 }
 
 CardUseStruct CardUseStruct::fromJson(const QJsonValue &value)
