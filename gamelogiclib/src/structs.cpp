@@ -359,7 +359,7 @@ DyingStruct DyingStruct::fromJson(const QJsonValue &value)
     if (ob.size() == 2)
         return r;
 
-    r.damage = new DamageStruct();                                      //when it comes to failure, fs should add some codes to deal it.
+    r.damage = new DamageStruct();      //todo_Fs:add some codes to deal with memory allocation failure
     ob[QStringLiteral("structType")] = QStringLiteral("DamageStruct");
     *(r.damage) = DamageStruct::fromJson(ob);
 
