@@ -117,3 +117,24 @@ QSgsEnum::PackageType QSgsPackage::type() const
     Q_D(const QSgsPackage);
     return d->type;
 }
+
+QStringList cppPackages()
+{
+    // @todo_Fs: add a mechanism to get all the cpp package names before loading it
+    return QStringList();
+}
+
+QSgsPackage *loadCppPackage(const QString &packageName)
+{
+#ifndef QSANGUOSHA_STATICLIB
+    QPluginLoader loader(packageName);
+    return qobject_cast<QSgsPackage *>(loader.instance());
+#else
+    foreach (const QObject *object, QPluginLoader::staticInstances()) {
+        if (object->objectName() == packageName)
+            return qobject_cast<QSgsPackage *>(object);
+    }
+
+    return nullptr;
+#endif
+}

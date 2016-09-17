@@ -47,6 +47,7 @@ private:
     QVersionNumber m_ver;
 };
 
+QStringList luaPackages();
 QSgsLuaPackage *parseLuaPackage(const QString &fileName, QString *errorString);
 
 //class LuaTriggerSkill : public TriggerSkill

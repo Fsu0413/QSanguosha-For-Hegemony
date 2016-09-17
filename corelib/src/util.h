@@ -43,14 +43,14 @@ void qShuffle(QList<T> &list)
 // @todo: to be discovered that this grammar is correct or not
 LIBQSGSCORE_EXPORT lua_State *CreateLuaState();
 
-bool LIBQSGSCORE_EXPORT DoLuaScript(lua_State *L, const char *script);
+LIBQSGSCORE_EXPORT bool DoLuaScript(lua_State *L, const char *script);
 
-QVariant LIBQSGSCORE_EXPORT GetValueFromLuaState(lua_State *L, const char *table_name, const char *key);
+LIBQSGSCORE_EXPORT QVariant GetValueFromLuaState(lua_State *L, const char *table_name, const char *key);
 
-QStringList LIBQSGSCORE_EXPORT IntList2StringList(const QList<int> &intlist);
-QList<int> LIBQSGSCORE_EXPORT StringList2IntList(const QStringList &stringlist);
-QVariantList LIBQSGSCORE_EXPORT IntList2VariantList(const QList<int> &intlist);
-QList<int> LIBQSGSCORE_EXPORT VariantList2IntList(const QVariantList &variantlist);
+LIBQSGSCORE_EXPORT QStringList IntList2StringList(const QList<int> &intlist);
+LIBQSGSCORE_EXPORT QList<int> StringList2IntList(const QStringList &stringlist);
+LIBQSGSCORE_EXPORT QVariantList IntList2VariantList(const QList<int> &intlist);
+LIBQSGSCORE_EXPORT QList<int> VariantList2IntList(const QVariantList &variantlist);
 
 
 #endif

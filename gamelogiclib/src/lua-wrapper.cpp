@@ -404,6 +404,13 @@ const QVersionNumber &QSgsLuaPackage::version() const
 //    return origin->effect(event, room, player, data, ask_who);
 //}
 
+
+QStringList luaPackages()
+{
+    // @todo_Fs: add a mechanism to get all the lua package names before loading it
+    return QStringList();
+}
+
 QSgsLuaPackage *parseLuaPackage(const QString &fileName, QString *errorString)
 {
     QString errorString_;

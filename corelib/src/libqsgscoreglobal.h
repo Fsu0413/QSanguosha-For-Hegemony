@@ -17,10 +17,14 @@ class _EXPORT QSgsCoreGlobal
 #include <QtNetwork>
 #include <lua.hpp>
 
+#ifndef QSANGUOSHA_STATICLIB
 #ifdef LIBQSGSCORE_BUILDING_LIBQSGSCORE
 #define LIBQSGSCORE_EXPORT Q_DECL_EXPORT
 #else
 #define LIBQSGSCORE_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define LIBQSGSCORE_EXPORT
 #endif
 
 #endif

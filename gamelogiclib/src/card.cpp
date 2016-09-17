@@ -50,7 +50,7 @@ const QSgsEnum::CardSuit Card::AllSuits[4] = {
     QSgsEnum::CardSuit::Diamond
 };
 
-Card::Card(RoomObject *roomObject, const CardFace *cardFace, QSgsEnum::CardSuit suit, int number, bool canRecast, bool transferable, int id)
+Card::Card(RoomObject *roomObject, const CardFace *cardFace, int id, QSgsEnum::CardSuit suit, int number, bool canRecast, bool transferable)
     : QObject(roomObject), d_ptr(new CardPrivate)
 {
     Q_D(Card);

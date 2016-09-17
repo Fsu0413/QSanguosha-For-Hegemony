@@ -340,7 +340,7 @@ bool ProactiveSkill::viewFilter(const QList<Card *> &selected, Card *to_select, 
 Card *ProactiveSkill::viewAs(const QList<Card *> &cards, const Player *player, QSgsEnum::CardUseReason reason, const QString &pattern) const
 {
     if (cardFeasible(cards, player, reason, pattern)) {
-        Card *card = new Card(nullptr, findChild<SkillCardFace *>());
+        Card *card = new Card(nullptr, findChild<SkillCardFace *>(), 0);
         card->addSubcards(cards);
         return card;
     }
