@@ -305,7 +305,7 @@ SlashEffectStruct SlashEffectStruct::fromJson(const QJsonValue &value)
         return r;
 
     QJsonObject ob = value.toObject();
-    if (ob.value(QStringLiteral("structType")) != QStringLiteral("SlashEffectStruct"))
+    if (ob.value(QStringLiteral("structType")).toString() != QStringLiteral("SlashEffectStruct"))
         return r;
 
     QString strFrom = ob.value(QStringLiteral("from")).toString();
@@ -351,7 +351,7 @@ DyingStruct DyingStruct::fromJson(const QJsonValue &value)
 
     QJsonObject ob = value.toObject();
 
-    if (ob.value(QStringLiteral("structType")) != QStringLiteral("DyingStruct"))
+    if (ob.value(QStringLiteral("structType")).toString() != QStringLiteral("DyingStruct"))
         return r;
 
     QString strWho = ob.value(QStringLiteral("who")).toString();        //find player by objectName
@@ -396,7 +396,7 @@ DeathStruct DeathStruct::fromJson(const QJsonValue &value)
 
     QJsonObject ob = value.toObject();
 
-    if (ob.value(QStringLiteral("structType")) != QStringLiteral("DeathStruct"))
+    if (ob.value(QStringLiteral("structType")).toString() != QStringLiteral("DeathStruct"))
         return r;
 
     QString strWho = ob.value(QStringLiteral("who")).toString();        //find player by objectName
@@ -438,7 +438,7 @@ RecoverStruct RecoverStruct::fromJson(const QJsonValue &value)
         return r;
 
     QJsonObject ob = value.toObject();
-    if (ob.value(QStringLiteral("structType")) != QStringLiteral("RecoverStruct"))
+    if (ob.value(QStringLiteral("structType")).toString() != QStringLiteral("RecoverStruct"))
         return r;
 
     QString strWho = ob.value(QStringLiteral("who")).toString();
