@@ -74,8 +74,11 @@ public:
 
     const QList<Card *> &cards();
     QList<const Card *> cards() const;
+    const QList<Card *> &virtualCards();
+    QList<const Card *> virtualCards() const;
     Card *card(int id);
     const Card *card(int id) const;
+
     const QList<Player *> &players();
     QList<const Player *> players() const;
     Player *player(const QString &name);

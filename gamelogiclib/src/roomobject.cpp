@@ -92,19 +92,21 @@ void RoomObject::addRealCard(Card *card)
 {
     Q_D(RoomObject);
     d->availableCards << card;
+    // @todo_Fs: notify
 }
 
 void RoomObject::addRealCards(QList<Card *> cards)
 {
     Q_D(RoomObject);
     d->availableCards << cards;
+    // @todo_Fs: notify
 }
 
 void RoomObject::addVirtualCard(Card *card)
 {
     Q_D(RoomObject);
     d->virtualCards << card;
-    // card->setParent(this);
+    // @todo_Fs: notify
 }
 
 const QList<Card *> &RoomObject::cards()
@@ -118,6 +120,21 @@ QList<const Card *> RoomObject::cards() const
     Q_D(const RoomObject);
     QList<const Card *> c;
     foreach (Card *card, d->availableCards)
+        c << card;
+    return c;
+}
+
+const QList<Card *> &RoomObject::virtualCards()
+{
+    Q_D(RoomObject);
+    return d->virtualCards;
+}
+
+QList<const Card *> RoomObject::virtualCards() const
+{
+    Q_D(const RoomObject);
+    QList<const Card *> c;
+    foreach (Card *card, d->virtualCards)
         c << card;
     return c;
 }
