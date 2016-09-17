@@ -61,7 +61,7 @@ const QHash<QString, const General *> QSgsPackage::generals() const
 const General *QSgsPackage::general(const QString &generalName) const
 {
     Q_D(const QSgsPackage);
-    return d->generals.value(generalName,nullptr);
+    return d->generals.value(generalName, nullptr);
 }
 
 const QHash<QString, const CardFace *> &QSgsPackage::cardFaces() const
@@ -73,7 +73,7 @@ const QHash<QString, const CardFace *> &QSgsPackage::cardFaces() const
 const CardFace *QSgsPackage::cardFace(const QString &cardFaceName) const
 {
     Q_D(const QSgsPackage);
-    return d->cardFaces.value(cardFaceName,nullptr);
+    return d->cardFaces.value(cardFaceName, nullptr);
 }
 
 const QList<Card *> QSgsPackage::cards() const
@@ -91,7 +91,7 @@ const QHash<QString, const Skill *> QSgsPackage::skills() const
 const Skill *QSgsPackage::skill(const QString &skillName) const
 {
     Q_D(const QSgsPackage);
-    return d->skills.value(skillName,nullptr);
+    return d->skills.value(skillName, nullptr);
 }
 
 const QMultiMap<QString, QString> QSgsPackage::relatedSkills() const

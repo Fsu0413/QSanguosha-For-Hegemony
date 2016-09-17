@@ -48,7 +48,7 @@ private:
     QVersionNumber m_ver;
 };
 
-QSgsLuaPackage *parseLuaPackage(const QString &fileName, bool *ok = nullptr);
+QSgsLuaPackage *parseLuaPackage(const QString &fileName, QString *errorString);
 
 //class LuaTriggerSkill : public TriggerSkill
 //{
