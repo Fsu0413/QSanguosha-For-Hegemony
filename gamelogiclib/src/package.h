@@ -33,7 +33,6 @@ class QSgsPackagePrivate;
 class LIBQSGSGAMELOGIC_EXPORT QSgsPackage
 {
 public:
-    explicit QSgsPackage(const QString &name, QSgsEnum::PackageType type = QSgsEnum::PackageType::General);
     virtual ~QSgsPackage();
 
     const QHash<QString, const General *> generals() const;
@@ -51,6 +50,8 @@ public:
     QSgsEnum::PackageType type() const;
 	
 protected:
+    explicit QSgsPackage(const QString &name, QSgsEnum::PackageType type = QSgsEnum::PackageType::General);
+
     Q_DECLARE_PRIVATE(QSgsPackage)
     QSgsPackagePrivate *d_ptr;
 };

@@ -403,14 +403,13 @@ const QVersionNumber &QSgsLuaPackage::version() const
 //    return origin->effect(event, room, player, data, ask_who);
 //}
 
-
-QSgsLuaPackage *parseLuaPackage(const QString &fileName, bool *ok)
+QSgsLuaPackage *parseLuaPackage(const QString &fileName, QString *errorString)
 {
-    bool ok_;
-    if (ok == nullptr)
-        ok = &ok_;
+    QString errorString_;
+    if (errorString == nullptr)
+        errorString = &errorString_;
 
-    *ok = false;
+    errorString->clear();
 
     lua_State *l = Sanguosha->luaState();
 
@@ -421,17 +420,17 @@ QSgsLuaPackage *parseLuaPackage(const QString &fileName, bool *ok)
     error = luaL_loadfile(l, fileName.toUtf8().constData());
 #endif
     if (error) {
-        const char *error_message = lua_tostring(l, -1);
+        const char *errorMessage = lua_tostring(l, -1);
+        *errorString = QString::fromUtf8(errorMessage);
         lua_pop(l, 1);
-        //emit this->error(error_message);
         return nullptr;
     }
 
     error = lua_pcall(l, 0, 1, 0);
     if (error) {
-        const char *error_message = lua_tostring(l, -1);
+        const char *errorMessage = lua_tostring(l, -1);
+        *errorString = QString::fromUtf8(errorMessage);
         lua_pop(l, 1);
-        // emit this->error(error_message);
         return nullptr;
     }
 
@@ -442,7 +441,8 @@ QSgsLuaPackage *parseLuaPackage(const QString &fileName, bool *ok)
     const char *name = lua_tostring(l, -1);
     lua_pop(l, 1);
     if (QString::fromUtf8(name).isEmpty()) {
-        //emit this->error("invalid package name for Lua File:" + m_LuaFile);
+        *errorString = QStringLiteral("No package name for Lua File: ") + fileName;
+        lua_pop(l, 1);
         return nullptr;
     }
 
@@ -450,22 +450,25 @@ QSgsLuaPackage *parseLuaPackage(const QString &fileName, bool *ok)
 
     lua_pushstring(l, "version");
     lua_rawget(l, -2);
-    QString ver_string = QString::fromUtf8(lua_tostring(l, -1));
+    QString verStr = QString::fromUtf8(lua_tostring(l, -1));
     lua_pop(l, 1);
-    if (ver_string.isEmpty()) {
-        //emit this->error("invalid package version for Lua File:" + m_LuaFile);
+    if (verStr.isEmpty()) {
+        *errorString = QStringLiteral("No package version for Lua File: ") + fileName;
+        lua_pop(l, 1);
         return nullptr;
     } else {
-        QStringList splitedVerString = ver_string.split(QStringLiteral("."));
+        QStringList splitedVerString = verStr.split(QStringLiteral("."));
         if (splitedVerString.length() != 3) {
-            //emit this->error("invalid package version for Lua File:" + m_LuaFile + ". The version number must go with a formation like x.x.x");
+            *errorString = QStringLiteral("The package version %1 for Lua file %2 is invalid.").arg(verStr).arg(fileName);
+            lua_pop(l, 1);
             return nullptr;
         } else {
             foreach (const QString &n, splitedVerString) {
                 bool is_ok = false;
                 n.toInt(&is_ok);
                 if (!is_ok) {
-                    //emit this->error("invalid package version for Lua File:" + m_LuaFile + ". Eveny part of the version must be a number!");
+                    *errorString = QStringLiteral("The package version %1 for Lua file %2 is invalid.").arg(verStr).arg(fileName);
+                    lua_pop(l, 1);
                     return nullptr;
                 }
             }
@@ -483,9 +486,10 @@ QSgsLuaPackage *parseLuaPackage(const QString &fileName, bool *ok)
 
     // then, we need to evaluate the skill and card.
 
-    QSgsLuaPackage *pac = new QSgsLuaPackage(QString::fromUtf8(name), t, ver_string);
+    QSgsLuaPackage *pac = new QSgsLuaPackage(QString::fromUtf8(name), t, verStr);
 
-    *ok = true;
+    // we must pop the table finally, should put it to _G.QSgsPackage
 
+    lua_pop(l, 1);
     return pac;
 }
