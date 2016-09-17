@@ -1,4 +1,5 @@
 #include "roomobject.h"
+#include "player.h"
 
 RoomRequestReceiver::RoomRequestReceiver()
 {
@@ -121,10 +122,22 @@ QList<const Card *> RoomObject::cards() const
     return c;
 }
 
-Card *RoomObject::card(int id) const
+Card *RoomObject::card(int id)
+{
+    Q_D(RoomObject);
+    if (id > 0)
+        return d->availableCards.value(id - 1, nullptr);
+    else
+        return d->virtualCards.value(-id - 1, nullptr);
+}
+
+const Card *RoomObject::card(int id) const
 {
     Q_D(const RoomObject);
-    return d->availableCards.value(id, nullptr);
+    if (id > 0)
+        return d->availableCards.value(id - 1, nullptr);
+    else
+        return d->virtualCards.value(-id - 1, nullptr);
 }
 
 const QList<Player *> &RoomObject::players()
@@ -140,6 +153,26 @@ QList<const Player *> RoomObject::players() const
     foreach (Player *player, d->players)
         p << player;
     return p;
+}
+
+Player *RoomObject::player(const QString &name)
+{
+    Q_D(RoomObject);
+    foreach (Player *p, d->players) {
+        if (p->objectName() == name)
+            return p;
+    }
+    return nullptr;
+}
+
+const Player *RoomObject::player(const QString &name) const
+{
+    Q_D(const RoomObject);
+    foreach (Player *p, d->players) {
+        if (p->objectName() == name)
+            return p;
+    }
+    return nullptr;
 }
 
 const QString &RoomObject::currentCardUsePattern() const

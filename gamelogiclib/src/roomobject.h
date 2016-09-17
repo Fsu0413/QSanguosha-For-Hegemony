@@ -74,9 +74,12 @@ public:
 
     const QList<Card *> &cards();
     QList<const Card *> cards() const;
-    Card *card(int id) const;
+    Card *card(int id);
+    const Card *card(int id) const;
     const QList<Player *> &players();
     QList<const Player *> players() const;
+    Player *player(const QString &name);
+    const Player *player(const QString &name) const;
 
     const QString &currentCardUsePattern() const;
     QSgsEnum::CardUseReason currentCardUseReason() const;
