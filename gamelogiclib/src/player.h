@@ -30,12 +30,13 @@ class Skill;
 class TriggerSkill;
 class PlayerPrivate;
 
-class LIBQSGSGAMELOGIC_EXPORT Player : public QObject
+class LIBQSGSGAMELOGIC_EXPORT Player final : public QObject
 {
     Q_OBJECT
 
 public:
     explicit Player(QObject *parent);
+    ~Player();
 
     // property setters/getters
     int hp() const;
@@ -52,7 +53,7 @@ public:
 
     void setDisableShow(const QString &flags, const QString &reason);
     void removeDisableShow(const QString &reason);
-    const QStringList &disableShow(bool head) const;
+    bool disableShow(bool head, QStringList *reasons = nullptr) const;
 
     const QString &kingdom() const;
     void setKingdom(const QString &kingdom);
@@ -91,8 +92,8 @@ public:
     bool faceUp() const;
     void setFaceUp(bool faceUp);
 
-    static bool (Player::*isSuperposed)() const;
-    static void (Player::*setSuperposed)(bool superposed);
+    inline bool superposed() const { return faceUp(); }
+    void setSuperposed(bool superposed) { setFaceUp(superposed); }
 
     void setFixedDistance(const Player *player, int distance);
     int originalRightDistanceTo(const Player *other) const;
