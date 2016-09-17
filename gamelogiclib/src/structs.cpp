@@ -237,11 +237,6 @@ CardEffectStruct::CardEffectStruct()
 
 QJsonValue CardEffectStruct::toJson() const
 {
-    QJsonValue v;
-
-    if (to == nullptr)
-        return v;
-
     QJsonObject ob;
 
     ob.insert(QStringLiteral("structType"), QStringLiteral("CardEffectStruct"));
