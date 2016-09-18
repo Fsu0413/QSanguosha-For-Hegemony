@@ -530,22 +530,23 @@ QJsonValue CardUseStruct::toJson() const
     QJsonValue v;
     QJsonObject ob;
 
-    if (to.isEmpty() || card == nullptr || card->id() == 0)
+    if (card == nullptr || card->id() == 0)
         return v;
 
     ob.insert(QStringLiteral("structType"), QStringLiteral("CardUseStruct"));
 
-    QStringList listTo;
-    for (int i = 0; i < to.size(); i++)
-        listTo << to.at(i)->objectName();
-
-    ob.insert(QStringLiteral("to"), listTo.join(QStringLiteral(",")));
-
+    QJsonArray playerArray;
+    foreach (Player *p, to)
+        playerArray.append(p->objectName());
+    ob.insert(QStringLiteral("to"), playerArray);
     ob.insert(QStringLiteral("card"), card->id());
     ob.insert(QStringLiteral("isOwnerUse"), isOwnerUse);
     ob.insert(QStringLiteral("addHistory"), addHistory);
     ob.insert(QStringLiteral("isHandcard"), isHandcard);
-    ob.insert(QStringLiteral("nullifiedList"), nullifiedList.join(QStringLiteral(",")));
+    QJsonArray nullifiedArray;
+    foreach (const QString &n, nullifiedList)
+        nullifiedArray.append(n);
+    ob.insert(QStringLiteral("nullifiedList"), nullifiedArray);
     ob.insert(QStringLiteral("reason"), static_cast<int>(reason));
 
     if (from != nullptr)
@@ -571,25 +572,26 @@ CardUseStruct CardUseStruct::fromJson(const QJsonValue &value, RoomObject *room)
     if (intCard == 0)
         return r;
 
-    QStringList listTo = ob.value(QStringLiteral("to")).toString().split(QStringLiteral(","));
-    if (listTo.isEmpty())
-        return r;
-
     r.card = room->card(intCard);
-    for (int i = 0; i < listTo.size(); i++)
-        r.to.append(nullptr); //todo_Fs:get player by elements of StringList
+
+    QJsonArray playerArray = ob.value(QStringLiteral("to")).toArray();
+    foreach (const QVariant &p, playerArray.toVariantList())
+        r.to.append(room->player(p.toString()));
 
     QString strFrom = ob.value(QStringLiteral("from")).toString();
     if (strFrom.isNull() || strFrom.isEmpty())
         r.from = nullptr;
     else
-        r.from = nullptr;   //todo_Fs:RoomObject->getPlayer
+        r.from = room->player(strFrom);
 
     r.addHistory = ob.value(QStringLiteral("addHistory")).toBool();
     r.isOwnerUse = ob.value(QStringLiteral("isOwnerUse")).toBool();
     r.isHandcard = ob.value(QStringLiteral("isHandcard")).toBool();
     r.reason = static_cast<QSgsEnum::CardUseReason>(ob.value(QStringLiteral("reason")).toInt());
-    r.nullifiedList = ob.value(QStringLiteral("nullifiedList")).toString().split(QStringLiteral(","));    //todo_Fs:further handling?
+
+    QJsonArray nullifiedArray = ob.value(QStringLiteral("nullifiedList")).toArray();
+    foreach (const QVariant &p, nullifiedArray.toVariantList())
+        r.nullifiedList.append(p.toString());
 
     return r;
 
@@ -862,7 +864,7 @@ QJsonValue PhaseChangeStruct::toJson() const
     return ob;
 }
 
-PhaseChangeStruct PhaseChangeStruct::fromJson(const QJsonValue &value, RoomObject *room)
+PhaseChangeStruct PhaseChangeStruct::fromJson(const QJsonValue &value, RoomObject *)
 {
     PhaseChangeStruct r;
 
@@ -935,16 +937,12 @@ QJsonValue LogMessage::toJson() const
     ob.insert(QStringLiteral("card_str"), card_str);
     ob.insert(QStringLiteral("arg"), arg);
     ob.insert(QStringLiteral("arg2"), arg2);
-    if (to.isEmpty())
-        ob.insert(QStringLiteral("to"), QString());
-    else{
-        QStringList listTo;
 
-        for (int i = 0; i < to.size(); i++)
-            listTo << to.at(i)->objectName();
+    QJsonArray playerArray;
+    foreach (Player *p, to)
+        playerArray.append(p->objectName());
 
-        ob.insert(QStringLiteral("to"), listTo.join(QStringLiteral(",")));
-    }
+    ob.insert(QStringLiteral("to"), playerArray);
 
     if (from != nullptr)
         ob.insert(QStringLiteral("from"), from->objectName());
@@ -974,13 +972,9 @@ LogMessage LogMessage::fromJson(const QJsonValue &value, RoomObject *room)
     if (!strFrom.isNull() && ! strFrom.isEmpty())
         r.from = room->player(strFrom);
 
-    QString strTo = ob.value(QStringLiteral("to")).toString();
-    if (!strTo.isNull() && !strTo.isEmpty()){
-        QStringList listTo = strTo.split(QStringLiteral(","));
-
-        for (int i = 0; i < listTo.size(); i++)
-            r.to.append(nullptr);       //todo_Fs:find player by the elements of StringList
-    }
+    QJsonArray playerArray = ob.value(QStringLiteral("to")).toArray();
+    foreach (const QVariant &p, playerArray.toVariantList())
+        r.to.append(room->player(p.toString()));
 
     return r;
 }
