@@ -120,8 +120,18 @@ QSgsEnum::PackageType QSgsPackage::type() const
 
 QStringList cppPackages()
 {
-    // @todo_Fs: add a mechanism to get all the cpp package names before loading it
+#ifndef QSANGUOSHA_STATICLIB
+    // @todo_Fs: add a mechanism to get all the cpp package plugins before loading it
     return QStringList();
+#else
+    QStringList l;
+    foreach (const QObject *object, QPluginLoader::staticInstances()) {
+        if (object->inherits("QSgsPackage"))
+            l << object->objectName();
+    }
+
+    return l;
+#endif
 }
 
 QSgsPackage *loadCppPackage(const QString &packageName)
@@ -131,7 +141,7 @@ QSgsPackage *loadCppPackage(const QString &packageName)
     return qobject_cast<QSgsPackage *>(loader.instance());
 #else
     foreach (const QObject *object, QPluginLoader::staticInstances()) {
-        if (object->objectName() == packageName)
+        if (object->inhertis("QSgsPackage") && object->objectName() == packageName)
             return qobject_cast<QSgsPackage *>(object);
     }
 

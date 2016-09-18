@@ -326,24 +326,14 @@ struct LIBQSGSGAMELOGIC_EXPORT CardsMoveStruct
     }
 };
 
-struct LIBQSGSGAMELOGIC_EXPORT DyingStruct
-{
-    DyingStruct();
-
-    Player *who; // who is ask for help
-    DamageStruct *damage; // if it is nullptr that means the dying is caused by losing hp
-
-    QJsonValue toJson() const;
-
-    static DyingStruct fromJson(const QJsonValue &value, RoomObject *room);
-};
-
 struct LIBQSGSGAMELOGIC_EXPORT DeathStruct
 {
     DeathStruct();
 
     Player *who; // who is dead
-    DamageStruct *damage; // if it is nullptr that means the dying is caused by losing hp
+    QSgsEnum::DeathReason reason;
+    Player *murderer;
+    DamageStruct damage;
 
     QJsonValue toJson() const;
 
@@ -554,7 +544,6 @@ Q_DECLARE_METATYPE(SlashEffectStruct)
 Q_DECLARE_METATYPE(CardUseStruct)
 Q_DECLARE_METATYPE(CardsMoveStruct)
 Q_DECLARE_METATYPE(CardsMoveOneTimeStruct)
-Q_DECLARE_METATYPE(DyingStruct)
 Q_DECLARE_METATYPE(DeathStruct)
 Q_DECLARE_METATYPE(RecoverStruct)
 Q_DECLARE_METATYPE(PhaseChangeStruct)

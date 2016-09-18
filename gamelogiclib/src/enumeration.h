@@ -313,6 +313,16 @@ enum class CardMoveReason
     BasicReasonMask = 0x0F
 };
 
+enum class DeathReason
+{
+    Murder = 1,                 // killed by others
+    Suiside,                    // killed by himself
+    Contingency,                // damaged by no source
+    HpLostTo0,
+    MaxHpLostTo0,
+    SuddenDeath                 // as the name tells. seems like only god_guanyu can cause this type of death...
+};
+
 }
 
 
