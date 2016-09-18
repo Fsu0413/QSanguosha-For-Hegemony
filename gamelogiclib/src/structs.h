@@ -88,7 +88,7 @@ struct LIBQSGSGAMELOGIC_EXPORT SlashEffectStruct
 
     QSgsEnum::DamageNature nature;
 
-    bool nullptrified;
+    bool nullified;
 
     QJsonValue toJson() const;
 

@@ -21,10 +21,7 @@
 #include "structs.h"
 #include "player.h"
 #include "card.h"
-
-//#include "json.h"
-//#include "exppattern.h"
-//#include "room.h"
+#include "roomobject.h"
 
 bool CardsMoveStruct::tryParse(const QVariant &arg)
 {
@@ -172,7 +169,7 @@ QJsonValue DamageStruct::toJson() const
         ob.insert(QStringLiteral("from"), QString());
     ob.insert(QStringLiteral("to"), to->objectName());
     if (card != nullptr)
-        ob.insert(QStringLiteral("card"), card->id()); // seems like a virtual card must have unique IDs....@todo_Fs
+        ob.insert(QStringLiteral("card"), card->id());
     else
         ob.insert(QStringLiteral("card"), 0);
     ob.insert(QStringLiteral("damage"), damage);
@@ -190,7 +187,7 @@ QJsonValue DamageStruct::toJson() const
 DamageStruct DamageStruct::fromJson(const QJsonValue &value, RoomObject *room)
 {
     DamageStruct r;
-    if (!value.isObject())
+    if (!value.isObject() || room == nullptr)
         return r;
 
     QJsonObject ob = value.toObject();
@@ -207,13 +204,13 @@ DamageStruct DamageStruct::fromJson(const QJsonValue &value, RoomObject *room)
 
     QString strFrom = ob.value(QStringLiteral("from")).toString();
     if (!strFrom.isNull() && !strFrom.isEmpty())
-        r.from = nullptr; // @todo_Fs: RoomObject?? // roomObject->getPlayer(strFrom);
+        r.from = room->player(strFrom);
 
-    r.to = nullptr; // @todo_Fs: RoomObject?? // roomObject->getPlayer(strTo);
+    r.to = room->player(strTo);
 
     int intCard = ob.value(QStringLiteral("card")).toInt();
     if (intCard != 0)
-        r.card = nullptr; // @todo_Fs: RoomObject??  // roomObject->getCard(intCard);
+        r.card = room->card(intCard);
 
     r.damage = intDamage;
     r.nature = static_cast<QSgsEnum::DamageNature>(ob.value(QStringLiteral("nature")).toInt());
@@ -259,7 +256,7 @@ CardEffectStruct CardEffectStruct::fromJson(const QJsonValue &value, RoomObject 
 {
     CardEffectStruct r;
 
-    if (!value.isObject())
+    if (!value.isObject() || room == nullptr)
         return r;
 
     QJsonObject ob = value.toObject();
@@ -270,24 +267,24 @@ CardEffectStruct CardEffectStruct::fromJson(const QJsonValue &value, RoomObject 
     if (strTo.isNull() || strTo.isEmpty())
         return r;
 
-    int intCard = ob.value(QStringLiteral("card")).toInt();             //find card by its id
+    int intCard = ob.value(QStringLiteral("card")).toInt();
     if (intCard == 0)
         return r;
 
-    r.card = nullptr;   //todo_Fs:RoomObject->getCard
-    r.to = nullptr; //todo_Fs:RoomObject->getPlayer
+    r.card = room->card(intCard);
+    r.to = room->player(strTo);
     r.multiple = ob.value(QStringLiteral("multiple")).toBool();
     r.nullptrified = ob.value(QStringLiteral("nullptrified")).toBool();
 
-    QString strFrom = ob.value(QStringLiteral("from")).toString();      //find player by objectName
+    QString strFrom = ob.value(QStringLiteral("from")).toString();
     if (!strFrom.isEmpty() && !strFrom.isNull())
-        r.from = nullptr;   //todo_Fs:RoomObject->getPlayer
+        r.from = room->player(strFrom);
 
     return r;
 }
 
 SlashEffectStruct::SlashEffectStruct()
-    : jinkNum(1), slash(nullptr), jink(nullptr), from(nullptr), to(nullptr), drank(0), nature(QSgsEnum::DamageNature::Normal), nullptrified(false)
+    : jinkNum(1), slash(nullptr), jink(nullptr), from(nullptr), to(nullptr), drank(0), nature(QSgsEnum::DamageNature::Normal), nullified(false)
 {
 }
 
@@ -306,7 +303,7 @@ QJsonValue SlashEffectStruct::toJson() const
     ob.insert(QStringLiteral("to"), to->objectName());
     ob.insert(QStringLiteral("drank"), drank);
     ob.insert(QStringLiteral("nature"), static_cast<int>(nature));
-    ob.insert(QStringLiteral("nullptrified"), nullptrified);
+    ob.insert(QStringLiteral("nullified"), nullified);
 
     if (jink != nullptr)
         ob.insert(QStringLiteral("jink"), jink->id());
@@ -324,7 +321,7 @@ SlashEffectStruct SlashEffectStruct::fromJson(const QJsonValue &value, RoomObjec
 {
     SlashEffectStruct r;
 
-    if (!value.isObject())
+    if (!value.isObject() || room == nullptr)
         return r;
 
     QJsonObject ob = value.toObject();
@@ -338,19 +335,19 @@ SlashEffectStruct SlashEffectStruct::fromJson(const QJsonValue &value, RoomObjec
     if (intSlash == 0)
         return r;
 
-    r.slash = nullptr;  //todo_Fs:RoomObject->getCard
-    r.to = nullptr;     //todo_Fs:RoomObject->getPlayer
+    r.slash = room->card(intSlash);
+    r.to = room->player(strTo);
 
     QString strFrom = ob.value(QStringLiteral("from")).toString();
     if (!strFrom.isNull() && !strFrom.isEmpty())
-        r.from = nullptr;   //todo_Fs:RoomObject->getPlayer
+        r.from = room->player(strFrom);
     int intJink = ob.value(QStringLiteral("jink")).toInt();
     if (intJink != 0)
-        r.jink = nullptr;   //todo_Fs:RoomObject->getCard
+        r.jink = room->card(intJink);
 
     r.drank = ob.value(QStringLiteral("drank")).toInt();
     r.jinkNum = ob.value(QStringLiteral("jinkNum")).toInt();
-    r.nullptrified = ob.value(QStringLiteral("nullptrified")).toBool();
+    r.nullified = ob.value(QStringLiteral("nullified")).toBool();
     r.nature = static_cast<QSgsEnum::DamageNature>(ob.value(QStringLiteral("nature")).toInt());
 
     return r;
@@ -504,14 +501,12 @@ RecoverStruct RecoverStruct::fromJson(const QJsonValue &value, RoomObject *room)
     if (intRecover == 0)
         return r;
 
-    r.who = nullptr;        //todo_Fs:RoomObject->getPlayer
+    r.who = room->player(strWho);
     r.recover = intRecover;
 
     int intCard = ob.value(QStringLiteral("card")).toInt();
-    if (intCard == 0)
-        r.card = nullptr;
-    else
-        r.card = nullptr;   //todo_Fs:RoomObject->getCard
+    if (intCard != 0)
+        r.card = room->card(intCard);
 
     return r;
 }
