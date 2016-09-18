@@ -233,7 +233,7 @@ QJsonValue CardEffectStruct::toJson() const
 {
     QJsonValue v;
 
-    if (to == nullptr || card == nullptr)
+    if (to == nullptr || card == nullptr || card->id() == 0)
         return v;
 
     QJsonObject ob;
@@ -292,7 +292,7 @@ QJsonValue SlashEffectStruct::toJson() const
 {
     QJsonValue v;
 
-    if (slash == nullptr || to == nullptr)
+    if (slash == nullptr || to == nullptr || slash->id() == 0)
         return v;
 
     QJsonObject ob;
@@ -393,7 +393,7 @@ DyingStruct DyingStruct::fromJson(const QJsonValue &value, RoomObject *room)
     if (strWho.isNull() || strWho.isEmpty())
         return r;
     else
-        r.who = nullptr;        //todo_Fs:RoomObject->getPlayer
+        r.who = room->player(strWho);
 
     if (ob.size() == 2)
         return r;
@@ -445,7 +445,7 @@ DeathStruct DeathStruct::fromJson(const QJsonValue &value, RoomObject *room)
     if (strWho.isNull() || strWho.isEmpty())
         return r;
     else
-        r.who = nullptr;                //todo_Fs:RoomObject->getPlayer
+        r.who = room->player(strWho);
 
     if (ob.size() == 2)
         return r;
@@ -577,7 +577,7 @@ QJsonValue CardUseStruct::toJson() const
     QJsonValue v;
     QJsonObject ob;
 
-    if (to.isEmpty() || card == nullptr)
+    if (to.isEmpty() || card == nullptr || card->id() == 0)
         return v;
 
     ob.insert(QStringLiteral("structType"), QStringLiteral("CardUseStruct"));
@@ -621,9 +621,9 @@ CardUseStruct CardUseStruct::fromJson(const QJsonValue &value, RoomObject *room)
     if (listTo.isEmpty())
         return r;
 
-    r.card = nullptr;   //todo_Fs:RoomObject->getCard
+    r.card = room->card(intCard);
     for (int i = 0; i < listTo.size(); i++)
-        r.to.append(nullptr); //todo_Fs:RoomObject->getPlayer
+        r.to.append(nullptr); //todo_Fs:get player by elements of StringList
 
     QString strFrom = ob.value(QStringLiteral("from")).toString();
     if (strFrom.isNull() || strFrom.isEmpty())
@@ -782,3 +782,251 @@ SkillTriggerStruct SkillTriggerStruct::fromJson(const QJsonValue &value, RoomObj
     return SkillTriggerStruct();
 }
 
+QJsonValue PindianStruct::toJson() const
+{
+    QJsonValue v;
+
+    if (from == nullptr || to == nullptr || from_card == nullptr || to_card == nullptr ||
+        from_card->id() == 0 || to_card->id() == 0)
+        return v;
+
+    QJsonObject ob;
+
+    ob.insert(QStringLiteral("structType"), QStringLiteral("PindianStruct"));
+    ob.insert(QStringLiteral("from"), from->objectName());
+    ob.insert(QStringLiteral("to"), to->objectName());
+    ob.insert(QStringLiteral("from_card"), from_card->id());
+    ob.insert(QStringLiteral("to_card"), to_card->id());
+    ob.insert(QStringLiteral("from_number"), from_number);
+    ob.insert(QStringLiteral("to_number"), to_number);
+    ob.insert(QStringLiteral("reason"), reason);
+    ob.insert(QStringLiteral("success"), success);
+
+    return ob;
+}
+
+PindianStruct PindianStruct::fromJson(const QJsonValue &value, RoomObject *room)
+{
+    PindianStruct r;
+
+    if (!value.isObject())
+        return r;
+
+    QJsonObject ob = value.toObject();
+    if (ob.value(QStringLiteral("structType")).toString() != QStringLiteral("PindianStruct"))
+        return r;
+
+    QString strFrom = ob.value(QStringLiteral("from")).toString();
+    if (strFrom.isNull() || strFrom.isEmpty())
+        return r;
+
+    QString strTo = ob.value(QStringLiteral("to")).toString();
+    if (strTo.isNull() || strTo.isEmpty())
+        return r;
+
+    int intFromCard = ob.value(QStringLiteral("from_card")).toInt();
+    if (intFromCard == 0)
+        return r;
+
+    int intToCard = ob.value(QStringLiteral("to_card")).toInt();
+    if (intToCard == 0)
+        return r;
+
+    r.from = room->player(strFrom);
+    r.to = room->player(strTo);
+    r.from_card = room->card(intFromCard);
+    r.to_card = room->card(intToCard);
+    r.from_number = ob.value(QStringLiteral("from_number")).toInt();
+    r.to_number = ob.value(QStringLiteral("to_number")).toInt();
+    r.reason = ob.value(QStringLiteral("reason")).toString();
+    r.success = ob.value(QStringLiteral("success")).toBool();
+
+    return r;
+}
+
+QJsonValue JudgeStruct::toJson() const
+{
+    QJsonValue v;
+
+    if (who == nullptr || card == nullptr || card->id() == 0)
+        return v;
+
+    QJsonObject ob;
+
+    ob.insert(QStringLiteral("structType"), QStringLiteral("JudgeStruct"));
+    ob.insert(QStringLiteral("who"), who->objectName());
+    ob.insert(QStringLiteral("card"), card->id());
+    ob.insert(QStringLiteral("pattern"), pattern);
+    ob.insert(QStringLiteral("good"), good);
+    ob.insert(QStringLiteral("reason"), reason);
+    ob.insert(QStringLiteral("time_consuming"), time_consuming);
+    ob.insert(QStringLiteral("negative"), negative);
+    ob.insert(QStringLiteral("play_animation"), play_animation);
+
+    return ob;
+}
+
+JudgeStruct JudgeStruct::fromJson(const QJsonValue &value, RoomObject *room)
+{
+    JudgeStruct r;
+
+    if (!value.isObject())
+        return r;
+
+    QJsonObject ob = value.toObject();
+    if (ob.value(QStringLiteral("structType")).toString() != QStringLiteral("JudgeStruct"))
+        return r;
+
+    QString strWho = ob.value(QStringLiteral("who")).toString();
+    if (strWho.isNull() || strWho.isEmpty())
+        return r;
+
+    int intCard = ob.value(QStringLiteral("card")).toInt();
+    if (intCard == 0)
+        return r;
+
+    r.who = room->player(strWho);
+    r.card = room->card(intCard);
+    r.pattern = ob.value(QStringLiteral("pattern")).toString();
+    r.good = ob.value(QStringLiteral("good")).toBool();
+    r.reason = ob.value(QStringLiteral("reason")).toString();
+    r.time_consuming = ob.value(QStringLiteral("time_consuming")).toBool();
+    r.negative = ob.value(QStringLiteral("negative")).toBool();
+    r.play_animation = ob.value(QStringLiteral("play_animation")).toBool();
+
+    return r;
+}
+
+QJsonValue PhaseChangeStruct::toJson() const
+{
+    QJsonObject ob;
+
+    ob.insert(QStringLiteral("structType"), QStringLiteral("PhaseChangeStruct"));
+    ob.insert(QStringLiteral("from"), static_cast<int>(from));
+    ob.insert(QStringLiteral("to"), static_cast<int>(to));
+
+    return ob;
+}
+
+PhaseChangeStruct PhaseChangeStruct::fromJson(const QJsonValue &value, RoomObject *room)
+{
+    PhaseChangeStruct r;
+
+    if (!value.isObject())
+        return r;
+
+    QJsonObject ob = value.toObject();
+    if (ob.value(QStringLiteral("structType")).toString() != QStringLiteral("PhaseChangeStruct"))
+        return r;
+
+    r.from = static_cast<QSgsEnum::PlayerPhase>(ob.value(QStringLiteral("from")).toInt());
+    r.to = static_cast<QSgsEnum::PlayerPhase>(ob.value(QStringLiteral("to")).toInt());
+
+    return r;
+}
+
+QJsonValue CardResponseStruct::toJson() const
+{
+    QJsonValue v;
+
+    if (card == nullptr || who == nullptr || card->id() == 0)
+        return v;
+
+    QJsonObject ob;
+
+    ob.insert(QStringLiteral("structType"), QStringLiteral("CardResponseStruct"));
+    ob.insert(QStringLiteral("card"), card->id());
+    ob.insert(QStringLiteral("who"), who->objectName());
+    ob.insert(QStringLiteral("isUse"), isUse);
+    ob.insert(QStringLiteral("isHandcard"), isHandcard);
+    ob.insert(QStringLiteral("isRetrial"), isRetrial);
+
+    return ob;
+}
+
+CardResponseStruct CardResponseStruct::fromJson(const QJsonValue &value, RoomObject *room)
+{
+    CardResponseStruct r;
+
+    if (!value.isObject())
+        return r;
+
+    QJsonObject ob = value.toObject();
+    if (ob.value(QStringLiteral("structType")).toString() != QStringLiteral("CardResponseStruct"))
+        return r;
+
+    QString strWho = ob.value(QStringLiteral("who")).toString();
+    if (strWho.isNull() || strWho.isEmpty())
+        return r;
+
+    int intCard = ob.value(QStringLiteral("card")).toInt();
+    if (intCard == 0)
+        return r;
+
+    r.who = room->player(strWho);
+    r.card = room->card(intCard);
+    r.isUse = ob.value(QStringLiteral("isUse")).toBool();
+    r.isHandcard = ob.value(QStringLiteral("isHandcard")).toBool();
+    r.isRetrial = ob.value(QStringLiteral("isRetrial")).toBool();
+
+    return r;
+}
+
+QJsonValue LogMessage::toJson() const
+{
+    QJsonObject ob;
+
+    ob.insert(QStringLiteral("structType"), QStringLiteral("LogMessage"));
+    ob.insert(QStringLiteral("type"), type);
+    ob.insert(QStringLiteral("card_str"), card_str);
+    ob.insert(QStringLiteral("arg"), arg);
+    ob.insert(QStringLiteral("arg2"), arg2);
+    if (to.isEmpty())
+        ob.insert(QStringLiteral("to"), QString());
+    else{
+        QStringList listTo;
+
+        for (int i = 0; i < to.size(); i++)
+            listTo << to.at(i)->objectName();
+
+        ob.insert(QStringLiteral("to"), listTo.join(QStringLiteral(",")));
+    }
+
+    if (from != nullptr)
+        ob.insert(QStringLiteral("from"), from->objectName());
+    else
+        ob.insert(QStringLiteral("from"), QString());
+
+    return ob;
+}
+
+LogMessage LogMessage::fromJson(const QJsonValue &value, RoomObject *room)
+{
+    LogMessage r;
+
+    if (!value.isObject())
+        return r;
+
+    QJsonObject ob = value.toObject();
+    if (ob.value(QStringLiteral("structType")).toString() != QStringLiteral("LogMessage"))
+        return r;
+
+    r.type = ob.value(QStringLiteral("type")).toString();
+    r.card_str = ob.value(QStringLiteral("card_str")).toString();
+    r.arg = ob.value(QStringLiteral("arg")).toString();
+    r.arg2 = ob.value(QStringLiteral("arg2")).toString();
+
+    QString strFrom = ob.value(QStringLiteral("from")).toString();
+    if (!strFrom.isNull() && ! strFrom.isEmpty())
+        r.from = room->player(strFrom);
+
+    QString strTo = ob.value(QStringLiteral("to")).toString();
+    if (!strTo.isNull() && !strTo.isEmpty()){
+        QStringList listTo = strTo.split(QStringLiteral(","));
+
+        for (int i = 0; i < listTo.size(); i++)
+            r.to.append(nullptr);       //todo_Fs:find player by the elements of StringList
+    }
+
+    return r;
+}

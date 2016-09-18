@@ -368,14 +368,17 @@ struct LIBQSGSGAMELOGIC_EXPORT PindianStruct
     PindianStruct();
     bool isSuccess() const;
 
-//    Player *from;
-//    Player *to;
-//    const Card *from_card;
-//    const Card *to_card;
-//    int from_number;
-//    int to_number;
-//    QString reason;
-//    bool success;
+    Player *from;
+    Player *to;
+    const Card *from_card;
+    const Card *to_card;
+    int from_number;
+    int to_number;
+    QString reason;
+    bool success;
+
+    QJsonValue toJson() const;
+    static PindianStruct fromJson(const QJsonValue &value, RoomObject *room);
 };
 
 struct LIBQSGSGAMELOGIC_EXPORT JudgeStruct
@@ -388,29 +391,27 @@ struct LIBQSGSGAMELOGIC_EXPORT JudgeStruct
 
     bool isGood(const Card *card) const; // For AI
 
-//    Player *who;
-//    const Card *card;
-//    QString pattern;
-//    bool good;
-//    QString reason;
-//    bool time_consuming;
-//    bool negative;
-//    bool play_animation;
+    Player *who;
+    const Card *card;
+    QString pattern;
+    bool good;
+    QString reason;
+    bool time_consuming;
+    bool negative;
+    bool play_animation;
 
-//private:
-//    enum TrialResult
-//    {
-//        TRIAL_RESULT_UNKNOWN,
-//        TRIAL_RESULT_GOOD,
-//        TRIAL_RESULT_BAD
-//    } _m_result;
+    QJsonValue toJson() const;
+    static JudgeStruct fromJson(const QJsonValue &value, RoomObject *room);
 };
 
 struct LIBQSGSGAMELOGIC_EXPORT PhaseChangeStruct
 {
     PhaseChangeStruct();
-//    Player::Phase from;
-//    Player::Phase to;
+    QSgsEnum::PlayerPhase from;
+    QSgsEnum::PlayerPhase to;
+
+    QJsonValue toJson() const;
+    static PhaseChangeStruct fromJson(const QJsonValue &value, RoomObject *room);
 };
 
 // @todo: Move it to Player?
@@ -468,11 +469,14 @@ struct LIBQSGSGAMELOGIC_EXPORT CardResponseStruct
 //        m_isRetrial = false;
 //    }
 
-//    const Card *m_card;
-//    Player *m_who;
-//    bool m_isUse;
-//    bool m_isHandcard;
-//    bool m_isRetrial;
+    const Card *card;
+    Player *who;
+    bool isUse;
+    bool isHandcard;
+    bool isRetrial;
+
+    QJsonValue toJson() const;
+    static CardResponseStruct fromJson(const QJsonValue &value, RoomObject *room);
 };
 
 //struct PlayerNumStruct
@@ -523,12 +527,15 @@ struct LIBQSGSGAMELOGIC_EXPORT LogMessage
     QString toString() const;
     QVariant toVariant() const;
 
-//    QString type;
-//    Player *from;
-//    QList<Player *> to;
-//    QString card_str;
-//    QString arg;
-//    QString arg2;
+    QString type;
+    Player *from;
+    QList<Player *> to;
+    QString card_str;
+    QString arg;
+    QString arg2;
+
+    QJsonValue toJson() const;
+    static LogMessage fromJson(const QJsonValue &value, RoomObject *room);
 };
 
 struct AskForMoveCardsStruct
