@@ -356,7 +356,7 @@ struct LIBQSGSGAMELOGIC_EXPORT RecoverStruct
 struct LIBQSGSGAMELOGIC_EXPORT PindianStruct
 {
     PindianStruct();
-    bool isSuccess() const;
+    bool isSuccess(bool from = true) const;
 
     Player *from;
     Player *to;
@@ -365,7 +365,6 @@ struct LIBQSGSGAMELOGIC_EXPORT PindianStruct
     int from_number;
     int to_number;
     QString reason;
-    bool success;
 
     QJsonValue toJson() const;
     static PindianStruct fromJson(const QJsonValue &value, RoomObject *room);
@@ -374,21 +373,12 @@ struct LIBQSGSGAMELOGIC_EXPORT PindianStruct
 struct LIBQSGSGAMELOGIC_EXPORT JudgeStruct
 {
     JudgeStruct();
-    bool isGood() const;
-    bool isBad() const;
-    bool isEffected() const;
-    void updateResult();
-
-    bool isGood(const Card *card) const; // For AI
+    bool match() const;
 
     Player *who;
     const Card *card;
     QString pattern;
-    bool good;
     QString reason;
-    bool time_consuming;
-    bool negative;
-    bool play_animation;
 
     QJsonValue toJson() const;
     static JudgeStruct fromJson(const QJsonValue &value, RoomObject *room);
@@ -419,45 +409,7 @@ struct PhaseStruct
 
 struct LIBQSGSGAMELOGIC_EXPORT CardResponseStruct
 {
-    inline CardResponseStruct()
-    {
-//        m_card = nullptr;
-//        m_who = nullptr;
-//        m_isUse = false;
-//        m_isRetrial = false;
-    }
-
-//    inline CardResponseStruct(const Card *card)
-//    {
-//        m_card = card;
-//        m_who = nullptr;
-//        m_isUse = false;
-//        m_isRetrial = false;
-//    }
-
-//    inline CardResponseStruct(const Card *card, Player *who)
-//    {
-//        m_card = card;
-//        m_who = who;
-//        m_isUse = false;
-//        m_isRetrial = false;
-//    }
-
-//    inline CardResponseStruct(const Card *card, bool isUse)
-//    {
-//        m_card = card;
-//        m_who = nullptr;
-//        m_isUse = isUse;
-//        m_isRetrial = false;
-//    }
-
-//    inline CardResponseStruct(const Card *card, Player *who, bool isUse)
-//    {
-//        m_card = card;
-//        m_who = who;
-//        m_isUse = isUse;
-//        m_isRetrial = false;
-//    }
+    CardResponseStruct();
 
     const Card *card;
     Player *who;
@@ -469,53 +421,9 @@ struct LIBQSGSGAMELOGIC_EXPORT CardResponseStruct
     static CardResponseStruct fromJson(const QJsonValue &value, RoomObject *room);
 };
 
-//struct PlayerNumStruct
-//{
-//    inline PlayerNumStruct()
-//    {
-//        m_num = 0;
-//        m_toCalculate = QString();
-//        m_type = MaxCardsType::Max;
-//        m_reason = QString();
-//    }
-
-//    inline PlayerNumStruct(int num, const QString &toCalculate)
-//    {
-//        m_num = num;
-//        m_toCalculate = toCalculate;
-//        m_type = MaxCardsType::Max;
-//        m_reason = QString();
-//    }
-
-//    inline PlayerNumStruct(int num, const QString &toCalculate, MaxCardsType::MaxCardsCount type)
-//    {
-//        m_num = num;
-//        m_toCalculate = toCalculate;
-//        m_type = type;
-//        m_reason = QString();
-//    }
-
-//    inline PlayerNumStruct(int num, const QString &toCalculate, MaxCardsType::MaxCardsCount type, const QString &reason)
-//    {
-//        m_num = num;
-//        m_toCalculate = toCalculate;
-//        m_type = type;
-//        m_reason = reason;
-//    }
-
-//    MaxCardsType::MaxCardsCount m_type;
-//    int m_num;
-//    QString m_toCalculate;
-//    QString m_reason;
-//};
-
-
-
 struct LIBQSGSGAMELOGIC_EXPORT LogMessage
 {
     LogMessage();
-    QString toString() const;
-    QVariant toVariant() const;
 
     QString type;
     Player *from;
@@ -528,15 +436,6 @@ struct LIBQSGSGAMELOGIC_EXPORT LogMessage
     static LogMessage fromJson(const QJsonValue &value, RoomObject *room);
 };
 
-struct AskForMoveCardsStruct
-{
-    AskForMoveCardsStruct();
-
-//    QList<int> top;
-//    QList<int> bottom;
-
-//    bool is_success;
-};
 
 Q_DECLARE_METATYPE(DamageStruct)
 Q_DECLARE_METATYPE(CardEffectStruct)
@@ -553,6 +452,5 @@ Q_DECLARE_METATYPE(CardResponseStruct)
 //Q_DECLARE_METATYPE(Player *)
 //Q_DECLARE_METATYPE(JudgeStruct *)
 //Q_DECLARE_METATYPE(PindianStruct *)
-Q_DECLARE_METATYPE(AskForMoveCardsStruct)
 #endif
 
