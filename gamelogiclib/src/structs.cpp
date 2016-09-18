@@ -521,7 +521,7 @@ PhaseChangeStruct::PhaseChangeStruct()
 }
 
 CardUseStruct::CardUseStruct()
-    : card(nullptr), from(nullptr), isOwnerUse(true), addHistory(true), nullptrifiedList(QStringList())
+    : card(nullptr), from(nullptr), isOwnerUse(true), addHistory(true), nullifiedList(QStringList())
 {
 }
 
@@ -538,13 +538,14 @@ QJsonValue CardUseStruct::toJson() const
     QStringList listTo;
     for (int i = 0; i < to.size(); i++)
         listTo << to.at(i)->objectName();
+
     ob.insert(QStringLiteral("to"), listTo.join(QStringLiteral(",")));
 
     ob.insert(QStringLiteral("card"), card->id());
     ob.insert(QStringLiteral("isOwnerUse"), isOwnerUse);
     ob.insert(QStringLiteral("addHistory"), addHistory);
     ob.insert(QStringLiteral("isHandcard"), isHandcard);
-    ob.insert(QStringLiteral("nullptrifiedList"), nullptrifiedList.join(QStringLiteral(",")));
+    ob.insert(QStringLiteral("nullifiedList"), nullifiedList.join(QStringLiteral(",")));
     ob.insert(QStringLiteral("reason"), static_cast<int>(reason));
 
     if (from != nullptr)
@@ -588,7 +589,7 @@ CardUseStruct CardUseStruct::fromJson(const QJsonValue &value, RoomObject *room)
     r.isOwnerUse = ob.value(QStringLiteral("isOwnerUse")).toBool();
     r.isHandcard = ob.value(QStringLiteral("isHandcard")).toBool();
     r.reason = static_cast<QSgsEnum::CardUseReason>(ob.value(QStringLiteral("reason")).toInt());
-    r.nullptrifiedList = ob.value(QStringLiteral("nullptrifiedList")).toString().split(QStringLiteral(","));    //todo_Fs:further handling?
+    r.nullifiedList = ob.value(QStringLiteral("nullifiedList")).toString().split(QStringLiteral(","));    //todo_Fs:further handling?
 
     return r;
 

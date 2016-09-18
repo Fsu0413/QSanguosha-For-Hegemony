@@ -111,7 +111,7 @@ struct LIBQSGSGAMELOGIC_EXPORT CardUseStruct
     bool isOwnerUse;
     bool addHistory;
     bool isHandcard;
-    QStringList nullptrifiedList;
+    QStringList nullifiedList;
     QSgsEnum::CardUseReason reason;
 
     QJsonValue toJson() const;
