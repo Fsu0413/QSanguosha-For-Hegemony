@@ -353,79 +353,30 @@ SlashEffectStruct SlashEffectStruct::fromJson(const QJsonValue &value, RoomObjec
     return r;
 }
 
-DyingStruct::DyingStruct()
-    : who(nullptr), damage(nullptr)
-{
-}
-
-QJsonValue DyingStruct::toJson() const
-{
-    QJsonValue v;
-    QJsonObject ob;
-
-    if (who == nullptr)
-        return v;
-
-    if (damage != nullptr){
-        ob = damage->toJson().toObject();
-        ob[QStringLiteral("structType")] = QStringLiteral("DyingStruct");
-    }else{
-        ob.insert(QStringLiteral("structType"), QStringLiteral("DyingStruct"));
-    }
-
-    ob.insert(QStringLiteral("who"), who->objectName());
-    return ob;
-}
-
-DyingStruct DyingStruct::fromJson(const QJsonValue &value, RoomObject *room)
-{
-    DyingStruct r;
-
-    if (!value.isObject())
-        return r;
-
-    QJsonObject ob = value.toObject();
-
-    if (ob.value(QStringLiteral("structType")).toString() != QStringLiteral("DyingStruct"))
-        return r;
-
-    QString strWho = ob.value(QStringLiteral("who")).toString();
-    if (strWho.isNull() || strWho.isEmpty())
-        return r;
-    else
-        r.who = nullptr;        //todo_Fs:RoomObject->getPlayer
-
-    if (ob.size() == 2)
-        return r;
-
-    r.damage = new DamageStruct();      //todo_Fs:replace it with other pointer
-    ob[QStringLiteral("structType")] = QStringLiteral("DamageStruct");
-    *(r.damage) = DamageStruct::fromJson(ob, room);
-
-    return r;
-}
-
 DeathStruct::DeathStruct()
-    : who(nullptr), damage(nullptr)
+    : who(nullptr), reason(QSgsEnum::DeathReason::SuddenDeath), murderer(nullptr), damage(DamageStruct())
 {
 }
 
 QJsonValue DeathStruct::toJson() const
 {
     QJsonValue v;
-    QJsonObject ob;
 
     if (who == nullptr)
         return v;
 
-    if (damage != nullptr){
-        ob = damage->toJson().toObject();
-        ob[QStringLiteral("structType")] = QStringLiteral("DeathStruct");
-    }else{
-        ob.insert(QStringLiteral("structType"), QStringLiteral("DeathStruct"));
-    }
-
+    QJsonObject ob;
+    ob.insert(QStringLiteral("structType"), QStringLiteral("DeathStruct"));
     ob.insert(QStringLiteral("who"), who->objectName());
+    ob.insert(QStringLiteral("reason"), static_cast<int>(reason));
+    if (murderer != nullptr)
+        ob.insert(QStringLiteral("murderer"), murderer->objectName());
+    else
+        ob.insert(QStringLiteral("murderer"), QString());
+
+    ob.insert(QStringLiteral("damage"), damage.toJson());
+
+
     return ob;
 }
 
@@ -433,7 +384,7 @@ DeathStruct DeathStruct::fromJson(const QJsonValue &value, RoomObject *room)
 {
     DeathStruct r;
 
-    if (!value.isObject())
+    if (!value.isObject() || room == nullptr)
         return r;
 
     QJsonObject ob = value.toObject();
@@ -445,14 +396,16 @@ DeathStruct DeathStruct::fromJson(const QJsonValue &value, RoomObject *room)
     if (strWho.isNull() || strWho.isEmpty())
         return r;
     else
-        r.who = nullptr;                //todo_Fs:RoomObject->getPlayer
+        r.who = room->player(strWho);
 
-    if (ob.size() == 2)
-        return r;
+    int intReason = ob.value(QStringLiteral("reason")).toInt(static_cast<int>(QSgsEnum::DeathReason::SuddenDeath));
+    r.reason = static_cast<QSgsEnum::DeathReason>(intReason);
 
-    r.damage = new DamageStruct();                                      //todo_Fs:replace it with other pointer
-    ob[QStringLiteral("structType")] = QStringLiteral("DamageStruct");
-    *(r.damage) = DamageStruct::fromJson(ob, room);
+    QString strMurderer = ob.value(QStringLiteral("murderer")).toString();
+    if (!strMurderer.isNull() && !strMurderer.isEmpty())
+        r.murderer = room->player(strMurderer);
+
+    r.damage = DamageStruct::fromJson(ob.value(QStringLiteral("damage")), room);
 
     return r;
 }
