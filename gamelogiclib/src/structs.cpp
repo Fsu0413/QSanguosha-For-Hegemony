@@ -372,7 +372,7 @@ QJsonValue DeathStruct::toJson() const
     if (murderer != nullptr)
         ob.insert(QStringLiteral("murderer"), murderer->objectName());
     else
-        r.who = room->player(strWho);
+        ob.insert(QStringLiteral("murderer"), QString());
 
     ob.insert(QStringLiteral("damage"), damage.toJson());
 
