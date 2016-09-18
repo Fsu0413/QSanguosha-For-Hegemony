@@ -97,13 +97,7 @@ struct LIBQSGSGAMELOGIC_EXPORT SlashEffectStruct
 
 struct LIBQSGSGAMELOGIC_EXPORT CardUseStruct
 {
-
     CardUseStruct();
-    CardUseStruct(const Card *card, Player *from, QList<Player *> to, bool isOwnerUse = true);
-    CardUseStruct(const Card *card, Player *from, Player *target, bool isOwnerUse = true);
-//    bool isValid(const QString &pattern) const;
-//    void parse(const QString &str, RoomObject *room);
-//    bool tryParse(const QVariant &usage, RoomObject *room);
 
     const Card *card;
     Player *from;
