@@ -59,7 +59,7 @@ class LIBQSGSGAMELOGIC_EXPORT RoomObject : public QObject
     Q_OBJECT
 
 public:
-    explicit RoomObject(QObject *parent = 0);
+    explicit RoomObject(QObject *parent = nullptr);
     /*virtual*/ ~RoomObject(); // if this class is meant to be a virtual class, make sure this destructor is virtual
 
     struct CardPlaceStruct
@@ -123,7 +123,8 @@ public:
         Player *player;
     };
     // ask a player to distribute cards. Note that fromPlace can either be PlaceHand/PlaceEquip or PlaceTable/PlaceWugu, in the condition of PlaceTable/PlaceWugu you should call fillAg first and call clearAg afterwards
-    QList<CardDistributeStruct> askForDistribute(Player *player, const QList<Card *> cards, QSgsEnum::CardPlace fromPlace, bool forced = false, const QJsonValue &data = QJsonValue());
+    // if from place is PlaceTable/PlaceWugu, the prompt is ignored
+    QList<CardDistributeStruct> askForDistribute(Player *player, const QList<Card *> cards, QSgsEnum::CardPlace fromPlace, const QString &prompt = QString(), bool forced = false, const QJsonValue &data = QJsonValue());
     // ask a player to discard. Note this pattern needs to be discussed, probably it will be a QStringList
     Card *askForDiscard(Player *player, const QString &pattern, const QString &prompt, const QString &reason = QString(), bool forced = false, const QJsonValue &data = QJsonValue());
     // ask a player to discard multi cards
@@ -133,7 +134,7 @@ public:
     // ask a player to make a choice
     QString askForChoice(Player *player, const QStringList &choices, const QString &reason = QString(), const QJsonValue &data = QJsonValue());
     // advanced use of askForChoice
-    QString askForChoice(Player *player, const QJsonDocument &choicesDocument, const QString &reason = QString(), const QJsonValue &data = QJsonValue());
+    QString askForChoice(Player *player, const QJsonObject &choicesObject, const QString &reason = QString(), const QJsonValue &data = QJsonValue());
     // ask players to use Nullification, a targetNo of -1 stands for Nullification to Nullification
     // This function will rename to askForWard if we decided to use offical translations in card/general names, etc.
     CardUseStruct askForNullification(const CardUseStruct &use, int targetNo = 0);

@@ -289,7 +289,7 @@ Card *RoomObject::askForAg(Player *player, const QList<Card *> cards, const QStr
     return nullptr;
 }
 
-QList<RoomObject::CardDistributeStruct> RoomObject::askForDistribute(Player *player, const QList<Card *> cards, QSgsEnum::CardPlace fromPlace, bool forced, const QJsonValue &data)
+QList<RoomObject::CardDistributeStruct> RoomObject::askForDistribute(Player *player, const QList<Card *> cards, QSgsEnum::CardPlace fromPlace, const QString &prompt, bool forced, const QJsonValue &data)
 {
     return QList<RoomObject::CardDistributeStruct>();
 }
@@ -314,7 +314,7 @@ QString RoomObject::askForChoice(Player *player, const QStringList &choices, con
     return QString();
 }
 
-QString RoomObject::askForChoice(Player *player, const QJsonDocument &choicesDocument, const QString &reason, const QJsonValue &data)
+QString RoomObject::askForChoice(Player *player, const QJsonObject &choicesObject, const QString &reason, const QJsonValue &data)
 {
     return QString();
 }

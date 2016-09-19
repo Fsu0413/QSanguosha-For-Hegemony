@@ -24,7 +24,8 @@ HEADERS += \
     src/nativesocket.h \
     src/socket.h \
     src/util.h \
-    src/settings.h
+    src/settings.h \
+    src/translator.h
 
 SOURCES += \
     src/engine.cpp \
@@ -32,7 +33,8 @@ SOURCES += \
     src/protocol.cpp \
     src/nativesocket.cpp \
     src/util.cpp \
-    src/settings.cpp
+    src/settings.cpp \
+    src/translator.cpp
 
 DESTDIR = $$OUT_PWD/../dist/lib
 DLLDESTDIR = $$OUT_PWD/../dist/bin

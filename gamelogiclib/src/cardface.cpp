@@ -74,17 +74,17 @@ bool CardFace::targetFilter(const QList<const Player *> &targets, const Player *
     return result;
 }
 
-bool CardFace::isAvailable(const Player *player) const
+bool CardFace::isAvailable(const Player *) const
 {
     return true;
 }
 
-const CardFace *CardFace::validate(CardUseStruct &use) const
+const CardFace *CardFace::validate(CardUseStruct &) const
 {
     return this;
 }
 
-const CardFace *CardFace::validateInResponse(Player *user) const
+const CardFace *CardFace::validateInResponse(Player *) const
 {
     return this;
 }

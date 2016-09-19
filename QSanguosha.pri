@@ -57,7 +57,8 @@ unix: !android: !mac: QMAKE_LFLAGS += -Wl,--rpath=../lib
 
 !win32-msvc* {
     # we use gcc/clang on unix-like systems and mingw
-    QMAKE_CXXFLAGS += -Wc++11-compat -Wc++14-compat
+    QMAKE_CFLAGS += -Wpointer-to-int-cast
+    QMAKE_CXXFLAGS += -Wc++11-compat -Wc++14-compat -Wzero-as-null-pointer-constant
     mac:QMAKE_LFLAGS += -Wl,-undefined -Wl,error
     else:QMAKE_LFLAGS += -Wl,--no-undefined
 }
