@@ -38,6 +38,7 @@ HEADERS += \
     src/structs.h \
     src/exppattern.h \
     src/enumeration.h \
+    src/translator.h \
     cardfaces/base.h
 
 SOURCES += \
@@ -54,6 +55,7 @@ SOURCES += \
     src/skill.cpp \
     src/structs.cpp \
     src/exppattern.cpp \
+    src/translator.cpp \
     cardfaces/base.cpp
 
 DESTDIR = $$OUT_PWD/../dist/lib

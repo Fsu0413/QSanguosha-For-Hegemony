@@ -1,7 +1,7 @@
 #ifndef QSGSTRANSLATOR_H
 #define QSGSTRANSLATOR_H
 
-#include "libqsgscoreglobal.h"
+#include "libqsgsgamelogicglobal.h"
 
 #if 0
 class _EXPORT QSgsTranslator
@@ -10,7 +10,7 @@ class _EXPORT QSgsTranslator
 namespace QSgsTranslator
 {
 
-void initTranslator();
+void loadTranslationOfPackage(const QString &packageName);
 
 // Card description
 QString PackageName(const char *package);

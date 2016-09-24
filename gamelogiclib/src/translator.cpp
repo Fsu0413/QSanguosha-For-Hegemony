@@ -1,15 +1,42 @@
 #include "translator.h"
 
+// TBD for further design
 
+class Translator final : public QTranslator
+{
+    Q_OBJECT
+
+public:
+
+    QString translate(const char *context, const char *sourceText, const char *disambiguation, int n) const final override
+    {
+        return QString();
+    }
+    bool isEmpty() const final override
+    {
+        return false;
+    }
+};
+
+namespace
+{
+
+void initTranslator()
+{
+    // dummy
+}
+
+}
 
 namespace QSgsTranslator
 {
 
 
-void initTranslator()
+void loadTranslationOfPackage(const QString &packageName)
 {
-
+    // TBD
 }
+
 
 #define FUNCFORTRANSLATE(a) \
     QString a(const char *a ## Str) { \
@@ -31,6 +58,9 @@ FUNCFORTRANSLATE(Log)
 FUNCFORTRANSLATE(Prompt)
 FUNCFORTRANSLATE(Choice)
 
+
 #undef FUNCFORTRANSLATE
 
 }
+
+#include "translator.moc"
