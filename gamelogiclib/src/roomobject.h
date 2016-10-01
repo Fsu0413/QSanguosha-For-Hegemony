@@ -19,6 +19,7 @@ public:
     virtual ~RoomRequestReceiver();
 
     virtual bool doRequest(const QJsonDocument &request) = 0; // REMEMBER TO CLEAR m_result!!!
+    virtual void doNotify(const QJsonDocument &notify) = 0;
     virtual const QJsonDocument &waitForResult(int timeout);
 
 protected:
@@ -43,6 +44,7 @@ public:
     RoomRequestHandler(RoomRequestReceiver *receiver);
     ~RoomRequestHandler();
 
+    void notifyReceiver(const QJsonDocument &request);
     QJsonDocument requestReceiver(const QJsonDocument &request, int timeout);
 
     RoomRequestReceiver *receiver() const;
@@ -93,7 +95,7 @@ public:
     const QList<Card *> &discardPile();
     QList<const Card *> discardPile() const;
 
-    const CardPlaceStruct &cardPlace(const Card *card) const; // using the const functions of the QHash to get the place of a card
+    CardPlaceStruct cardPlace(const Card *card) const; // using the const functions of the QHash to get the place of a card
 
     // set the handler of the following interactive methods. Note that RoomObject takes the ownership of the handler, DO NOT DELETE IT AFTER YOU SET IT!!
     RoomRequestHandler *requestHandler() const;

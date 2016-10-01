@@ -41,6 +41,11 @@ RoomRequestHandler::~RoomRequestHandler()
 
 }
 
+void RoomRequestHandler::notifyReceiver(const QJsonDocument &request)
+{
+    m_receiver->doNotify(notify);
+}
+
 QJsonDocument RoomRequestHandler::requestReceiver(const QJsonDocument &request, int timeout)
 {
     // emit a signal to RoomRequestReceiver, and wait for its callback
@@ -236,7 +241,7 @@ const QList<Card *> &RoomObject::discardPile()
     return d->discardPile;
 }
 
-const RoomObject::CardPlaceStruct &RoomObject::cardPlace(const Card *card) const
+RoomObject::CardPlaceStruct RoomObject::cardPlace(const Card *card) const
 {
     Q_D(const RoomObject);
     return d->cardPlaces.value(card, CardPlaceStruct{nullptr, QSgsEnum::CardPlace::PlaceUnknown});
